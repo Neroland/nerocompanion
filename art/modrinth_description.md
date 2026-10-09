@@ -1,3 +1,11 @@
+[![NeroLink App — Beta](https://img.shields.io/badge/NeroLink_App-Now_in_Beta-60d4e8?style=for-the-badge)](https://nerolandmc.net/nerolink/#beta) [![Explore the Neroland ecosystem](https://img.shields.io/badge/Explore-The_Neroland_Ecosystem-1a5a6c?style=for-the-badge)](https://nerolandmc.net/ecosystem/)
+
+> 📱 **NeroLink App Beta — your Neroland world on your phone.** Check energy, alerts and machines live, claim quest rewards and search your storage without logging in. **[Join the beta at nerolandmc.net →](https://nerolandmc.net/nerolink/#beta)**
+>
+> 🌌 **Explore the Neroland ecosystem.** See how NeroCompanion fits together with the rest of the Nero mods — every mod, wiki and changelog in one place. **[View the ecosystem at nerolandmc.net →](https://nerolandmc.net/ecosystem/)** · [NeroCompanion on the website](https://nerolandmc.net/mods/nerocompanion/)
+
+---
+
 # NeroCompanion
 
 **Bring one along — personal drones, helper bots and tamed alien pets that follow you, work for you, and fight at your side.**
@@ -47,6 +55,12 @@ Every companion carries an active-mode enum in NBT, and a small state machine sw
 ## Privacy (POPIA / GDPR)
 
 NeroCompanion stores **only what ownership needs** — a companion's owner is kept as a **UUID** (never a username) in entity NBT and in the lost-companion saved data, alongside last-known position and the companion's own chips and skin. It carries **no chat, no analytics profile, and no personal data beyond that owner UUID**, and it registers with **Core's shared data-erasure hook** so a single erase request clears your companion ownership alongside every other Neroland mod. Any crash telemetry follows the ecosystem standard: anonymous, version-strings only, and opt-out.
+
+> **Telemetry notice:** NeroCompanion sends anonymous error reports (stack trace + mod/game
+> versions only — never IPs, usernames, UUIDs, or world data) to the developers via Sentry
+> (EU servers) so crashes can be fixed. On by default — opt out any time by setting `telemetryEnabled = false`
+> in `config/nerocompanion.properties`. Full details:
+> [PRIVACY.md](https://github.com/Neroland/nerocompanion/blob/main/PRIVACY.md).
 
 ## Why it fits the ecosystem
 
