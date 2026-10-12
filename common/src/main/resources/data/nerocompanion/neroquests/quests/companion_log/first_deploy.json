@@ -1,0 +1,12 @@
+{
+  "title": "quest.nerocompanion.companion_log.first_deploy.title",
+  "description": "quest.nerocompanion.companion_log.first_deploy.desc",
+  "icon": "minecraft:lead",
+  "prerequisites": ["nerocompanion:companion_log/blueprint"],
+  "objectives": [
+    { "type": "neroquests:gate_open", "gate": "nerocompanion:first_deploy" }
+  ],
+  "rewards": [
+    { "type": "neroquests:xp", "amount": 75 }
+  ]
+}

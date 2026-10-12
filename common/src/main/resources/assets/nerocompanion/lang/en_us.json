@@ -1,3 +1,17 @@
 {
-  "economy_result.nerocompanion.absent": "Buying with credits needs NeroEconomy, which is not installed on this server."
+  "chapter.nerocompanion.companion_log.title": "Companion Log",
+  "economy_result.nerocompanion.absent": "Buying with credits needs NeroEconomy, which is not installed on this server.",
+  "message.nerocompanion.skin_unlocked": "Companion skin unlocked: %s. It will be available in the skin picker once companions arrive.",
+  "quest.nerocompanion.companion_log.blueprint.desc": "Craft your first companion item. A Helper Drone is the simplest place to start.",
+  "quest.nerocompanion.companion_log.blueprint.title": "Blueprint",
+  "quest.nerocompanion.companion_log.companion_keeper.desc": "Deploy, upgrade, adopt and fill out a squad. Finishing all four earns the Aurora cosmetic skin for your companions.",
+  "quest.nerocompanion.companion_log.companion_keeper.title": "Companion Keeper",
+  "quest.nerocompanion.companion_log.first_chip.desc": "Insert an upgrade chip into one of your companions.",
+  "quest.nerocompanion.companion_log.first_chip.title": "First Chip",
+  "quest.nerocompanion.companion_log.first_deploy.desc": "Deploy a companion from its item so it binds to you as its owner.",
+  "quest.nerocompanion.companion_log.first_deploy.title": "First Deploy",
+  "quest.nerocompanion.companion_log.full_squad.desc": "Have as many companions active at once as this server allows.",
+  "quest.nerocompanion.companion_log.full_squad.title": "Full Squad",
+  "quest.nerocompanion.companion_log.pet_adopted.desc": "Adopt a pet alien so it follows you as one of your own.",
+  "quest.nerocompanion.companion_log.pet_adopted.title": "Pet Adopted"
 }

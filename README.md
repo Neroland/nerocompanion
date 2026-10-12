@@ -2,7 +2,7 @@
 
 > Part of the Neroland sci-fi Minecraft mod ecosystem, built on **Neroland Core**.
 
-**Status:** barebones multiloader skeleton — version `0.3.0-alpha.1`. No gameplay content yet; optional NeroEconomy seams are in place.
+**Status:** barebones multiloader skeleton — version `0.4.0-alpha.1`. No gameplay content yet; optional NeroEconomy seams and the NeroQuests quest pack are in place.
 
 ## Build targets
 
@@ -65,6 +65,24 @@ works. Two rules:
    of value; a bot owned by such a player must not feed a trader.
 2. **No chunk loading.** The Auto-Trader never loads chunks, and a bot must not either just to keep one
    running.
+
+## Developer notes: NeroQuests quest pack and milestone gates
+
+NeroCompanion ships a **NeroQuests** quest chapter, `nerocompanion:companion_log` "Companion Log" (6 quests),
+as plain data under `common/src/main/resources/data/nerocompanion/neroquests/`. NeroQuests is **optional**:
+with it installed the chapter appears in the quest book; without it the files are inert. There is no
+dependency in either direction. Because no companion items or entities exist yet, the quests are visible but
+cannot be completed until that content lands.
+
+- `progression/CompanionMilestones` records the personal milestones the quests read, as player-scope Core
+  record gates (`first_deploy`, `first_chip`, `pet_adopted`, `full_squad`). Call the matching `record...`
+  when a companion is first bound, a chip is inserted, a pet alien is adopted, or the owner's active count
+  reaches the cap. The gates have no `requires` and are never checked for access.
+- `progression/QuestHooks` listens for the `nerocompanion:hook/skin/<id>` hook gates a quest reward opens.
+  The open gate is the permanent skin unlock; the skin picker reads `QuestHooks.isSkinUnlocked` as a display
+  check. Today the only effect is a chat line; the skins arrive with the companion content.
+- No threshold channels: a companion count is about one owner, so publishing it would hint at a player.
+- `gradlew :neoforge:26.2:test` runs `QuestPackTest`, which validates the pack against the quest format.
 
 ## Privacy & telemetry
 

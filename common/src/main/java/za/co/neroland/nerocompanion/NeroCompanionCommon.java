@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import za.co.neroland.nerocompanion.config.NeroCompanionConfig;
 import za.co.neroland.nerocompanion.economy.CompanionEconomy;
 import za.co.neroland.nerocompanion.platform.Services;
+import za.co.neroland.nerocompanion.progression.QuestHooks;
 import za.co.neroland.nerocompanion.telemetry.NeroCompanionTelemetry;
 
 /**
@@ -43,5 +44,9 @@ public final class NeroCompanionCommon {
         // 3. Optional NeroEconomy bridge for cosmetic purchases and price display. Touches NeroEconomy only when it is loaded
         //    and new enough; claims must happen here, before the first server starts.
         CompanionEconomy.init();
+
+        // 4. Quest hook listener (Core progression events only; no quest-mod dependency). Each loader feeds
+        //    QuestHooks.tick from the server tick so the listener can find the online player to notify.
+        QuestHooks.init();
     }
 }

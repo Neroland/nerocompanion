@@ -57,3 +57,6 @@ __pycache__/
 
 # node deps (e.g. tools/gradle-mcp markdownlint)
 node_modules/
+
+# Test / dev-run logs written beside the Stonecutter nodes
+**/versions/*/logs/

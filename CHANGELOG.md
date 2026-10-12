@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0-alpha.1] - 2026-10-11
+
+Quest pack and milestone seams. Requires Neroland Core 1.15.0. Still no blocks, items or recipes: the quests
+become completable once companions exist.
+
+### Added
+
+- **NeroQuests quest pack.** Ships chapter `nerocompanion:companion_log` "Companion Log", 6 quests
+  (`blueprint`, `first_deploy`, `first_chip`, `pet_adopted`, `full_squad`, `companion_keeper`), that appears in
+  the quest book when NeroQuests is installed; inert otherwise, no dependency in either direction. Until the
+  companion items and entities land, the quests are visible but cannot be completed.
+- **Milestone gates** (player-scope Core record gates, no `requires`, never checked for access):
+  `nerocompanion:first_deploy`, `first_chip`, `pet_adopted` and `full_squad`.
+  `progression/CompanionMilestones` has one `record...` call per gate for the companion code to make when the
+  matching thing happens (online owner, or offline owner by UUID through Core 1.15.0).
+- **Skin hook gates** `nerocompanion:hook/skin/<id>` (shipped: `aurora`, rewarded by *Companion Keeper*).
+  `progression/QuestHooks` listens on Core's progression events; the open gate is the permanent unlock
+  record, so the future skin picker reads `QuestHooks.isSkinUnlocked` as a display check. For now the only
+  visible effect is a chat line when the gate opens for an online player; the skins themselves land with the
+  companion content.
+- `QuestPackTest` (JUnit 5, plain JVM) checks the pack against the quest-mod format and that every gate the
+  code names is shipped as a player-scope record. Run with `gradlew :neoforge:26.2:test`.
+
+### Changed
+
+- Neroland Core floor raised to **1.15.0** (offline-capable `ProgressionGates.open(server, uuid, gate)`).
+- No threshold channels are published: a companion count is about one owner, so there is no world milestone
+  that would not hint at a specific player (POPIA/GDPR). Milestones live only in Core's player-scope gate
+  store, which Core's privacy document covers.
+
 ## [0.3.0-alpha.1] - 2026-10-11
 
 Optional NeroEconomy seams. No blocks, items or recipes yet.

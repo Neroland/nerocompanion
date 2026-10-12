@@ -1,0 +1,12 @@
+{
+  "title": "quest.nerocompanion.companion_log.first_chip.title",
+  "description": "quest.nerocompanion.companion_log.first_chip.desc",
+  "icon": "minecraft:redstone",
+  "prerequisites": ["nerocompanion:companion_log/first_deploy"],
+  "objectives": [
+    { "type": "neroquests:gate_open", "gate": "nerocompanion:first_chip" }
+  ],
+  "rewards": [
+    { "type": "neroquests:xp", "amount": 100 }
+  ]
+}

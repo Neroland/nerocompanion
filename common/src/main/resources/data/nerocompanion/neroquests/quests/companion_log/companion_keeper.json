@@ -1,0 +1,16 @@
+{
+  "title": "quest.nerocompanion.companion_log.companion_keeper.title",
+  "description": "quest.nerocompanion.companion_log.companion_keeper.desc",
+  "icon": "minecraft:nether_star",
+  "prerequisites": ["nerocompanion:companion_log/full_squad", "nerocompanion:companion_log/pet_adopted"],
+  "objectives": [
+    { "type": "neroquests:quest_complete", "quest": "nerocompanion:companion_log/first_deploy" },
+    { "type": "neroquests:quest_complete", "quest": "nerocompanion:companion_log/first_chip" },
+    { "type": "neroquests:quest_complete", "quest": "nerocompanion:companion_log/pet_adopted" },
+    { "type": "neroquests:quest_complete", "quest": "nerocompanion:companion_log/full_squad" }
+  ],
+  "rewards": [
+    { "type": "neroquests:xp", "amount": 200 },
+    { "type": "neroquests:mod_hook", "gate": "nerocompanion:hook/skin/aurora" }
+  ]
+}

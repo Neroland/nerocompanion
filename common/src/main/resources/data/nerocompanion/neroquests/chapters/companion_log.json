@@ -1,0 +1,12 @@
+{
+  "title": "chapter.nerocompanion.companion_log.title",
+  "icon": "minecraft:name_tag",
+  "quests": [
+    { "quest": "nerocompanion:companion_log/blueprint", "x": 0, "y": 0 },
+    { "quest": "nerocompanion:companion_log/first_deploy", "x": 2, "y": 0 },
+    { "quest": "nerocompanion:companion_log/pet_adopted", "x": 2, "y": 2 },
+    { "quest": "nerocompanion:companion_log/first_chip", "x": 4, "y": 0 },
+    { "quest": "nerocompanion:companion_log/full_squad", "x": 6, "y": 0 },
+    { "quest": "nerocompanion:companion_log/companion_keeper", "x": 6, "y": 2 }
+  ]
+}

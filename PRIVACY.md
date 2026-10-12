@@ -53,8 +53,11 @@ nothing is ever sent before the config — and therefore your choice — has bee
 ## Player data
 
 NeroCompanion does not currently store any player data of its own — no player UUIDs, names, positions or
-gameplay records are written to the world save or anywhere else. Neroland Core (a required
-dependency) documents its own data handling in its own PRIVACY.md.
+gameplay records are written to the world save or anywhere else. The quest milestones and skin unlocks it
+records (`nerocompanion:first_deploy`, `first_chip`, `pet_adopted`, `full_squad`, `hook/skin/<id>`) are
+player-scope progression gates held in Neroland Core's store, which Core's PRIVACY.md covers, including
+export and erasure. Neroland Core (a required dependency) documents its own data handling in its own
+PRIVACY.md.
 
 ## Legal basis and your rights (GDPR / POPIA)
 

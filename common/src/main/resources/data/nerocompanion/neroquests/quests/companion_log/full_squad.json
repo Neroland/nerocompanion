@@ -1,0 +1,12 @@
+{
+  "title": "quest.nerocompanion.companion_log.full_squad.title",
+  "description": "quest.nerocompanion.companion_log.full_squad.desc",
+  "icon": "minecraft:armor_stand",
+  "prerequisites": ["nerocompanion:companion_log/first_chip"],
+  "objectives": [
+    { "type": "neroquests:gate_open", "gate": "nerocompanion:full_squad" }
+  ],
+  "rewards": [
+    { "type": "neroquests:xp", "amount": 150 }
+  ]
+}
