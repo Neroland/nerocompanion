@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0-alpha.1] - 2026-10-11
+
+Optional NeroEconomy seams. No blocks, items or recipes yet.
+
+### Added
+
+- **NeroEconomy seams** (NeroEconomy stays optional; NeroCompanion builds, loads and runs without it):
+  `economy/CompanionEconomy.chargeCosmetic` charges reason `cosmetic_purchase` with the purchase id as the
+  replay-safe key, and `askPrice`, `bidPrice` and `remainingToday` give companions Merchant House prices
+  and the player's own daily allowance.
+- The carry-bot rules (no feeding from creative or spectator players, no chunk loading), documented in the
+  README and the new wiki page *NeroEconomy integration*.
+
+### Changed
+
+- NeroEconomy is declared as an optional dependency on every loader (Fabric `suggests`, NeoForge
+  `optional`, Forge `mandatory = false`, floor `0.3.0-beta.1`) and compiled `compileOnly`.
+- Neroland Core (floor 1.13.0) is now a required dependency, and NeroCompanion ships anonymous, opt-out
+  crash reporting (see PRIVACY.md).
+
 ## [0.2.0-alpha.1] - 2026-09-24
 
 EMI compatibility. No gameplay, id, tag or config change.

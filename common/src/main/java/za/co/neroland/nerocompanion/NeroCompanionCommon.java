@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import za.co.neroland.nerocompanion.config.NeroCompanionConfig;
+import za.co.neroland.nerocompanion.economy.CompanionEconomy;
 import za.co.neroland.nerocompanion.platform.Services;
 import za.co.neroland.nerocompanion.telemetry.NeroCompanionTelemetry;
 
@@ -38,5 +39,9 @@ public final class NeroCompanionCommon {
         //    telemetryEnabled=false); stays inert while the build's DSN is the placeholder
         //    (see NeroCompanionTelemetry's PLACEHOLDER_DSN guard).
         NeroCompanionTelemetry.init();
+
+        // 3. Optional NeroEconomy bridge for cosmetic purchases and price display. Touches NeroEconomy only when it is loaded
+        //    and new enough; claims must happen here, before the first server starts.
+        CompanionEconomy.init();
     }
 }
