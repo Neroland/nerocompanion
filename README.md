@@ -2,13 +2,13 @@
 
 > Part of the Neroland sci-fi Minecraft mod ecosystem, built on **Neroland Core**.
 
-**Status:** barebones multiloader skeleton — version `0.4.0-alpha.1`. No gameplay content yet; optional NeroEconomy seams and the NeroQuests quest pack are in place.
+**Status:** barebones multiloader skeleton — version `0.5.0-alpha.1`. No gameplay content yet; optional NeroEconomy seams and the NeroQuests quest pack are in place.
 
 ## Build targets
 
-- **Minecraft:** 26.1.2, 26.2 and 26.3
-- **Loaders:** NeoForge, MinecraftForge/Forge, Fabric (the "9 cells")
-- **Java:** 25
+- **Minecraft:** 1.21.1, 1.21.4, 1.21.5, 1.21.8 (also 1.21.7), 1.21.10 (also 1.21.9), 1.21.11, 26.1.2, 26.2 and 26.3
+- **Loaders:** NeoForge, MinecraftForge/Forge, Fabric (the "27 cells")
+- **Java:** 21 for the 1.21.x builds, 25 for 26.x
 - Mod id: `nerocompanion` · package `za.co.neroland.nerocompanion`
 
 ## Layout
@@ -27,8 +27,10 @@ The build is the repo root, with a flattened cross-loader structure driven by St
 ./gradlew :fabric:26.2:build          # one cell
 ./gradlew :neoforge:26.1.2:build :neoforge:26.2:build :neoforge:26.3:build \
           :forge:26.1.2:build :forge:26.2:build :forge:26.3:build \
-          :fabric:26.1.2:build :fabric:26.2:build :fabric:26.3:build   # all nine
+          :fabric:26.1.2:build :fabric:26.2:build :fabric:26.3:build   # the nine 26.x cells
 ```
+
+The 1.21.x cells build the same way, e.g. `./gradlew :neoforge:1.21.1:build`.
 
 ## Developer notes: NeroEconomy seams and carry-bot rules
 
