@@ -9,7 +9,7 @@ the system is designed to comply with the GDPR (EU) and POPIA (South Africa).
 > **Note:** error reporting is **active by default** as described on this page, and can be
 > switched off at any time with `telemetryEnabled = false` (see
 > [How to opt out](#how-to-opt-out)). Any build whose `NeroCompanionTelemetry.DSN` field is still the
-> placeholder (including the current development builds, forks and source builds) sends
+> placeholder sends
 > **nothing**, ever — no report leaves the machine and no network connection is opened,
 > regardless of the settings below.
 
