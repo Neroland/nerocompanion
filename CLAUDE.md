@@ -1,5 +1,7 @@
 # Project context for AI coding agents — nerocompanion
 
+> Modrinth is temporarily being removed from the upload and is no longer being referenced. Avoid making references to modrinth.
+
 > This and `AGENTS.md` are kept identical; update both together.
 
 ## The mod
@@ -9,7 +11,7 @@
   shared content under `common/` and wire it through each loader entry point.
 - Mod id: **`nerocompanion`** (matches the registry namespace + every loader manifest). Package root:
   `za.co.neroland.nerocompanion`. Author: **Neroland**.
-- Version: **0.5.0-alpha.1**.
+- Version: **0.5.1-alpha.1**.
 - Targets **MC 1.21.1, 1.21.4, 1.21.5, 1.21.8, 1.21.10, 1.21.11, 26.1.2, 26.2 AND 26.3** on **NeoForge,
   MinecraftForge/Forge, and Fabric** → the **"27 cells"**. **Java 21** for 1.21.x, **Java 25** for 26.x.
   Mappings = official Mojang names (26.x ships de-obfuscated; 1.21.x Fabric is remapped). Source is written

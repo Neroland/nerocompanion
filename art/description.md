@@ -71,7 +71,7 @@ NeroCompanion stores **only what ownership needs** — a companion's owner is ke
 
 ## Requirements & compatibility
 
-- **Requires [Neroland Core](https://modrinth.com/mod/nerolandcore)** — install it alongside NeroCompanion (it loads first).
+- **Requires [Neroland Core](https://nerolandmc.net/mods/neroland-core/)** — install it alongside NeroCompanion (it loads first).
 - Optional but recommended: **NeroPower / Nerotech** for pad power, **NeroLogistics** for hauling, **NeroCreatures** and **Nerospace** for pet aliens.
 - Charging pads accept energy from **any FE source** — Create, AE2, Mekanism, Ad Astra and **Energized Power** interoperate through Core's common tags as the 26.x ecosystem fills in, with no hard dependency on any of them.
 - **Modpacks are allowed and encouraged** — any platform, no need to ask. Use the official files and credit *NeroCompanion by Neroland* with links to the [CurseForge page](https://www.curseforge.com/minecraft/mc-mods/nerocompanion) and the [GitHub repository](https://github.com/Neroland/nerocompanion). Full terms: [LICENSE](https://github.com/Neroland/nerocompanion/blob/main/LICENSE).
