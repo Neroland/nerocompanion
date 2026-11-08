@@ -252,7 +252,7 @@ public class CompanionBayScreen extends CompanionScreenBase<BayMenu> {
     @Override
     protected boolean click(double mx, double my, int button) {
         Payloads.BaySnapshot s = snap();
-        if (s == null || button != 0 || this.isWaiting()) {
+        if (s == null || button != InputConstants.MOUSE_BUTTON_LEFT || this.isWaiting()) {
             return false;
         }
         int x = this.leftPos;

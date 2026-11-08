@@ -399,7 +399,7 @@ public class CompanionScreen extends CompanionScreenBase<CompanionMenu> {
     @Override
     protected boolean click(double mx, double my, int button) {
         Payloads.CompanionSnapshot s = snap();
-        if (s == null || button != 0) {
+        if (s == null || button != InputConstants.MOUSE_BUTTON_LEFT) {
             return false;
         }
         int x = this.leftPos;

@@ -278,7 +278,7 @@ public abstract class CompanionScreenBase<T extends AbstractContainerMenu> exten
     private boolean handleClick(double mx, double my, int button) {
         int cx = this.leftPos + this.imageWidth - 11;
         int cy = this.topPos + 5;
-        if (button == 0 && inside(mx, my, cx, cy, 11, 11)) {
+        if (button == InputConstants.MOUSE_BUTTON_LEFT && inside(mx, my, cx, cy, 11, 11)) {
             clickSound();
             this.escape();
             return true;

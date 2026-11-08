@@ -284,7 +284,7 @@ public class RemoteRadialScreen extends Screen {
     //? if >=1.21.9 {
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-        if (event.button() == 0) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             this.click(this.pick(event.x(), event.y(), true));
             return true;
         }
@@ -293,7 +293,7 @@ public class RemoteRadialScreen extends Screen {
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
-        if (event.button() == 1) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             this.useReleased(this.pick(event.x(), event.y()));
             return true;
         }
@@ -307,7 +307,7 @@ public class RemoteRadialScreen extends Screen {
     //?} else {
     /*@Override
     public boolean mouseClicked(double mx, double my, int button) {
-        if (button == 0) {
+        if (button == InputConstants.MOUSE_BUTTON_LEFT) {
             this.click(this.pick(mx, my, true));
             return true;
         }
@@ -316,7 +316,7 @@ public class RemoteRadialScreen extends Screen {
 
     @Override
     public boolean mouseReleased(double mx, double my, int button) {
-        if (button == 1) {
+        if (button == InputConstants.MOUSE_BUTTON_RIGHT) {
             this.useReleased(this.pick(mx, my));
             return true;
         }

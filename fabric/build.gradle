@@ -275,7 +275,8 @@ tasks.register('ecjCheck', JavaExec) {
 // Server game tests are off so `check`/`build` never launch a game. Run: gradlew :fabric:26.3:runClientGameTest
 // (screenshots land in fabric/versions/26.3/build/run/clientGameTest/screenshots).
 if (mc == '26.3') {
-    fabricApi {
+    // `fabricApi` alone would resolve to the Fabric API version string defined at the top of this script.
+    project.extensions.getByName('fabricApi').with {
         configureTests {
             createSourceSet = true
             modId = 'nerocompanion_uitest'
@@ -283,7 +284,6 @@ if (mc == '26.3') {
             enableClientGameTests = true
         }
     }
-    sourceSets.gametest.java.srcDir "${branchDir}/src/gametest/java"
-    sourceSets.gametest.resources.srcDir "${branchDir}/src/gametest/resources"
+    // Stonecutter maps the branch's fabric/src/gametest onto this source set itself (like src/main), so no srcDir here.
     sourceSets.gametest.compileClasspath += sourceSets.creaturesSpi.output + sourceSets.siblingStubs.output
 }

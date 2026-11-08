@@ -348,7 +348,7 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
     @Override
     protected boolean click(double mx, double my, int button) {
         Payloads.CompanionSnapshot s = snap();
-        if (s == null || button != 0) {
+        if (s == null || button != InputConstants.MOUSE_BUTTON_LEFT) {
             return false;
         }
         int x = this.leftPos;
@@ -405,7 +405,7 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
 
     @Override
     protected boolean drag(double mx, double my, int button, double dx, double dy) {
-        if (button == 0 && inside(mx, my, this.leftPos + 8, this.topPos + 30, 100, STAGE_H)) {
+        if (button == InputConstants.MOUSE_BUTTON_LEFT && inside(mx, my, this.leftPos + 8, this.topPos + 30, 100, STAGE_H)) {
             this.yaw = (float) ((this.yaw + dx * 2.0D) % 360.0D);
             this.paused = true;
             return true;

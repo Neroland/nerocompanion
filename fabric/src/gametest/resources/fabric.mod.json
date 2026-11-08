@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "nerocompanion_uitest",
+  "version": "1.0.0",
+  "name": "NeroCompanion UI audit (client game test, never shipped)",
+  "description": "Drives the NeroCompanion screens with simulated input and screenshots them. Test source set only.",
+  "license": "All Rights Reserved",
+  "environment": "client",
+  "entrypoints": {
+    "fabric-client-gametest": ["za.co.neroland.nerocompanion.gametest.NeroCompanionUiClientGameTest"]
+  },
+  "depends": {
+    "fabricloader": "*",
+    "fabric-client-gametest-api-v1": "*",
+    "nerocompanion": "*"
+  }
+}
