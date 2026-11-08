@@ -20,13 +20,13 @@ class TextWrapTest {
 
     @Test
     void lastLineGetsAnEllipsisWhenTextIsLeftOver() {
-        assertEquals(List.of("None of your", "companions…"),
+        assertEquals(List.of("None of your", "companions are\u2026"),
                 TextWrap.wrap("None of your companions are close enough to park.", CHARS, 15, 15));
     }
 
     @Test
     void aWordWiderThanTheLineIsShortenedNotSplit() {
-        assertEquals(List.of("Stand…"), TextWrap.wrap("Standard", CHARS, 6, 6));
+        assertEquals(List.of("Stand\u2026"), TextWrap.wrap("Standard", CHARS, 6, 6));
         assertEquals(List.of("Bobble", "Beanie"), TextWrap.wrap("Bobble Beanie", CHARS, 7, 7));
     }
 
@@ -38,7 +38,7 @@ class TextWrapTest {
 
     @Test
     void fitWordsKeepsWholeWords() {
-        assertEquals("Nearby (within…", TextWrap.fitWords("Nearby (within 8 blocks)", CHARS, 16));
+        assertEquals("Nearby (within\u2026", TextWrap.fitWords("Nearby (within 8 blocks)", CHARS, 16));
         assertEquals("Lost", TextWrap.fitWords("Lost", CHARS, 16));
         assertEquals("", TextWrap.fitWords("  ", CHARS, 16));
     }
