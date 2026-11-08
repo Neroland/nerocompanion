@@ -239,5 +239,43 @@ def main():
         print("wrote", os.path.relpath(p, ROOT))
 
 
+
+
+def generate_gif(source=None, output=None):
+    source = source or os.path.join(OUT, "nerocompanion_logo.png")
+    output = output or os.path.join(OUT, "nerocompanion_logo.gif")
+    with Image.open(source) as image:
+        logo = image.convert("RGB")
+    logo.thumbnail((400, 400), Image.Resampling.LANCZOS)
+    w, h = logo.size
+    color = (86, 204, 196)
+    frames = []
+    for index in range(16):
+        t = index / 16
+        phase = 2 * math.pi * t
+        overlay = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(overlay)
+        pulse = max(0, math.sin(phase))**8 + 0.55*max(0, math.sin(phase-0.8))**12
+        r = 0.012 + 0.009*pulse
+        draw.ellipse((w*(0.5-r), h*(0.155-r), w*(0.5+r), h*(0.155+r)), fill=color + (int(70+150*min(1,pulse)),))
+        for j in range(3):
+            u = (t + j/3) % 1
+            draw.arc((w*(0.5-0.07-u*0.14), h*(0.355-0.07-u*0.14), w*(0.5+0.07+u*0.14), h*(0.355+0.07+u*0.14)), 205, 335, fill=color + (int(110*(1-u)),), width=2)
+        overlay = overlay.filter(ImageFilter.MaxFilter(3))
+        image = logo.convert("RGBA")
+        image.alpha_composite(overlay.filter(ImageFilter.GaussianBlur(max(1, w * 0.008))))
+        image.alpha_composite(overlay)
+        frames.append(image.convert("RGB"))
+    frames[0].save(output, save_all=True, append_images=frames[1:], duration=180, loop=0, optimize=True)
+    return output
+
+
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser(description="Generate the logo or animate its existing master PNG.")
+    parser.add_argument("--gif", action="store_true", help="generate the animated logo")
+    args = parser.parse_args()
+    if args.gif:
+        print("wrote", os.path.relpath(generate_gif(), ROOT))
+    else:
+        main()

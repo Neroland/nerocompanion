@@ -1,6 +1,6 @@
 # Commands
 
-All server commands start with `/nscomp`.
+Most server commands start with `/nscomp`. The creative showcase gallery has its own command, `/nerocompanion gallery`.
 
 ## For every player
 
@@ -23,15 +23,18 @@ All server commands start with `/nscomp`.
 | `/nscomp types` | The companion types loaded from data packs, and any problems found in their files |
 | `/nscomp debug spawn <count> [type]` | Creative only. Spawns `count` companions owned by you (Helper Drones unless you name a type such as `mining_bot`; `mixed` cycles all seven). At most `debug.maxSpawn` (64) per call; ignores the companion limits |
 | `/nscomp debug clear` | Creative only. Removes the companions `debug spawn` made this server run (they are not lost and cannot be reclaimed) |
-| `/nscomp gallery` | Creative only, nobody else within 96 blocks. Builds the showcase stage with everything the mod adds: every skin, hat, pose and item (it replaces blocks; test worlds only). See [Server Admin](Server-Admin.md#showcase-gallery) |
-| `/nscomp gallery clear` | Removes the gallery companions and item frames and puts back the blocks it replaced |
+| `/nerocompanion gallery` | Creative only, nobody else within 96 blocks. Builds the showcase stage with everything the mod adds: every skin, hat, pose and item (it replaces blocks; test worlds only). See [Server Admin](Server-Admin.md#showcase-gallery) |
+| `/nerocompanion gallery clear` | Removes the gallery companions and item frames and puts back the blocks it replaced |
 
 ## Client command
 
+The screenshot pass runs on your own game, so it has its own name: a client command called `/nerocompanion` would
+hide the server's `/nerocompanion gallery`.
+
 | Command | What it does |
 |---|---|
-| `/nscompgallery capture [time]` | Needs cheats. Rebuilds the gallery at 0, 100, 0 and saves screenshots to `screenshots/nerocompanion/` (noon unless you name a time). Changes the world's daylight and weather game rules |
-| `/nscompgallery capture shot <name>` | Saves the current view as one screenshot |
+| `/nerocompanion_capture capture [time]` | Needs cheats. Rebuilds the gallery at 0, 100, 0 and saves screenshots to `screenshots/nerocompanion/` (noon unless you name a time). Changes the world's daylight and weather game rules |
+| `/nerocompanion_capture capture shot <name>` | Saves the current view as one screenshot |
 
 ## Related Neroland Core commands
 

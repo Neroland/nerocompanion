@@ -27,27 +27,29 @@ import net.minecraft.world.phys.Vec3;
 
 import za.co.neroland.nerocompanion.NeroCompanionCommon;
 import za.co.neroland.nerocompanion.client.look.ClientLooks;
+import za.co.neroland.nerocompanion.command.GalleryCommands;
 import za.co.neroland.nerocompanion.command.GalleryLayout;
 import za.co.neroland.nerocompanion.look.LookKind;
 import za.co.neroland.nerocompanion.registry.ModEntities;
 
 /**
- * CLIENT, creative-debug: an automated, reproducible screenshot pass over the {@code /nscomp gallery} stage (ported
+ * CLIENT, creative-debug: an automated, reproducible screenshot pass over the {@code /nerocompanion gallery} stage (ported
  * from the family's capture harness).
  *
- * <p>{@code /nscomp gallery} builds the stage server-side; this harness drives the camera, hides every overlay and
+ * <p>{@code /nerocompanion gallery} builds the stage server-side; this harness drives the camera, hides every overlay and
  * writes one PNG per shot via {@link Screenshot#grab} to {@code <run dir>/screenshots/nerocompanion/}, so the
  * captures can be re-rendered identically after a model or texture change.
  *
  * <p><b>Cross-loader.</b> Vanilla client classes only. Each loader wires {@link #registerClientCommands} from its
- * client-command hook and {@link #tick()} from its client tick. The root is {@code /nscompgallery}, never
- * {@code /nscomp}: a client root sharing a server root's name shadows the server subtree.
+ * client-command hook and {@link #tick()} from its client tick. The root is {@code /nerocompanion_capture}, never
+ * {@code /nerocompanion}: a client root sharing a server root's name shadows the server subtree (Fabric runs a
+ * client root that matches and never forwards it; Forge and NeoForge merge both trees into one suggestion tree).
  *
  * <ul>
- *   <li>{@code /nscompgallery capture [time]} - teleports to the fixed origin {@value #ORIGIN_X}/{@value #ORIGIN_Y}/
- *       {@value #ORIGIN_Z}, rebuilds the stage ({@code /nscomp gallery clear}, then {@code /nscomp gallery}), freezes
+ *   <li>{@code /nerocompanion_capture capture [time]} - teleports to the fixed origin {@value #ORIGIN_X}/{@value #ORIGIN_Y}/
+ *       {@value #ORIGIN_Z}, rebuilds the stage ({@code /nerocompanion gallery clear}, then {@code /nerocompanion gallery}), freezes
  *       time and weather, hides clouds and the HUD, then shoots the framed list.</li>
- *   <li>{@code /nscompgallery capture shot <name>} - grabs the current view once, overlays hidden.</li>
+ *   <li>{@code /nerocompanion_capture capture shot <name>} - grabs the current view once, overlays hidden.</li>
  * </ul>
  *
  * <p><b>Test world only.</b> The commands it sends need cheats, and they change the world: the daylight and weather
@@ -113,6 +115,9 @@ public final class GalleryCaptureHarness {
     private static java.lang.reflect.Method mcGetRenderTarget;  // 26.1.x
     private static java.lang.reflect.Method grMainRenderTarget; // 26.2
 
+    /** The client command root. Distinct from the server's {@code nerocompanion} root on purpose. */
+    public static final String ROOT = "nerocompanion_capture";
+
     private GalleryCaptureHarness() {
     }
 
@@ -121,16 +126,16 @@ public final class GalleryCaptureHarness {
     // ------------------------------------------------------------------------------------------------
 
     /**
-     * Registers the client-side {@code /nscompgallery capture …} tree. Generic in {@code S} so the same
+     * Registers the client-side {@code /nerocompanion_capture capture …} tree. Generic in {@code S} so the same
      * method serves NeoForge/Forge ({@code CommandSourceStack}) and Fabric
      * ({@code FabricClientCommandSource}); every body drives the local client only.
      *
-     * <p>The root must NOT be {@code nscomp} — see the class docs (it would shadow the server
-     * tree, and {@code /nscomp gallery} would stop working).
+     * <p>The root must NOT be {@code nerocompanion} — see the class docs (it would shadow the server
+     * tree, and {@code /nerocompanion gallery} would stop working).
      */
     public static <S> void registerClientCommands(CommandDispatcher<S> dispatcher) {
         dispatcher.register(
-                LiteralArgumentBuilder.<S>literal("nscompgallery")
+                LiteralArgumentBuilder.<S>literal(ROOT)
                         .then(LiteralArgumentBuilder.<S>literal("capture")
                                 .executes(ctx -> startCapture("noon"))
                                 .then(LiteralArgumentBuilder.<S>literal("shot")
@@ -193,8 +198,8 @@ public final class GalleryCaptureHarness {
                 "time set " + time,
                 "weather clear");
         List<String> build = List.of(
-                "nscomp gallery clear",
-                "nscomp gallery");
+                GalleryCommands.ROOT + " gallery clear",
+                GalleryCommands.ROOT + " gallery");
         Shot first = shots.get(0);
         shots.set(0, new Shot(first.name(), setup, build, groundClear(), BUILD_WARMUP_TICKS,
                 first.camera(), first.target()));

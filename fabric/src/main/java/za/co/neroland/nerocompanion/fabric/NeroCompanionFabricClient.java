@@ -76,7 +76,7 @@ public final class NeroCompanionFabricClient implements ClientModInitializer {
                 net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry.getInstance()
                         .register(type, sprites -> factory.apply(sprites)));
         *///?}
-        // Client-side /nscompgallery capture tree (its own root: a shared "nscomp" root would shadow the server's).
+        // Client-side /nerocompanion_capture tree (its own root: sharing "nerocompanion" would shadow the server gallery).
         net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) ->
                         za.co.neroland.nerocompanion.client.GalleryCaptureHarness.registerClientCommands(dispatcher));

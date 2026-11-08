@@ -3,7 +3,7 @@ package za.co.neroland.nerocompanion.entity;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * What a creative-gallery display companion shows ({@code /nscomp gallery}). Display only and never saved: the
+ * What a creative-gallery display companion shows ({@code /nerocompanion gallery}). Display only and never saved: the
  * companion is frozen (no AI, no drain, no work) and the synched mode, flags, energy and bond level come from here
  * instead of its record. {@code -1} (or a null mode) keeps the real value.
  *

@@ -1,8 +1,8 @@
 # Skins & Hats
 
 Looks only change how a companion looks; they never change what it can do. Choose them in the **Skin Studio**
-(the Skin button on the Companion screen), which has a live preview and says how to unlock each locked look.
-Unlocks are per companion.
+(the **Skin Studio** button on the Companion screen; skins and hats are two tabs there), which has a live preview and
+says how to unlock each locked look. Unlocks are per companion.
 
 ## Skins
 

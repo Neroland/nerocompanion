@@ -43,7 +43,7 @@ import za.co.neroland.nerocompanion.registry.ModEntities;
 import za.co.neroland.nerocompanion.registry.ModItems;
 
 /**
- * The creative showcase, {@code /nscomp gallery [clear]} (operators, creative, nobody else within
+ * The creative showcase, {@code /nerocompanion gallery [clear]} (operators, creative, nobody else within
  * {@value #OTHERS_RANGE} blocks - it replaces blocks, so it is for a test world). It works out a {@link GalleryLayout}
  * from everything the mod adds, lays a graphite stage of that size east and south of the caller's feet, and shows:
  * every type standard, every type skin, each family skin on every type, every hat on every type that may wear it,
@@ -72,6 +72,19 @@ public final class GalleryCommands {
     private static final Map<String, Gallery> GALLERIES = new ConcurrentHashMap<>();
 
     private GalleryCommands() {
+    }
+
+    /** The server command root that holds {@code gallery}; the client capture harness uses its own root. */
+    public static final String ROOT = NeroCompanionCommon.MOD_ID;
+
+    /** {@code /nerocompanion gallery [clear]}: operators; {@link #build} and {@link #clear} add the creative check. */
+    public static void register(com.mojang.brigadier.CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(com.mojang.brigadier.builder.LiteralArgumentBuilder.<CommandSourceStack>literal(ROOT)
+                .then(com.mojang.brigadier.builder.LiteralArgumentBuilder.<CommandSourceStack>literal("gallery")
+                        .requires(CompanionCommands.operator())
+                        .executes(context -> build(context.getSource()))
+                        .then(com.mojang.brigadier.builder.LiteralArgumentBuilder.<CommandSourceStack>literal("clear")
+                                .executes(context -> clear(context.getSource())))));
     }
 
     private static String key(ServerLevel level, BlockPos origin) {

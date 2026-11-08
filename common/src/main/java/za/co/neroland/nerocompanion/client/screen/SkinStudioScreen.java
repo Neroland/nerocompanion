@@ -54,10 +54,11 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
     private float yaw;
     private int seenVersion = -1;
 
-    public SkinStudioScreen(CompanionMenu menu, Inventory inventory, Component title, boolean hats) {
+    /** Opens on the Skins tab; the Hats tab is one click (or Tab) away. */
+    public SkinStudioScreen(CompanionMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title, WIDTH, HEIGHT);
         this.inventory = inventory;
-        this.hats = hats;
+        this.hats = false;
     }
 
     @Nullable
@@ -224,6 +225,8 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
         int y = this.topPos;
         Payloads.CompanionSnapshot s = snap();
         if (s == null) {
+            // No snapshot yet (or it was dropped): say so instead of an empty panel.
+            this.text(g, Component.translatable("gui.nerocompanion.waiting"), x + 8, y + 32, CompanionColours.SUBTLE);
             return;
         }
         // 1 preview stage: the live companion wearing the selected look; the type glyph while it is away

@@ -23,14 +23,13 @@ import za.co.neroland.nerocompanion.platform.Services;
 
 /**
  * The Remote's job radial: eight wedges in the same positions for every companion, the "Come here" hub and the
- * Recall pill. Opens after holding the Remote for 4 ticks; releasing the use key (or a left click) confirms the
- * hovered element, number keys 1-9 / 0 pick directly, the wheel or Tab switches companion, Esc closes. It sends
- * intents only; the result shows as the companion's emote and, on a deny, one action-bar sentence. Client only.
+ * Recall pill. Opens after holding the Remote for 4 ticks; releasing the use key on a wedge, the hub or the pill
+ * confirms it, and releasing it with nothing selected leaves the radial open for a click. A left click confirms the
+ * element under the cursor (a click on empty space closes), number keys 1-9 / 0 pick directly, the wheel or Tab
+ * switches companion, Esc closes. The hit-testing lives in {@link RadialLayout}. It sends intents only; the result shows as the companion's emote and, on a deny, one action-bar sentence. Client only.
  */
 public class RemoteRadialScreen extends Screen {
 
-    private static final int OUTER = 40;
-    private static final int INNER = 10;
     /** Wedge tiles: x, w, h, cx, cy, gx, gy (rows y 112 normal / 144 hover / 208 active). */
     private static final int[][] WEDGES = {
             {0, 30, 27, 15, 40, 0, -27},
@@ -42,15 +41,14 @@ public class RemoteRadialScreen extends Screen {
             {192, 27, 30, 40, 15, -27, 0},
             {224, 31, 31, 37, 37, -19, -19}};
 
-    /** -2 none, -1 hub, 0..7 wedge, 8 recall pill. */
-    private int hovered = -2;
+    /** {@link RadialLayout#NONE}, {@link RadialLayout#HUB}, 0..7 wedge or {@link RadialLayout#RECALL}. */
+    private int hovered = RadialLayout.NONE;
     private int flash;
     /**
      * Whether the cursor has left the centre since the radial opened. The cursor starts on the hub, so until it
-     * moves at least {@value #MOVE_PX} px a release selects nothing (it must not send "Come here").
+     * moves at least {@link RadialLayout#MOVE_PX} px a release selects nothing (it must not send "Come here").
      */
     private boolean moved;
-    private static final int MOVE_PX = 4;
 
     public RemoteRadialScreen() {
         super(Component.translatable("gui.nerocompanion.radial.title"));
@@ -97,32 +95,12 @@ public class RemoteRadialScreen extends Screen {
 
     /** The element under the cursor; {@code click} lets a deliberate left click choose the hub without moving. */
     private int pick(double mx, double my, boolean click) {
-        int cx = this.width / 2;
-        int cy = this.height / 2;
-        if (Math.abs(mx - cx) >= MOVE_PX || Math.abs(my - cy) >= MOVE_PX) {
+        double dx = mx - this.width / 2;
+        double dy = my - this.height / 2;
+        if (RadialLayout.movedOff(dx, dy)) {
             this.moved = true;
         }
-        if (inside(mx, my, cx - 48, cy + 58, 96, 14)) {
-            return 8;
-        }
-        double dx = mx - cx;
-        double dy = my - cy;
-        double dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < INNER) {
-            return this.moved || click ? -1 : -2;
-        }
-        if (dist > OUTER + 30 && this.hovered < 0) {
-            return -2;
-        }
-        double deg = Math.toDegrees(Math.atan2(dx, -dy));
-        if (deg < 0) {
-            deg += 360.0D;
-        }
-        return (int) Math.floor((deg + 22.5D) / 45.0D) % 8;
-    }
-
-    private static boolean inside(double mx, double my, int x, int y, int w, int h) {
-        return mx >= x && my >= y && mx < x + w && my < y + h;
+        return RadialLayout.pick(dx, dy, this.moved, click, this.hovered);
     }
 
     private void draw(GuiGraphicsExtractor g, int mx, int my) {
@@ -216,7 +194,7 @@ public class RemoteRadialScreen extends Screen {
             Screens.set(null);
             return;
         }
-        if (index == -2) {
+        if (index == RadialLayout.NONE) {
             Screens.set(null);
             return;
         }
@@ -232,6 +210,9 @@ public class RemoteRadialScreen extends Screen {
                 return;
             }
             if (mode == t.mode()) {
+                // Already in that mode: nothing to send, but the choice was made, so close like any confirm.
+                CompanionScreenBase.clickSound();
+                Screens.set(null);
                 return;
             }
             payload = new Payloads.SetMode(t.companionId(), mode, false);
@@ -239,6 +220,21 @@ public class RemoteRadialScreen extends Screen {
         Services.NETWORK.sendToServer(payload);
         CompanionScreenBase.clickSound();
         Screens.set(null);
+    }
+
+    private void click(int picked) {
+        this.hovered = picked;
+        if (RadialLayout.onClick(picked) == RadialLayout.Action.CLOSE) {
+            Screens.set(null);
+        } else {
+            this.confirm(picked);
+        }
+    }
+
+    private void useReleased(int picked) {
+        if (RadialLayout.onUseRelease(picked) == RadialLayout.Action.CONFIRM) {
+            this.confirm(picked);
+        }
     }
 
     private boolean key(int key) {
@@ -289,7 +285,7 @@ public class RemoteRadialScreen extends Screen {
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         if (event.button() == 0) {
-            this.confirm(this.pick(event.x(), event.y(), true));
+            this.click(this.pick(event.x(), event.y(), true));
             return true;
         }
         return super.mouseClicked(event, doubleClick);
@@ -298,7 +294,7 @@ public class RemoteRadialScreen extends Screen {
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
         if (event.button() == 1) {
-            this.confirm(this.pick(event.x(), event.y()));
+            this.useReleased(this.pick(event.x(), event.y()));
             return true;
         }
         return super.mouseReleased(event);
@@ -312,7 +308,7 @@ public class RemoteRadialScreen extends Screen {
     /*@Override
     public boolean mouseClicked(double mx, double my, int button) {
         if (button == 0) {
-            this.confirm(this.pick(mx, my, true));
+            this.click(this.pick(mx, my, true));
             return true;
         }
         return super.mouseClicked(mx, my, button);
@@ -321,7 +317,7 @@ public class RemoteRadialScreen extends Screen {
     @Override
     public boolean mouseReleased(double mx, double my, int button) {
         if (button == 1) {
-            this.confirm(this.pick(mx, my));
+            this.useReleased(this.pick(mx, my));
             return true;
         }
         return super.mouseReleased(mx, my, button);

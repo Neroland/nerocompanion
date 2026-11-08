@@ -17,7 +17,7 @@ import za.co.neroland.nerocompanion.entity.GalleryPose;
 import za.co.neroland.nerocompanion.look.Look;
 
 /**
- * The {@code /nscomp gallery} stage, worked out from what there is to show before a block is placed. Pure: the
+ * The {@code /nerocompanion gallery} stage, worked out from what there is to show before a block is placed. Pure: the
  * server command builds from the plan and the client capture harness frames the same plan, so the two never drift.
  *
  * <p>Stage coordinates are relative to the caller's feet: x {@code 0..length-1} east, z {@code 0..depth-1} south,

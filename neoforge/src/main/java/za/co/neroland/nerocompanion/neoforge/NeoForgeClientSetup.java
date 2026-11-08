@@ -50,7 +50,7 @@ public final class NeoForgeClientSetup {
         modEventBus.addListener((net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent event) ->
                 za.co.neroland.nerocompanion.client.particle.CompanionParticles.registerAll((type, factory) ->
                         event.registerSpriteSet(type, factory::apply)));
-        // Client-side /nscompgallery capture tree (its own root: a shared "nscomp" root would shadow the server's).
+        // Client-side /nerocompanion_capture tree (its own root: sharing "nerocompanion" would shadow the server gallery).
         NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.client.event.RegisterClientCommandsEvent event) ->
                 za.co.neroland.nerocompanion.client.GalleryCaptureHarness.registerClientCommands(
                         event.getDispatcher()));

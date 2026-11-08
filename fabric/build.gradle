@@ -268,3 +268,22 @@ tasks.register('ecjCheck', JavaExec) {
         ] + srcDirs
     }
 }
+
+// Client game test harness (Fabric API fabric-client-gametest-api-v1) - the 26.3 Fabric cell only.
+// A separate `gametest` source set (fabric/src/gametest, its own fabric.mod.json) that Loom runs as a second mod in
+// the `runClientGameTest` task. It is never part of sourceSets.main, so nothing here reaches the shipped jar.
+// Server game tests are off so `check`/`build` never launch a game. Run: gradlew :fabric:26.3:runClientGameTest
+// (screenshots land in fabric/versions/26.3/build/run/clientGameTest/screenshots).
+if (mc == '26.3') {
+    fabricApi {
+        configureTests {
+            createSourceSet = true
+            modId = 'nerocompanion_uitest'
+            enableGameTests = false
+            enableClientGameTests = true
+        }
+    }
+    sourceSets.gametest.java.srcDir "${branchDir}/src/gametest/java"
+    sourceSets.gametest.resources.srcDir "${branchDir}/src/gametest/resources"
+    sourceSets.gametest.compileClasspath += sourceSets.creaturesSpi.output + sourceSets.siblingStubs.output
+}

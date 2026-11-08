@@ -54,8 +54,6 @@ import za.co.neroland.nerocompanion.registry.ModEntities;
  *   <li>{@code /nscomp debug spawn <n> [type|mixed]} / {@code /nscomp debug clear} (operators in creative) - the
  *       tick-cost probe world: spawns companions owned by the caller (bypassing the caps; personal drones by
  *       default, {@code mixed} cycles all seven types), and removes the ones it spawned again.</li>
- *   <li>{@code /nscomp gallery [clear]} (operators in creative, nobody else within 96 blocks) - the showcase stage
- *       with every type, skin and hat ({@link GalleryCommands}).</li>
  *   <li>{@code /nscomp recover [name] [confirm]} (every player) - reclaims one of the caller's own lost companions as
  *       a Capsule (by name or type; with no name: the only one, or a list). Same rules and cost as a Bay's Reclaim;
  *       when a cost applies it is stated first and the command needs {@code confirm}.</li>
@@ -63,6 +61,9 @@ import za.co.neroland.nerocompanion.registry.ModEntities;
  *       ledger (a parked companion whose Bay is gone, a Capsule nobody has) to lost, so its owner can reclaim it.
  *       {@code player} is an online player's name or a UUID.</li>
  * </ul>
+ *
+ * <p>The creative showcase lives under its own root, {@code /nerocompanion gallery [clear]}, registered here
+ * alongside {@code /nscomp} ({@link GalleryCommands#register}).
  */
 public final class CompanionCommands {
 
@@ -71,6 +72,7 @@ public final class CompanionCommands {
     private CompanionCommands() { }
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        GalleryCommands.register(dispatcher);
         dispatcher.register(LiteralArgumentBuilder.<CommandSourceStack>literal(ROOT)
                 .then(LiteralArgumentBuilder.<CommandSourceStack>literal("export")
                         .executes(context -> export(context.getSource())))
@@ -94,11 +96,6 @@ public final class CompanionCommands {
                 .then(LiteralArgumentBuilder.<CommandSourceStack>literal("budget")
                         .requires(operator())
                         .executes(context -> budget(context.getSource())))
-                .then(LiteralArgumentBuilder.<CommandSourceStack>literal("gallery")
-                        .requires(operator())
-                        .executes(context -> GalleryCommands.build(context.getSource()))
-                        .then(LiteralArgumentBuilder.<CommandSourceStack>literal("clear")
-                                .executes(context -> GalleryCommands.clear(context.getSource()))))
                 .then(LiteralArgumentBuilder.<CommandSourceStack>literal("types")
                         .requires(operator())
                         .executes(context -> types(context.getSource())))

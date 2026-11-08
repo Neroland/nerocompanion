@@ -127,7 +127,7 @@ Looks sold for credits need an economy mod and stay locked without one.
 
 ## Showcase gallery
 
-- `/nscomp gallery` (operators, creative mode, nobody else within 96 blocks) builds a stage east and south of you
+- `/nerocompanion gallery` (operators, creative mode, nobody else within 96 blocks) builds a stage east and south of you
   showing everything the mod adds. The stage is sized to fit its contents (about 40 x 60 blocks with the shipped
   skins, hats and items; it grows if a data pack adds more), and nothing is left out: if anything cannot be placed
   the reply says how many. It **replaces blocks** (the floor, the air above it and a back wall), so use it in a test
@@ -147,12 +147,12 @@ Looks sold for credits need an economy mod and stay locked without one.
   The companions are display companions: yours, frozen in place (no AI, no battery drain), never recorded in the
   Recovery Ledger and never counted toward the companion limits. You cannot open their screen, recall them or hurt
   them.
-- `/nscomp gallery clear` removes the gallery's companions and item frames and puts back the blocks it replaced.
+- `/nerocompanion gallery clear` removes the gallery's companions and item frames and puts back the blocks it replaced.
   The record of what was replaced lasts until the server stops; a display companion that loads after that (or after
   its gallery was cleared while its chunk was unloaded) removes itself.
-- `/nscompgallery capture [time]` (client command, needs cheats) teleports you to 0, 100, 0, rebuilds the gallery
+- `/nerocompanion_capture capture [time]` (client command, needs cheats) teleports you to 0, 100, 0, rebuilds the gallery
   there and saves screenshots to `screenshots/nerocompanion/`: each companion row in pieces of four, the chargers,
-  each item-wall group, the whole wall and an overview; `/nscompgallery capture shot <name>` saves the
+  each item-wall group, the whole wall and an overview; `/nerocompanion_capture capture shot <name>` saves the
   current view. **Side effects it leaves behind:** the daylight and weather cycle game rules are switched off
   (`advance_time` / `advance_weather` on 26.x, `doDaylightCycle` / `doWeatherCycle` on 1.21.x), the time is set
   (noon by default) and the weather cleared. Turn the game rules back on afterwards if the world is not a test

@@ -43,15 +43,14 @@ public class CompanionScreen extends CompanionScreenBase<CompanionMenu> {
     private static final int[] MODE_Y = {40, 58, 76, 94};
     private static final int CHIP_Y = 112;
 
-    /** Focus order: name, save, 8 modes, chips (0-2), skin, hat, recall. */
+    /** Focus order: name, save, 8 modes, chips (0-2), Skin Studio, recall. */
     private static final int F_NAME = 0;
     private static final int F_SAVE = 1;
     private static final int F_MODE = 2;
     private static final int F_CHIP = 10;
-    private static final int F_SKIN = 13;
-    private static final int F_HAT = 14;
-    private static final int F_RECALL = 15;
-    private static final int F_COUNT = 16;
+    private static final int F_LOOKS = 13;
+    private static final int F_RECALL = 14;
+    private static final int F_COUNT = 15;
 
     private final Inventory inventory;
     @Nullable
@@ -335,15 +334,12 @@ public class CompanionScreen extends CompanionScreenBase<CompanionMenu> {
                     y + 130, CompanionColours.SUBTLE);
         }
 
-        // 9-11 skin, hat, recall
+        // 9-10 Skin Studio (skins and hats), recall
         boolean looksOn = !away && !this.isWaiting();
         boolean recallOn = s.has(Payloads.CompanionSnapshot.LOADED) && !this.isWaiting();
-        this.iconButton(g, mx, my, x + 8, y + 98, 36, 16, 176, Component.translatable("gui.nerocompanion.companion.skin"),
-                looksOn, false, this.focus == F_SKIN,
-                looksOn ? "gui.nerocompanion.companion.skin.tip" : "gui.nerocompanion.reason.away");
-        this.iconButton(g, mx, my, x + 48, y + 98, 36, 16, 160, Component.translatable("gui.nerocompanion.companion.hat"),
-                looksOn, false, this.focus == F_HAT,
-                looksOn ? "gui.nerocompanion.companion.hat.tip" : "gui.nerocompanion.reason.away");
+        this.iconButton(g, mx, my, x + 8, y + 98, 76, 16, 176,
+                Component.translatable("gui.nerocompanion.companion.studio"), looksOn, false, this.focus == F_LOOKS,
+                looksOn ? "gui.nerocompanion.companion.studio.tip" : "gui.nerocompanion.reason.away");
         this.iconButton(g, mx, my, x + 88, y + 98, 40, 16, 128,
                 Component.translatable("gui.nerocompanion.companion.recall"), recallOn, true,
                 this.focus == F_RECALL,
@@ -422,11 +418,8 @@ public class CompanionScreen extends CompanionScreenBase<CompanionMenu> {
                 return this.activate(F_CHIP + k, s);
             }
         }
-        if (inside(mx, my, x + 8, y + 98, 36, 16)) {
-            return this.activate(F_SKIN, s);
-        }
-        if (inside(mx, my, x + 48, y + 98, 36, 16)) {
-            return this.activate(F_HAT, s);
+        if (inside(mx, my, x + 8, y + 98, 76, 16)) {
+            return this.activate(F_LOOKS, s);
         }
         if (inside(mx, my, x + 88, y + 98, 40, 16)) {
             return this.activate(F_RECALL, s);
@@ -469,13 +462,13 @@ public class CompanionScreen extends CompanionScreenBase<CompanionMenu> {
             }
             return true;
         }
-        if (index == F_SKIN || index == F_HAT) {
+        if (index == F_LOOKS) {
             if (away) {
                 this.deny(Component.translatable("gui.nerocompanion.reason.away"));
             } else {
                 clickSound();
-                za.co.neroland.nerocompanion.client.Screens.set(new SkinStudioScreen(this.menu, this.inventory, this.title,
-                        index == F_HAT));
+                za.co.neroland.nerocompanion.client.Screens.set(new SkinStudioScreen(this.menu, this.inventory,
+                        this.title));
             }
             return true;
         }

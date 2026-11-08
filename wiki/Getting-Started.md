@@ -31,7 +31,8 @@ Shaped: redstone torch on top; iron ingot, glass pane, iron ingot in the middle;
 ingot at the bottom. With the **Companion Remote**:
 
 - **tap** a companion to open its screen,
-- **hold** use to open the job radial and pick a mode,
+- **hold** use to open the job radial, then either aim at a mode and let go, or let go and left-click a mode
+  (keys 1-8 pick a mode, 9 is "Come here", 0 recalls, Esc closes),
 - **sneak-use** a companion to recall it into a Capsule.
 
 ## 6. Keep it charged

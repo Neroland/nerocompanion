@@ -7,9 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- The Remote's radial menu no longer closes when you let go of the Remote before choosing. Hold the Remote, let
+  go, then left-click a job (or the centre for "Come here", or Recall); holding, aiming and letting go still works,
+  and so do the number keys. Clicking the job the companion already has now closes the menu instead of doing
+  nothing, and a click away from the ring closes it.
+
 ### Changed
 
-- `/nscomp gallery` now shows everything the mod adds on a stage sized to fit: every skin and every hat on every
+- The Companion screen has one **Skin Studio** button in place of the separate Skin and Hat buttons. Skins and
+  hats are the two tabs of the Studio.
+- The showcase gallery moved from `/nscomp gallery [clear]` to `/nerocompanion gallery [clear]` (same rules:
+  operators in creative, nobody else within 96 blocks). The client screenshot pass moved from
+  `/nscompgallery capture` to `/nerocompanion_capture capture`.
+- The gallery now shows everything the mod adds on a stage sized to fit: every skin and every hat on every
   type that may wear it, the poses (asleep, napping, working, charging, energy levels, bond levels) and a back wall
   of every item, Capsule variant and Scrap Egg stage. Display companions stay frozen and no longer count toward
   the companion limits. The capture harness frames the new layout.
