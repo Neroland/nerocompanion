@@ -1,0 +1,12 @@
+{
+  "title": "quest.nerocompanion.companion_log.bond_three.title",
+  "description": "quest.nerocompanion.companion_log.bond_three.desc",
+  "icon": "minecraft:poppy",
+  "prerequisites": ["nerocompanion:companion_log/first_deploy"],
+  "objectives": [
+    { "type": "neroquests:gate_open", "gate": "nerocompanion:bond_three" }
+  ],
+  "rewards": [
+    { "type": "neroquests:xp", "amount": 150 }
+  ]
+}

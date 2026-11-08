@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": "minecraft:redstone",
+    "C": "minecraft:copper_ingot",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    "RCR",
+    "III"
+  ],
+  "result": {
+    "id": "nerocompanion:charging_pad",
+    "count": 1
+  }
+}

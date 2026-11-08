@@ -1,22 +1,27 @@
 # NeroQuests integration
 
 NeroCompanion works with or without **NeroQuests**. When NeroQuests is installed, the quest book gains a
-**Companion Log** chapter with six quests that walk you through deploying, upgrading and growing a squad:
+**Companion Log** chapter with 14 quests that follow what you actually do:
 
 | Quest | What to do |
 | --- | --- |
-| Blueprint | Craft your first companion item (a Helper Drone). |
-| First Deploy | Deploy a companion from its item so it binds to you. |
+| Blueprint | Craft your first companion Capsule (a Helper Drone is the simplest). |
+| First Deploy | Deploy a companion from its Capsule so it binds to you. |
 | First Chip | Insert an upgrade chip into one of your companions. |
-| Pet Adopted | Adopt a pet alien. |
+| Pet Adopted | Hatch a Scrapling from a Scrap Egg, or tame a pet creature (NeroCreatures). |
 | Full Squad | Have as many companions active at once as the server allows. |
-| Companion Keeper | Finish the four above. Rewards the **Aurora** cosmetic skin. |
+| Companion Keeper | Finish the four above. Rewards the **Aurora** skin for every companion type. |
+| Topped Up | Charge a companion on a Charging Pad, in a Companion Bay or with the Hand Crank Charger. |
+| Best Friends | Reach bond level 3 with one companion. |
+| First Dig | Mark an area with the Remote and let a Mining Bot dig it out. |
+| Special Delivery | Bind a container and let a carrier deliver its cargo there. |
+| Good as New | Let a Repair Bot mend a worn tool or piece of gear. |
+| On Guard | Let a guarding Combat Bot see off a hostile mob. |
+| It Hatched! | Incubate a Scrap Egg until a Scrapling hatches. |
+| Found Again | Reclaim a lost companion. |
 
-> **Status:** companions are not built yet, so these quests are visible but cannot be completed. They come
-> alive as the companion items, upgrade chips and pet aliens land; the Aurora skin ships with the skin picker.
-
-Without NeroQuests nothing changes: the quest files stay dormant and NeroCompanion never needs NeroQuests to
-run.
+Each quest is credited to the companion's owner when it happens, even if they are offline. Without NeroQuests
+nothing changes: the quest files stay dormant and NeroCompanion never needs NeroQuests to run.
 
 ## Privacy
 
@@ -27,4 +32,4 @@ because a companion count is about one player.
 ## See also
 
 - [Home](Home.md)
-- [NeroEconomy integration](NeroEconomy-Integration.md)
+- [Skins & Hats](Skins-and-Hats.md)

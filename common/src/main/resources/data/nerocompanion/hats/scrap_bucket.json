@@ -1,0 +1,12 @@
+{
+  "types": [
+    "nerocompanion:scrapling",
+    "nerocompanion:mining_bot"
+  ],
+  "texture": "nerocompanion:entity/hat/scrap_bucket",
+  "glow": null,
+  "unlock": {
+    "rule": "item",
+    "item": "nerocompanion:scrap_shell"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "types": [
+    "nerocompanion:personal_drone",
+    "nerocompanion:mining_bot",
+    "nerocompanion:carry_bot",
+    "nerocompanion:repair_bot",
+    "nerocompanion:combat_bot",
+    "nerocompanion:scrapling"
+  ],
+  "texture": "nerocompanion:entity/hat/sun_visor",
+  "glow": null,
+  "unlock": {
+    "rule": "item",
+    "item": "nerocompanion:hat_sun_visor"
+  }
+}

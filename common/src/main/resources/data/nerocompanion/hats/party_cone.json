@@ -1,0 +1,11 @@
+{
+  "types": [
+    "*"
+  ],
+  "texture": "nerocompanion:entity/hat/party_cone",
+  "glow": null,
+  "unlock": {
+    "rule": "season",
+    "season": "festive"
+  }
+}

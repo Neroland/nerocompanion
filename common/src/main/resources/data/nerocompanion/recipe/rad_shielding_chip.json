@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocompanion:blank_chip",
+    "minecraft:obsidian"
+  ],
+  "result": {
+    "id": "nerocompanion:rad_shielding_chip",
+    "count": 1
+  }
+}

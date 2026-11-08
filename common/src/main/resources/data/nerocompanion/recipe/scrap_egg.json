@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "N": "minecraft:iron_nugget",
+    "C": "minecraft:copper_ingot",
+    "B": "nerocompanion:blank_chip"
+  },
+  "pattern": [
+    "NCN",
+    "CBC",
+    "NCN"
+  ],
+  "result": {
+    "id": "nerocompanion:scrap_egg",
+    "count": 1
+  }
+}

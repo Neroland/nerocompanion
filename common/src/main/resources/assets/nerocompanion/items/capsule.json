@@ -1,0 +1,61 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "nerocompanion:capsule_type",
+    "cases": [
+      {
+        "when": "personal_drone",
+        "model": {
+          "type": "minecraft:model",
+          "model": "nerocompanion:item/capsule_personal_drone"
+        }
+      },
+      {
+        "when": "scout_drone",
+        "model": {
+          "type": "minecraft:model",
+          "model": "nerocompanion:item/capsule_scout_drone"
+        }
+      },
+      {
+        "when": "mining_bot",
+        "model": {
+          "type": "minecraft:model",
+          "model": "nerocompanion:item/capsule_mining_bot"
+        }
+      },
+      {
+        "when": "carry_bot",
+        "model": {
+          "type": "minecraft:model",
+          "model": "nerocompanion:item/capsule_carry_bot"
+        }
+      },
+      {
+        "when": "repair_bot",
+        "model": {
+          "type": "minecraft:model",
+          "model": "nerocompanion:item/capsule_repair_bot"
+        }
+      },
+      {
+        "when": "combat_bot",
+        "model": {
+          "type": "minecraft:model",
+          "model": "nerocompanion:item/capsule_combat_bot"
+        }
+      },
+      {
+        "when": "scrapling",
+        "model": {
+          "type": "minecraft:model",
+          "model": "nerocompanion:item/capsule_scrapling"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "nerocompanion:item/capsule"
+    }
+  }
+}

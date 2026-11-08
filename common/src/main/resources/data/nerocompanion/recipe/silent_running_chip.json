@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocompanion:blank_chip",
+    "minecraft:white_wool"
+  ],
+  "result": {
+    "id": "nerocompanion:silent_running_chip",
+    "count": 1
+  }
+}

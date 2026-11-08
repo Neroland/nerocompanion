@@ -1,0 +1,279 @@
+{
+  "bond.levelup": {
+    "subtitle": "subtitles.nerocompanion.bond.levelup",
+    "sounds": [
+      {
+        "name": "nerocompanion:bond/levelup",
+        "stream": false
+      }
+    ]
+  },
+  "bot.servo": {
+    "subtitle": "subtitles.nerocompanion.bot.servo",
+    "sounds": [
+      {
+        "name": "nerocompanion:bot/servo",
+        "stream": false
+      }
+    ]
+  },
+  "bot.step": {
+    "subtitle": "subtitles.nerocompanion.bot.step",
+    "sounds": [
+      {
+        "name": "nerocompanion:bot/step",
+        "stream": false
+      }
+    ]
+  },
+  "charge.full": {
+    "subtitle": "subtitles.nerocompanion.charge.full",
+    "sounds": [
+      {
+        "name": "nerocompanion:charge/full",
+        "stream": false
+      }
+    ]
+  },
+  "charge.hum": {
+    "subtitle": "subtitles.nerocompanion.charge.hum",
+    "sounds": [
+      {
+        "name": "nerocompanion:charge/hum",
+        "stream": false,
+        "volume": 0.3
+      }
+    ]
+  },
+  "charge.spark": {
+    "subtitle": "subtitles.nerocompanion.charge.spark",
+    "sounds": [
+      {
+        "name": "nerocompanion:charge/spark",
+        "stream": false
+      }
+    ]
+  },
+  "chirp.curious": {
+    "subtitle": "subtitles.nerocompanion.chirp.curious",
+    "sounds": [
+      {
+        "name": "nerocompanion:chirp/curious",
+        "stream": false
+      }
+    ]
+  },
+  "chirp.grumpy": {
+    "subtitle": "subtitles.nerocompanion.chirp.grumpy",
+    "sounds": [
+      {
+        "name": "nerocompanion:chirp/grumpy",
+        "stream": false
+      }
+    ]
+  },
+  "chirp.loyal": {
+    "subtitle": "subtitles.nerocompanion.chirp.loyal",
+    "sounds": [
+      {
+        "name": "nerocompanion:chirp/loyal",
+        "stream": false
+      }
+    ]
+  },
+  "chirp.showoff": {
+    "subtitle": "subtitles.nerocompanion.chirp.showoff",
+    "sounds": [
+      {
+        "name": "nerocompanion:chirp/showoff",
+        "stream": false
+      }
+    ]
+  },
+  "chirp.shy": {
+    "subtitle": "subtitles.nerocompanion.chirp.shy",
+    "sounds": [
+      {
+        "name": "nerocompanion:chirp/shy",
+        "stream": false,
+        "volume": 0.3
+      }
+    ]
+  },
+  "chirp.sleepy": {
+    "subtitle": "subtitles.nerocompanion.chirp.sleepy",
+    "sounds": [
+      {
+        "name": "nerocompanion:chirp/sleepy",
+        "stream": false
+      }
+    ]
+  },
+  "combat.lunge": {
+    "subtitle": "subtitles.nerocompanion.combat.lunge",
+    "sounds": [
+      {
+        "name": "nerocompanion:combat/lunge",
+        "stream": false
+      }
+    ]
+  },
+  "crank.turn": {
+    "subtitle": "subtitles.nerocompanion.crank.turn",
+    "sounds": [
+      {
+        "name": "nerocompanion:crank/turn",
+        "stream": false
+      }
+    ]
+  },
+  "danger_alert": {
+    "subtitle": "subtitles.nerocompanion.danger_alert",
+    "sounds": [
+      {
+        "name": "nerocompanion:danger_alert",
+        "stream": false,
+        "volume": 0.9
+      }
+    ]
+  },
+  "deploy": {
+    "subtitle": "subtitles.nerocompanion.deploy",
+    "sounds": [
+      {
+        "name": "nerocompanion:deploy",
+        "stream": false
+      }
+    ]
+  },
+  "drone.hover": {
+    "subtitle": "subtitles.nerocompanion.drone.hover",
+    "sounds": [
+      {
+        "name": "nerocompanion:drone/hover",
+        "stream": false,
+        "volume": 0.25,
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "fetch.catch": {
+    "subtitle": "subtitles.nerocompanion.fetch.catch",
+    "sounds": [
+      {
+        "name": "nerocompanion:fetch/catch",
+        "stream": false
+      }
+    ]
+  },
+  "low_battery": {
+    "subtitle": "subtitles.nerocompanion.low_battery",
+    "sounds": [
+      {
+        "name": "nerocompanion:low_battery",
+        "stream": false,
+        "volume": 0.8
+      }
+    ]
+  },
+  "mine.drill": {
+    "subtitle": "subtitles.nerocompanion.mine.drill",
+    "sounds": [
+      {
+        "name": "nerocompanion:mine/drill",
+        "stream": false,
+        "volume": 0.35
+      }
+    ]
+  },
+  "pet.purr": {
+    "subtitle": "subtitles.nerocompanion.pet.purr",
+    "sounds": [
+      {
+        "name": "nerocompanion:pet/purr",
+        "stream": false
+      }
+    ]
+  },
+  "recall": {
+    "subtitle": "subtitles.nerocompanion.recall",
+    "sounds": [
+      {
+        "name": "nerocompanion:recall",
+        "stream": false
+      }
+    ]
+  },
+  "repair.weld": {
+    "subtitle": "subtitles.nerocompanion.repair.weld",
+    "sounds": [
+      {
+        "name": "nerocompanion:repair/weld",
+        "stream": false
+      }
+    ]
+  },
+  "salvage.chime": {
+    "subtitle": "subtitles.nerocompanion.salvage.chime",
+    "sounds": [
+      {
+        "name": "nerocompanion:salvage/chime",
+        "stream": false
+      }
+    ]
+  },
+  "salvage.return": {
+    "subtitle": "subtitles.nerocompanion.salvage.return",
+    "sounds": [
+      {
+        "name": "nerocompanion:salvage/return",
+        "stream": false
+      }
+    ]
+  },
+  "scout.ping": {
+    "subtitle": "subtitles.nerocompanion.scout.ping",
+    "sounds": [
+      {
+        "name": "nerocompanion:scout/ping",
+        "stream": false
+      }
+    ]
+  },
+  "scrapling.hatch": {
+    "subtitle": "subtitles.nerocompanion.scrapling.hatch",
+    "sounds": [
+      {
+        "name": "nerocompanion:scrapling/hatch",
+        "stream": false
+      }
+    ]
+  },
+  "sleep.powerdown": {
+    "subtitle": "subtitles.nerocompanion.sleep.powerdown",
+    "sounds": [
+      {
+        "name": "nerocompanion:sleep/powerdown",
+        "stream": false
+      }
+    ]
+  },
+  "ui.click": {
+    "subtitle": "subtitles.nerocompanion.ui.click",
+    "sounds": [
+      {
+        "name": "nerocompanion:ui/click",
+        "stream": false
+      }
+    ]
+  },
+  "wake": {
+    "subtitle": "subtitles.nerocompanion.wake",
+    "sounds": [
+      {
+        "name": "nerocompanion:wake",
+        "stream": false
+      }
+    ]
+  }
+}

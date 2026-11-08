@@ -1,0 +1,16 @@
+{
+  "pairs": [
+    [
+      "nerocompanion:lamp",
+      "nerocompanion:silent_running"
+    ],
+    [
+      "nerocompanion:chatterbox",
+      "nerocompanion:hush"
+    ],
+    [
+      "nerocompanion:speed",
+      "nerocompanion:armour"
+    ]
+  ]
+}

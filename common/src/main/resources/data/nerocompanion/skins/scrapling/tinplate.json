@@ -1,0 +1,11 @@
+{
+  "types": [
+    "nerocompanion:scrapling"
+  ],
+  "texture": "nerocompanion:entity/scrapling/tinplate",
+  "glow": "nerocompanion:entity/scrapling/tinplate_glow",
+  "unlock": {
+    "rule": "advancement",
+    "id": "nerocompanion:pet_adopted"
+  }
+}

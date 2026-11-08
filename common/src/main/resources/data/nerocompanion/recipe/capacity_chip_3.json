@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocompanion:capacity_chip_2",
+    "minecraft:redstone",
+    "minecraft:diamond"
+  ],
+  "result": {
+    "id": "nerocompanion:capacity_chip_3",
+    "count": 1
+  }
+}

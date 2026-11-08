@@ -1,0 +1,12 @@
+{
+  "types": [
+    "nerocompanion:repair_bot"
+  ],
+  "texture": "nerocompanion:entity/repair_bot/workshop",
+  "glow": "nerocompanion:entity/repair_bot/workshop_glow",
+  "unlock": {
+    "rule": "bond",
+    "level": 2
+  },
+  "eye_color": "#7FD7FF"
+}

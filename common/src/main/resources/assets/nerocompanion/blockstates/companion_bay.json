@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "nerocompanion:block/companion_bay"
+    },
+    "facing=east": {
+      "model": "nerocompanion:block/companion_bay",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "nerocompanion:block/companion_bay",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "nerocompanion:block/companion_bay",
+      "y": 270
+    }
+  }
+}

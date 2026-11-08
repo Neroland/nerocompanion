@@ -1,0 +1,12 @@
+{
+  "title": "quest.nerocompanion.companion_log.first_repair.title",
+  "description": "quest.nerocompanion.companion_log.first_repair.desc",
+  "icon": "minecraft:anvil",
+  "prerequisites": ["nerocompanion:companion_log/first_deploy"],
+  "objectives": [
+    { "type": "neroquests:gate_open", "gate": "nerocompanion:first_repair" }
+  ],
+  "rewards": [
+    { "type": "neroquests:xp", "amount": 100 }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "types": [
+    "nerocompanion:personal_drone"
+  ],
+  "texture": "nerocompanion:entity/personal_drone/default",
+  "glow": "nerocompanion:entity/personal_drone/default_glow",
+  "unlock": {
+    "rule": "default"
+  }
+}

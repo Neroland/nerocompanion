@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocompanion:blank_chip",
+    "minecraft:note_block"
+  ],
+  "result": {
+    "id": "nerocompanion:chatterbox_chip",
+    "count": 1
+  }
+}

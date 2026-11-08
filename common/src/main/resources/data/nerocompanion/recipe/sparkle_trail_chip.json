@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocompanion:blank_chip",
+    "minecraft:glow_ink_sac"
+  ],
+  "result": {
+    "id": "nerocompanion:sparkle_trail_chip",
+    "count": 1
+  }
+}

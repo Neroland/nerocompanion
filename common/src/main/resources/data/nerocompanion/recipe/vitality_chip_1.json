@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocompanion:blank_chip",
+    "minecraft:glistering_melon_slice"
+  ],
+  "result": {
+    "id": "nerocompanion:vitality_chip_1",
+    "count": 1
+  }
+}

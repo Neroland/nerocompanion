@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:iron_ingot",
+    "minecraft:glowstone_dust",
+    "minecraft:leather"
+  ],
+  "result": {
+    "id": "nerocompanion:hat_headlamp",
+    "count": 1
+  }
+}

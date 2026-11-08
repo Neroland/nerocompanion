@@ -1,0 +1,10 @@
+{
+  "types": [
+    "nerocompanion:carry_bot"
+  ],
+  "texture": "nerocompanion:entity/carry_bot/default",
+  "glow": "nerocompanion:entity/carry_bot/default_glow",
+  "unlock": {
+    "rule": "default"
+  }
+}

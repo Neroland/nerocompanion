@@ -1,0 +1,10 @@
+{
+  "types": [
+    "nerocompanion:repair_bot"
+  ],
+  "texture": "nerocompanion:entity/repair_bot/default",
+  "glow": "nerocompanion:entity/repair_bot/default_glow",
+  "unlock": {
+    "rule": "default"
+  }
+}

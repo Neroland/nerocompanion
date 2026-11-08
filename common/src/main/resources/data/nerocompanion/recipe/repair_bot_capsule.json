@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:glass",
+    "nerocompanion:blank_chip",
+    "minecraft:iron_ingot",
+    "minecraft:iron_ingot",
+    "minecraft:redstone",
+    "minecraft:grindstone"
+  ],
+  "result": {
+    "id": "nerocompanion:capsule",
+    "count": 1,
+    "components": {
+      "nerocompanion:blueprint": "nerocompanion:repair_bot"
+    }
+  }
+}

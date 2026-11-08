@@ -1,0 +1,18 @@
+{
+  "types": [
+    "*"
+  ],
+  "texture": "nerocompanion:entity/{type}/aurora",
+  "glow": "nerocompanion:entity/{type}/aurora_glow",
+  "unlock": {
+    "rule": "hook",
+    "hook": "nerocompanion:hook/skin/aurora"
+  },
+  "eye_color": "#7CFFB2",
+  "animated_glow": {
+    "frames": 8,
+    "frametime": 4,
+    "interpolate": true,
+    "frame_texture": "nerocompanion:entity/{type}/aurora_glow_{frame}"
+  }
+}

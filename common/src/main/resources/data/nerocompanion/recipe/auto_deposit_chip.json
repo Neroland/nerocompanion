@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocompanion:blank_chip",
+    "minecraft:hopper"
+  ],
+  "result": {
+    "id": "nerocompanion:auto_deposit_chip",
+    "count": 1
+  }
+}

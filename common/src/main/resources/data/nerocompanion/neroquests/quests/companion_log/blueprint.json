@@ -3,7 +3,7 @@
   "description": "quest.nerocompanion.companion_log.blueprint.desc",
   "icon": "minecraft:paper",
   "objectives": [
-    { "type": "neroquests:craft_item", "item": "nerocompanion:helper_drone" }
+    { "type": "neroquests:craft_item", "item": "nerocompanion:capsule" }
   ],
   "rewards": [
     { "type": "neroquests:xp", "amount": 50 }

@@ -33,7 +33,8 @@ Reports are de-duplicated and hard-capped at 10 events per game session.
 
 - **No IP address** is stored (`sendDefaultPii` is disabled; Sentry discards the sender IP).
 - **No username, player UUID, or machine/host name.**
-- **No world data, chat, coordinates, inventories, or gameplay analytics** of any kind.
+- **No world data, chat, coordinates, dimensions, companion names, inventories, or gameplay analytics** of any kind.
+  Before a report is sent, player ids, names, positions and world names are masked in every message it carries.
 - **No advertising or tracking identifiers** — there is no persistent ID linking reports from
   the same player or machine.
 - Errors caused by other mods or by Minecraft itself are filtered out and never sent.
@@ -52,12 +53,104 @@ nothing is ever sent before the config — and therefore your choice — has bee
 
 ## Player data
 
-NeroCompanion does not currently store any player data of its own — no player UUIDs, names, positions or
-gameplay records are written to the world save or anywhere else. The quest milestones and skin unlocks it
-records (`nerocompanion:first_deploy`, `first_chip`, `pet_adopted`, `full_squad`, `hook/skin/<id>`) are
-player-scope progression gates held in Neroland Core's store, which Core's PRIVACY.md covers, including
-export and erasure. Neroland Core (a required dependency) documents its own data handling in its own
-PRIVACY.md.
+NeroCompanion keeps a small amount of data about players **on the server only**. None of it is ever sent in error
+reports, and none of it leaves the server unless the server's operator hands you your own export file.
+
+### What is stored, and why
+
+| What | Where | Why |
+|---|---|---|
+| **Your player id on each companion and Companion Bay** | the world save (like a tamed animal) | so only you can command, recall, park and reclaim your companions |
+| **Recovery ledger** - for each of your companions: whether it is out, in a Capsule, parked or lost; its last-known dimension and block position; the Bay it is parked in; and a copy of the companion (type, the name you gave it, chips, bond, looks, its home and the container it is bound to) | `nerocompanion/recovery_ledger` | so a lost or killed companion can be reclaimed, and so a companion can never exist twice |
+| **Capsule vault** - the home position and job settings of each companion you put in a Capsule | `nerocompanion/capsule_vault` | so a Capsule never carries your player id or a position, but your companion still comes back to the right home |
+| **Salvage hold** - the items your companions picked up after you died | `nerocompanion/salvage_hold` | so you get your things back |
+| **Incubators** - who placed each incubating Scrap Egg, and where | `nerocompanion/incubators` | so the hatchling belongs to you |
+| **Privacy settings and last seen** - your three opt-outs below, and when you were last on the server | `nerocompanion/privacy` | to respect your choices, and to delete your data when you stop playing |
+| **NeroCreatures pets** (only with NeroCreatures installed) - which of your pets your companions look after | memory only, gone on restart | companion-pet interactions |
+
+Companion **names** are written by players. They are filtered by the server's chat filter, capped at 24 characters
+and shown to other players only as a nameplate (and you can turn that off). Your companion milestones and skin
+unlocks are progression flags in Neroland Core's store, covered by Core's own PRIVACY.md. NeroLink, if installed,
+keeps its own data (device tokens and notification settings) and documents it itself.
+
+Alerts about your companions (low battery, lost, back, salvage held, bond level 2-4) name the companion's type and
+the name you gave it, nothing else: never a position, a dimension, an id or another player's name. They are stored
+by Neroland Core (for NeroLink to show), which deletes them when you are erased. The NeroLink push notification sent
+with each one carries the same text (for salvage also the minutes left) and a link that names only the companion;
+NeroCompanion keeps a one-minute, memory-only note of what it last sent you so it does not repeat itself. The app
+only ever sees your own companions, and never a coordinate.
+
+With `/nscomp privacy push off`, NeroCompanion sends nothing at all about your companions to NeroLink: no push and no
+alert, so the app's alert list shows none from NeroCompanion (the companion list still shows how they are). With push
+on (the default), the *Companions* category in the app, which is off until you turn it on, still decides whether any
+notification reaches your phone.
+
+Items your companions hold for you (salvage, cargo) are stored whole, like any inventory, so an item that names
+another player (a player head, a signed book) keeps that name. The server's chat filter, if the operator set one up,
+checks each companion name when it is given.
+
+### How long it is kept
+
+- Everything above is **deleted when you have not been on the server for `privacy.ledgerRetentionDays`** (default 180
+  days), in every store at once. Your companions that are out in a loaded part of the world at that moment, and those
+  parked in loaded Bays, become **ownerless Capsules** (name, bond and home cleared), so nothing re-registers you.
+  Companions in parts of the world that are not loaded keep your player id in the world save; if that area loads
+  later, the companion is registered to you again and the clock starts over.
+- Neroland Core's own retention (`dataRetentionDays` in Core's config, or an operator's
+  `/neroland data purge-inactive`) also removes your NeroCompanion data, on Core's clock, the same way an erasure does.
+- While you play, old rows go on their own: a ledger entry for a companion in a Capsule or lost, a Capsule's stored
+  home and an unclaimed salvage hold are deleted after `privacy.ledgerRetentionDays` without use. A deployed companion
+  not seen for `lostAfterOfflineDays` (default 30) counts as lost and its last-known position is dropped.
+- Backup copies of each store are refreshed straight after a deletion, so deleted data does not live on in a backup.
+- An export file is deleted after 7 days. Until then it sits in the world folder, so it is also in any world backup
+  the server operator makes.
+
+### Your choices
+
+| Command (any player) | What it does |
+|---|---|
+| `/nscomp privacy` | shows your settings |
+| `/nscomp privacy names off` | your companions' names are hidden from other players: no nameplate, and the name is never sent to their game |
+| `/nscomp privacy chatter off` | your companions stop chattering, and you no longer see other companions' chatter |
+| `/nscomp privacy push off` | no push notifications and no app alerts about your companions (when NeroLink is installed); with it on, the app's *Companions* category is still the master switch |
+| `/nscomp export` | writes everything NeroCompanion holds about you to `nerocompanion/exports/<your player id>.json` in the world folder; ask the server operator for the file. It holds only your own data, only you are told where it is, and it is not sent anywhere. One request every few minutes (`privacy.exportCooldownSeconds`) |
+| `/neroland data eraseme` | Neroland Core's shared erasure: removes your data from every Neroland mod at once (operators can do the same for a player with `/neroland data erase`) |
+
+Use `on` instead of `off` to turn a setting back on. A server can also hide every companion name from everyone else
+with `privacy.allowNames = false`.
+
+### What erasure does
+
+One erasure request removes everything listed above: the ledger, Capsule vault, salvage hold, incubator entries,
+your privacy settings, your export file, and the backup copies of each store. Your companions that are out in a
+loaded part of the world, and those parked in loaded Bays, become **ownerless Capsules**: their name is cleared, their
+bond is reset and their home and job settings are dropped; chips, looks and charge stay, because they belong to the
+item. Companions and Bays in parts of the world that are not loaded do the same the next time they load. The ledger
+keeps only a random companion id and the time of the erasure (no player id, no position) so it can recognise those
+companions later; that marker is deleted after `privacy.ledgerRetentionDays`.
+
+A Capsule of one of your companions that someone else is holding carries no player id or position, only the
+companion's name. When that Capsule turns up in an online player's inventory or ender chest, or when anyone deploys
+it, the name is cleared too.
+
+### What is left over (and why)
+
+- A companion in a part of the world that never loads again keeps your player id, its name and its home in the
+  world save until that area loads. If it loads only after the erasure marker was deleted, it is treated as yours
+  again.
+- A Capsule lying in a chest, on the ground or in an offline player's inventory keeps the companion's name until it
+  is picked up by an online player, deployed or renamed. The server cannot search every item in the world.
+- Your own player file (your inventory, including any Capsules you carry) belongs to Minecraft, not to this mod.
+
+### Settings for server operators
+
+| Setting | Default | What it does |
+|---|---|---|
+| `privacy.ledgerRetentionDays` | 180 | days of inactivity after which a player's companion data is deleted; also the limit for single unused rows |
+| `privacy.allowNames` | true | `false` hides every companion name from every other player |
+| `privacy.exportCooldownSeconds` | 300 | seconds between two exports by one player |
+| `lostAfterOfflineDays` | 30 | a companion unseen this long counts as lost and its last-known position is dropped |
+| `telemetryEnabled` | true | anonymous error reports (see above); this one is per game, not per server |
 
 ## Legal basis and your rights (GDPR / POPIA)
 
@@ -66,7 +159,11 @@ s11(1)(f)): keeping the mod functional and crash-free, using the minimum data ne
 are engineered to contain no directly identifying personal information, are stored in the EU,
 and are retained only for Sentry's standard retention period before automatic deletion.
 
-To exercise any data-subject right (access, deletion, objection), contact
+Player data on a server is processed by that server's operator to provide the game features above (POPIA s11(1)(b)
+and (f); GDPR Art. 6(1)(b) and (f)). Use `/nscomp export` for access and `/neroland data eraseme` for deletion on the
+server you play on, or ask its operator.
+
+To exercise any data-subject right about error reports (access, deletion, objection), contact
 **[info@neroland.co.za](mailto:info@neroland.co.za)** — for a crash report, include the
 approximate date/time of the crash so the matching event can be located and removed. Sentry
 acts as a data processor for error reports; see
@@ -75,7 +172,7 @@ the [Sentry privacy policy](https://sentry.io/privacy/) and
 
 ## Changes to this policy
 
-When a future version of NeroCompanion starts storing any player-attributable data, this page will be
+When a future version of NeroCompanion starts storing any new player-attributable data, this page will be
 updated **before** that version is released, with the change called out in the changelog, and
 that data will be registered with Neroland Core's shared per-player data-erasure hook so a single
 erasure request purges it alongside every other Neroland mod. Likewise, if a future version ever

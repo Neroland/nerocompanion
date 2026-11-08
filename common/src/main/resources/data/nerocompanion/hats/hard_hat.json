@@ -1,0 +1,11 @@
+{
+  "types": [
+    "*"
+  ],
+  "texture": "nerocompanion:entity/hat/hard_hat",
+  "glow": null,
+  "unlock": {
+    "rule": "item",
+    "item": "nerocompanion:hat_hard_hat"
+  }
+}

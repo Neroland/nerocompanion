@@ -83,6 +83,29 @@ public final class NeroCompanionTelemetry {
     private static final Pattern USER_PATH =
             Pattern.compile("(?i)(?:[A-Z]:)?[/\\\\](?:Users|home)[/\\\\][^/\\\\\\s:;,'\"]+");
 
+    /** Any UUID (player, companion, entity). */
+    private static final Pattern UUID_TEXT = Pattern.compile(
+            "(?i)\\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\b");
+    /** Vanilla {@code Entity.toString()}: {@code ServerPlayer['Steve'/12, ...]}. */
+    private static final Pattern QUOTED_ENTITY_NAME = Pattern.compile("\\['[^']*'");
+    /** Record / toString fields that hold a player-written name or an owner. */
+    private static final Pattern NAMED_FIELD = Pattern.compile(
+            "(?i)\\b(name|names|owner|ownerId|owner_id|player|playerName|profile)=(?:Optional\\[[^\\]]*\\]|[^,\\]\\)}\\s]+)");
+    /** {@code BlockPos{x=1, y=2, z=3}} and {@code MutableBlockPos{...}}. */
+    private static final Pattern BLOCK_POS = Pattern.compile("(?:Mutable)?BlockPos\\{[^}]*\\}");
+    /** {@code ServerLevel[world]}, {@code ResourceKey[minecraft:dimension / minecraft:overworld]}, {@code l='...'}. */
+    private static final Pattern LEVEL_KEY = Pattern.compile(
+            "ServerLevel\\[[^\\]]*\\]|ClientLevel\\[[^\\]]*\\]|ResourceKey\\[[^\\]]*\\]|l='[^']*'");
+    /** {@code dimension=minecraft:overworld}, {@code dim=...}, {@code level=...}. */
+    private static final Pattern DIMENSION_FIELD = Pattern.compile(
+            "(?i)\\b(dimension|dim|level|world)=[^,\\]\\)}\\s]+");
+    /** {@code x=1.50}, {@code y: 64}, {@code pos=...}. */
+    private static final Pattern COORD_FIELD = Pattern.compile(
+            "(?i)\\b(x|y|z|pos|position|at|home|lastKnown)\\s*[=:]\\s*-?\\d+(?:\\.\\d+)?(?:[eE]-?\\d+)?");
+    /** {@code (1.5, 64.0, -3.25)} - a Vec3 or a position triple. */
+    private static final Pattern COORD_TRIPLE = Pattern.compile(
+            "\\(\\s*-?\\d+(?:\\.\\d+)?\\s*,\\s*-?\\d+(?:\\.\\d+)?\\s*,\\s*-?\\d+(?:\\.\\d+)?\\s*\\)");
+
     private static volatile boolean active;
     private static final AtomicInteger eventsSent = new AtomicInteger();
     private static final Set<String> seenFingerprints = ConcurrentHashMap.newKeySet();
@@ -323,11 +346,11 @@ public final class NeroCompanionTelemetry {
         if (!active || t == null || !touchesNeroCompanion(t)) {
             return;
         }
-        Sentry.withScope(scope -> {
+        // Sentry 8.x: tags set inside withScope never reach the event; the ScopeCallback overload applies them.
+        Sentry.captureException(t, scope -> {
             scope.setTag("handled", "true");
             scope.setTag("source", source);
             scope.setExtra("operation", operation);
-            Sentry.captureException(t);
         });
     }
 
@@ -384,8 +407,23 @@ public final class NeroCompanionTelemetry {
             }
         }
         Message message = event.getMessage();
-        if (message != null && message.getFormatted() != null) {
-            message.setFormatted(scrub(message.getFormatted()));
+        if (message != null) {
+            if (message.getFormatted() != null) {
+                message.setFormatted(scrub(message.getFormatted()));
+            }
+            if (message.getMessage() != null) {
+                message.setMessage(scrub(message.getMessage()));
+            }
+            // Log parameters are raw values (a UUID, a name, a position): never sent.
+            message.setParams(null);
+        }
+        List<Breadcrumb> crumbs = event.getBreadcrumbs();
+        if (crumbs != null) {
+            for (Breadcrumb crumb : crumbs) {
+                if (crumb.getMessage() != null) {
+                    crumb.setMessage(scrub(crumb.getMessage()));
+                }
+            }
         }
         return event;
     }
@@ -443,8 +481,22 @@ public final class NeroCompanionTelemetry {
         return sb.toString();
     }
 
-    /** Replaces home-directory paths (which contain the OS account name) with a neutral marker. */
+    /**
+     * Replaces everything personal a message can carry with neutral markers: home-directory paths (the OS account
+     * name), UUIDs (players, companions), quoted entity names as vanilla prints them ({@code ['Steve'/12, ...]}),
+     * {@code name=}/{@code owner=} fields of records, block positions and coordinates in every shape vanilla and
+     * NeroCompanion print them, and level / dimension keys. Never null-safe on purpose: callers check first.
+     */
     static String scrub(String text) {
-        return USER_PATH.matcher(text).replaceAll("/~");
+        String out = USER_PATH.matcher(text).replaceAll("/~");
+        out = UUID_TEXT.matcher(out).replaceAll("<uuid>");
+        out = QUOTED_ENTITY_NAME.matcher(out).replaceAll("['<name>'");
+        out = NAMED_FIELD.matcher(out).replaceAll("$1=<redacted>");
+        out = BLOCK_POS.matcher(out).replaceAll("<pos>");
+        out = LEVEL_KEY.matcher(out).replaceAll("<level>");
+        out = DIMENSION_FIELD.matcher(out).replaceAll("$1=<level>");
+        out = COORD_FIELD.matcher(out).replaceAll("$1=<n>");
+        out = COORD_TRIPLE.matcher(out).replaceAll("(<pos>)");
+        return out;
     }
 }

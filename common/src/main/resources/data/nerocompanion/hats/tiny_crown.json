@@ -1,0 +1,11 @@
+{
+  "types": [
+    "*"
+  ],
+  "texture": "nerocompanion:entity/hat/tiny_crown",
+  "glow": null,
+  "unlock": {
+    "rule": "bond",
+    "level": 4
+  }
+}

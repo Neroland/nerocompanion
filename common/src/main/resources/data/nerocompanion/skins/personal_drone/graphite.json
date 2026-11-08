@@ -1,0 +1,12 @@
+{
+  "types": [
+    "nerocompanion:personal_drone"
+  ],
+  "texture": "nerocompanion:entity/personal_drone/graphite",
+  "glow": "nerocompanion:entity/personal_drone/graphite_glow",
+  "unlock": {
+    "rule": "bond",
+    "level": 2
+  },
+  "eye_color": "#FFE2B0"
+}

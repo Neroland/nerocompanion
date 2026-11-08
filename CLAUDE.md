@@ -2,16 +2,19 @@
 
 > Modrinth is temporarily being removed from the upload and is no longer being referenced. Avoid making references to modrinth.
 
-> This and `AGENTS.md` are kept identical; update both together.
+> `AGENTS.md` and `CLAUDE.md` are kept byte-identical; update both together.
 
 ## The mod
 
 - **NeroCompanion** — part of the Neroland sci-fi Minecraft mod ecosystem, built on **Neroland Core**.
-  This repository is currently a **barebones multiloader skeleton** (no gameplay content yet); add
-  shared content under `common/` and wire it through each loader entry point.
+  This repository holds the first content release: seven companion types (drones, bots, the Scrapling pet),
+  chips, chargers, recovery ledger, death salvage, bond/personality, skins and hats, quests, privacy controls and
+  the NeroLink link module. Player docs live in `wiki/`; `README.md` maps the source; `USING-CORE.md` and
+  `USING-NEROLINK.md` describe the Core and link contracts. Built and unit-tested on all 27 cells; in-game
+  runtime verification is still pending, and nothing is tagged.
 - Mod id: **`nerocompanion`** (matches the registry namespace + every loader manifest). Package root:
   `za.co.neroland.nerocompanion`. Author: **Neroland**.
-- Version: **0.5.1-alpha.1**.
+- Version: **0.6.0-beta.1** (untagged). Pushing `gradle.properties` to `main` publishes a release.
 - Targets **MC 1.21.1, 1.21.4, 1.21.5, 1.21.8, 1.21.10, 1.21.11, 26.1.2, 26.2 AND 26.3** on **NeoForge,
   MinecraftForge/Forge, and Fabric** → the **"27 cells"**. **Java 21** for 1.21.x, **Java 25** for 26.x.
   Mappings = official Mojang names (26.x ships de-obfuscated; 1.21.x Fabric is remapped). Source is written

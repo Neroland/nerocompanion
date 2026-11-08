@@ -1,0 +1,26 @@
+{
+  "entity": "nerocompanion:scout_drone",
+  "locomotion": "flying",
+  "small": false,
+  "max_health": 8.0,
+  "armor": 0.0,
+  "speed": 0.35,
+  "flying_speed": 0.6,
+  "attack_damage": 0.0,
+  "energy": {
+    "capacity": 20000,
+    "drain_idle_per_second": 10,
+    "drain_active_per_second": 50
+  },
+  "modes": ["follow", "stay", "scout", "sleep"],
+  "default_mode": "follow",
+  "chip_slots": 2,
+  "chip_categories": ["stat", "capability", "cosmetic"],
+  "cargo_slots": 0,
+  "goal_weights": {
+    "follow_distance": 4.0,
+    "teleport_distance": 20.0,
+    "wander_chance": 0.05
+  },
+  "work_goals": ["nerocompanion:scout_ahead", "nerocompanion:scout_danger_alert", "nerocompanion:drone_lamp"]
+}

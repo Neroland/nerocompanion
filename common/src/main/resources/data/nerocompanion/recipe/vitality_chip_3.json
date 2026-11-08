@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocompanion:vitality_chip_2",
+    "minecraft:glistering_melon_slice",
+    "minecraft:diamond"
+  ],
+  "result": {
+    "id": "nerocompanion:vitality_chip_3",
+    "count": 1
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "types": [
+    "nerocompanion:personal_drone"
+  ],
+  "texture": "nerocompanion:entity/personal_drone/snowdrift",
+  "glow": "nerocompanion:entity/personal_drone/snowdrift_glow",
+  "unlock": {
+    "rule": "season",
+    "season": "winter"
+  },
+  "eye_color": "#7FD7FF"
+}

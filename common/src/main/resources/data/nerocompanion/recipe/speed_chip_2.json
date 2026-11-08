@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocompanion:speed_chip_1",
+    "minecraft:sugar",
+    "minecraft:gold_ingot"
+  ],
+  "result": {
+    "id": "nerocompanion:speed_chip_2",
+    "count": 1
+  }
+}

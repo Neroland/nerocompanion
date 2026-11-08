@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocompanion:blank_chip",
+    "minecraft:redstone"
+  ],
+  "result": {
+    "id": "nerocompanion:capacity_chip_1",
+    "count": 1
+  }
+}

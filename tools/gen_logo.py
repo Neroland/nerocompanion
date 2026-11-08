@@ -9,7 +9,7 @@ the pets/helper-robots mod, so the core-prism is orbited by friendly TEAL compan
 
 Outputs:
   art/logo/nerocompanion_logo.png       (1024x1024 master)
-  art/logo/nerocompanion_logo_400.png   (CurseForge/Modrinth-ready)
+  art/logo/nerocompanion_logo_400.png   (CurseForge-ready)
   common/src/main/resources/nerocompanion_logo.png  (256x256 in-game mods-list icon)
 """
 SEED = 79
@@ -180,20 +180,35 @@ def emblem_frame(base, cx, cy, rad):
     gl = Image.new("RGBA", (R, R), (0, 0, 0, 0)); gd = ImageDraw.Draw(gl)
     gd.ellipse([cx - ring, cy - ring, cx + ring, cy + ring], outline=ACCENT + (150,), width=SS * 2)
     base.alpha_composite(gl)
-    # orbiting companion bots
+    # orbiting companions: the three silhouettes the mod teaches - personal drone (205), mining bot (335), scrapling (75)
     nl = Image.new("RGBA", (R, R), (0, 0, 0, 0)); nd = ImageDraw.Draw(nl)
-    for t, col in ((205, NERO_ALLOY), (335, STARSTEEL), (75, ACCENT)):
+    for t, kind in ((205, "drone"), (335, "bot"), (75, "scrapling")):
         a = math.radians(t); nx, ny = cx + math.cos(a) * ring, cy + math.sin(a) * ring
         nd.line([(cx, cy), (nx, ny)], fill=ACCENT + (120,), width=SS)
         br = rad * 0.3
-        nd.rounded_rectangle([nx - br, ny - br * 0.85, nx + br, ny + br * 0.95],
-                             radius=int(br * 0.55), fill=STEEL_DK + (255,), outline=ACCENT + (235,), width=SS)
-        # eyes + antenna
-        for ex in (-0.38, 0.38):
-            nd.ellipse([nx + ex * br - br * 0.16, ny - br * 0.18, nx + ex * br + br * 0.16, ny + br * 0.14],
-                       fill=ACCENT_BRIGHT + (255,))
-        nd.line([(nx, ny - br * 0.85), (nx, ny - br * 1.3)], fill=ACCENT + (235,), width=SS)
-        nd.ellipse([nx - SS * 2, ny - br * 1.42, nx + SS * 2, ny - br * 1.18], fill=ACCENT_BRIGHT + (255,))
+        body = STEEL_DK + (255,); edge = ACCENT + (235,); eye = ACCENT_BRIGHT + (255,)
+        if kind == "drone":
+            # flat disc 2.0br x 0.9br with two fin stubs and two eye dots
+            nd.rounded_rectangle([nx - br * 1.35, ny - br * 0.05, nx - br * 0.9, ny + br * 0.25], radius=SS * 2, fill=body, outline=edge, width=SS)
+            nd.rounded_rectangle([nx + br * 0.9, ny - br * 0.05, nx + br * 1.35, ny + br * 0.25], radius=SS * 2, fill=body, outline=edge, width=SS)
+            nd.rounded_rectangle([nx - br, ny - br * 0.45, nx + br, ny + br * 0.45], radius=int(br * 0.4), fill=body, outline=edge, width=SS)
+            for ex in (-0.38, 0.38):
+                nd.ellipse([nx + ex * br - br * 0.16, ny - br * 0.2, nx + ex * br + br * 0.16, ny + br * 0.12], fill=eye)
+            nd.rectangle([nx - br * 0.12, ny - br * 0.6, nx + br * 0.12, ny - br * 0.45], fill=edge)
+        elif kind == "bot":
+            # square body on two tread bars, one eye bar, a short drill nub on the left
+            nd.rounded_rectangle([nx - br * 0.75, ny - br * 0.9, nx + br * 0.75, ny + br * 0.4], radius=int(br * 0.2), fill=body, outline=edge, width=SS)
+            nd.rounded_rectangle([nx - br * 0.95, ny + br * 0.45, nx + br * 0.95, ny + br * 0.85], radius=int(br * 0.2), fill=body, outline=edge, width=SS)
+            nd.rounded_rectangle([nx - br * 0.5, ny - br * 0.55, nx + br * 0.5, ny - br * 0.25], radius=SS * 2, fill=eye)
+            nd.polygon([(nx - br * 0.75, ny - br * 0.2), (nx - br * 1.25, ny), (nx - br * 0.75, ny + br * 0.2)], fill=body, outline=edge)
+        else:
+            # low oval 1.6br x 0.8br with four leg stubs and a curled tail line
+            for lx in (-0.55, -0.2, 0.2, 0.55):
+                nd.rectangle([nx + lx * br - br * 0.08, ny + br * 0.3, nx + lx * br + br * 0.08, ny + br * 0.6], fill=body, outline=edge, width=SS)
+            nd.ellipse([nx - br * 0.8, ny - br * 0.4, nx + br * 0.8, ny + br * 0.4], fill=body, outline=edge, width=SS)
+            nd.arc([nx + br * 0.55, ny - br * 1.05, nx + br * 1.25, ny - br * 0.1], start=120, end=400, fill=edge, width=SS * 2)
+            for ex in (-0.45, -0.1):
+                nd.ellipse([nx + ex * br - br * 0.12, ny - br * 0.2, nx + ex * br + br * 0.12, ny + br * 0.04], fill=eye)
     base.alpha_composite(nl)
     # bond heart spark, top
     hl = Image.new("RGBA", (R, R), (0, 0, 0, 0)); hd = ImageDraw.Draw(hl)

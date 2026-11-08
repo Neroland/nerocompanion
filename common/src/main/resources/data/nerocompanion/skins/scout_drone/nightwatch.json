@@ -1,0 +1,12 @@
+{
+  "types": [
+    "nerocompanion:scout_drone"
+  ],
+  "texture": "nerocompanion:entity/scout_drone/nightwatch",
+  "glow": "nerocompanion:entity/scout_drone/nightwatch_glow",
+  "unlock": {
+    "rule": "bond",
+    "level": 3
+  },
+  "eye_color": "#C8A8FF"
+}

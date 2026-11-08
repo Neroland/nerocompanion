@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocompanion:blank_chip",
+    "minecraft:book"
+  ],
+  "result": {
+    "id": "nerocompanion:emote_pack_chip",
+    "count": 1
+  }
+}

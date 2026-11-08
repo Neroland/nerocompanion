@@ -32,6 +32,18 @@ jobs:
         with:
           fetch-depth: 1
 
+      # Everything under wiki/ is published to the public GitHub wiki. Fail the sync rather than
+      # publish a reference to private planning material that lives outside this repository.
+      - name: Guard against private references in wiki/
+        run: |
+          set -euo pipefail
+          PATTERN='neroland-mc-ecosystem|BUILD-PROMPT|PLAN-0\.5\.0|AUDIT|SMOKE-TEST'
+          if grep -rnE "$PATTERN" wiki/; then
+            echo "::error::wiki/ references a private planning document or repository (pattern: $PATTERN). Remove the reference before publishing."
+            exit 1
+          fi
+          echo "wiki/ contains no private references."
+
       - name: Mirror wiki/ into the wiki repo and push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

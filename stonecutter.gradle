@@ -59,6 +59,65 @@ ext.legacyRenames = [
     [below: '26.1', from: /PayloadTypeRegistry\.clientboundPlay\(\)/, to: 'PayloadTypeRegistry.playS2C()'],
     [below: '26.1', from: /PayloadTypeRegistry\.serverboundPlay\(\)/, to: 'PayloadTypeRegistry.playC2S()'],
     [below: '26.1', from: /\bModList\.(getMods|isLoaded|getModContainerById)\(/, to: 'ModList.get().$1('],
+    // --- Entity renames (ported from the creatures mod, Stage 1) ---
+    // 26.1 renamed `new ChunkPos(BlockPos)` to the factory ChunkPos.containing(BlockPos), and
+    // ItemStack.getItemHolder() to typeHolder() (same arguments, same result).
+    [below: '26.1', from: /\bChunkPos\.containing\(/, to: 'new ChunkPos('],
+    [below: '26.1', from: /\.typeHolder\(\)/, to: '.getItemHolder()'],
+    // 1.21.11 moved projectile classes into sub-packages (hurtingprojectile, arrow); same classes before.
+    [below: '1.21.11', from: /\bnet\.minecraft\.world\.entity\.projectile\.(hurtingprojectile|arrow|throwableitemprojectile)\./, to: 'net.minecraft.world.entity.projectile.'],
+    // 1.21.5 renamed Entity.moveTo(x, y, z, yRot, xRot) -> snapTo(..) and Level.isNight() -> isDarkOutside().
+    [below: '1.21.5', from: /\.snapTo\(/, to: '.moveTo('],
+    [below: '1.21.5', from: /\.isDarkOutside\(\)/, to: '.isNight()'],
+    // 1.21.2 moved the level into these entity calls (EntityType.create, spawnAtLocation, doHurtTarget,
+    // hurt -> hurtServer). Before it the same calls take the arguments without the level, and
+    // EntityType.Builder.build takes the id as a string instead of the registry key.
+    [below: '1.21.2', from: /\.create\((\w+), EntitySpawnReason\.\w+\)/, to: '.create($1)'],
+    [below: '1.21.2', from: /\.spawnAtLocation\(\w+, /, to: '.spawnAtLocation('],
+    [below: '1.21.2', from: /\.doHurtTarget\(\w+, /, to: '.doHurtTarget('],
+    [below: '1.21.2', from: /\.hurtServer\(\w+, /, to: '.hurt('],
+    [below: '1.21.2', from: /\.build\(key\)\)/, to: '.build(key.location().toString()))'],
+    // 1.21.5 renamed ServerLevel.isNaturalSpawningAllowed(ChunkPos) -> canSpawnEntitiesInChunk(..).
+    [below: '1.21.5', from: /\.canSpawnEntitiesInChunk\(/, to: '.isNaturalSpawningAllowed('],
+    // 1.21.2: LevelHeightAccessor.getMinBuildHeight() -> getMinY(); InteractionResult.SUCCESS_SERVER is
+    // the plain SUCCESS before it; Item/Block Properties gained a mandatory .setId(key).
+    [below: '1.21.2', from: /\.getMinY\(\)/, to: '.getMinBuildHeight()'],
+    [below: '1.21.2', from: /\bInteractionResult\.SUCCESS_SERVER\b/, to: 'InteractionResult.SUCCESS'],
+    [below: '1.21.2', from: /\.setId\(key\)/, to: ''],
+    // 1.21.2 added Item.Properties.useBlockDescriptionPrefix(); before it a BlockItem already uses the block's name.
+    [below: '1.21.2', from: /\.useBlockDescriptionPrefix\(\)/, to: ''],
+    // --- Client (Stage 2 screens, HUD, block-entity renderers) ---
+    // 1.21.6 GUI pipelines: before it, blit took a RenderType factory; RenderPipelines arrived at 1.21.5.
+    [below: '1.21.6', from: /\bRenderPipelines\.GUI_TEXTURED\b/, to: 'net.minecraft.client.renderer.RenderType::guiTextured'],
+    [below: '1.21.5', from: /import net\.minecraft\.client\.renderer\.RenderPipelines;/, to: ''],
+    // 26.1 renamed GuiGraphics.renderItem(..) -> item(..) and drawCenteredString -> centeredText.
+    [below: '26.1', from: /\b(g|graphics)\.item\(/, to: '$1.renderItem('],
+    // 1.21.11 moved RenderType into renderer.rendertype and its factories into RenderTypes.
+    [below: '1.21.11', from: /import net\.minecraft\.client\.renderer\.rendertype\.RenderTypes;\r?\n/, to: ''],
+    [below: '1.21.11', from: /net\.minecraft\.client\.renderer\.rendertype\.RenderType\b/, to: 'net.minecraft.client.renderer.RenderType'],
+    [below: '1.21.11', from: /\bRenderTypes\.(entity\w*|lines\w*|debug\w*)\(/, to: 'RenderType.$1('],
+    // 26.1 moved CameraRenderState into renderer.state.level.
+    [below: '26.1', from: /net\.minecraft\.client\.renderer\.state\.level\.CameraRenderState/,
+            to: 'net.minecraft.client.renderer.state.CameraRenderState'],
+    // Before 1.21.9 block-entity renderers draw from one render(..) call; client/render/compat look-alikes run
+    // the renderers' extract + submit steps from it (see LegacyBlockEntityRenderer).
+    [below: '1.21.9', from: /import net\.minecraft\.client\.renderer\.(?:blockentity\.state\.|feature\.|state\.)?(SubmitNodeCollector|BlockEntityRenderState|ModelFeatureRenderer|CameraRenderState);/,
+            to: 'import za.co.neroland.nerocompanion.client.render.compat.$1;'],
+    [below: '1.21.9', from: /import net\.minecraft\.client\.renderer\.item\.ItemStackRenderState;/,
+            to: 'import za.co.neroland.nerocompanion.client.render.compat.ItemStackRenderState;'],
+    [below: '1.21.9', from: /implements(\s+)BlockEntityRenderer</,
+            to: 'implements$1za.co.neroland.nerocompanion.client.render.compat.LegacyBlockEntityRenderer<'],
+    [below: '1.21.9', from: /\bBlockEntityRenderer\.super\./,
+            to: 'za.co.neroland.nerocompanion.client.render.compat.LegacyBlockEntityRenderer.super.'],
+    // 1.21.9 added KeyEvent / MouseButtonEvent; client/input/compat has look-alikes for the older lines.
+    [below: '1.21.9', from: /\bnet\.minecraft\.client\.input\.(KeyEvent|MouseButtonEvent|MouseButtonInfo)\b/,
+            to: 'za.co.neroland.nerocompanion.client.input.compat.$1'],
+    // 1.21.2 renamed MobSpawnType -> EntitySpawnReason (SPAWN_EGG became SPAWN_ITEM_USE).
+    [below: '1.21.2', from: /\bEntitySpawnReason\.SPAWN_ITEM_USE\b/, to: 'MobSpawnType.SPAWN_EGG'],
+    [below: '1.21.2', from: /\bEntitySpawnReason\b/, to: 'MobSpawnType'],
+    // 1.21.6 narrowed ServerPlayer.level() to ServerLevel (before it, serverLevel()). Keyed on the receiver names
+    // this codebase uses (ported from the space mod's rule).
+    [below: '1.21.6', from: /\bServerLevel (\w+) = (player|serverPlayer|owner)\.level\(\);/, to: 'ServerLevel $1 = $2.serverLevel();'],
 ]
 
 // Shared common source — pulled into every loader node (single copy -> no drift).
@@ -111,6 +170,18 @@ subprojects {
                     password = gprKey
                 }
                 content { includeGroup 'za.co.neroland.neroeconomy' }
+            }
+            // The other optional siblings with a façade (decision 020), same rule: credentials only.
+            ['nerocolonies', 'nerofactions', 'nerospace'].each { sibling ->
+                maven {
+                    name = "${sibling}-github-packages"
+                    url = "https://maven.pkg.github.com/Neroland/${sibling}"
+                    credentials {
+                        username = gprUser
+                        password = gprKey
+                    }
+                    content { includeGroup "za.co.neroland.${sibling}" }
+                }
             }
         }
         mavenCentral()

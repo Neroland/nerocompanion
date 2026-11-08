@@ -1,0 +1,10 @@
+{
+  "types": [
+    "nerocompanion:scout_drone"
+  ],
+  "texture": "nerocompanion:entity/scout_drone/default",
+  "glow": "nerocompanion:entity/scout_drone/default_glow",
+  "unlock": {
+    "rule": "default"
+  }
+}

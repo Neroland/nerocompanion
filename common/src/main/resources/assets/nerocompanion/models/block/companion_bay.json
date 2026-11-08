@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "nerocompanion:block/companion_bay_side",
+    "down": "nerocompanion:block/companion_bay_side",
+    "up": "nerocompanion:block/companion_bay_top",
+    "north": "nerocompanion:block/companion_bay_front",
+    "south": "nerocompanion:block/companion_bay_back",
+    "east": "nerocompanion:block/companion_bay_side",
+    "west": "nerocompanion:block/companion_bay_side"
+  }
+}

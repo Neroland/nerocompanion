@@ -23,10 +23,10 @@ import za.co.neroland.nerocompanion.NeroCompanionCommon;
  *
  * <p>{@code nerocompanion:hook/skin/<id>} unlocks the cosmetic companion skin {@code <id>} for that
  * player. The open gate <i>is</i> the unlock record, so it is <b>never closed</b> (a permanent unlock) and
- * no second store is needed: the future skin picker reads {@link #isSkinUnlocked} as a display check,
- * never an access check. Until companions exist the only visible effect is one chat line when the gate
- * opens for an online player; a gate that opened while the player was offline is simply open on their
- * return, which is the unlock itself, so nothing is replayed on login.
+ * no second store is needed: the Skin Studio's {@code hook} rule ({@code look/LookService}) reads
+ * {@link #isSkinUnlocked}, so the skin becomes selectable for every companion type it allows the moment the gate
+ * opens. An online player also gets one chat line; a gate that opened while the player was offline is simply
+ * open on their return, which is the unlock itself, so nothing is replayed on login.
  *
  * <p><b>Privacy (POPIA/GDPR):</b> the gate change's target is the player's UUID string; it is used only to
  * find the online player, never logged or broadcast. The unlock lives in Core's gate store, which Core's
@@ -109,7 +109,7 @@ public final class QuestHooks {
         return skin.isEmpty() ? null : skin;
     }
 
-    /** The bounded placeholder effect: one chat line naming the skin. The skin itself lands with companions. */
+    /** One chat line naming the skin; the unlock itself is the open gate the Skin Studio reads. */
     private static void announce(ServerPlayer player, String skin) {
         player.sendSystemMessage(Component.translatable("message.nerocompanion.skin_unlocked", skin));
     }

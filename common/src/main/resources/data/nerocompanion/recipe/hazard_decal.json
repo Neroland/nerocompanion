@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocompanion:blank_chip",
+    "minecraft:yellow_dye",
+    "minecraft:black_dye"
+  ],
+  "result": {
+    "id": "nerocompanion:hazard_decal",
+    "count": 1
+  }
+}

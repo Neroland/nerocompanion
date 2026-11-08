@@ -17,6 +17,9 @@ import za.co.neroland.nerocompanion.NeroCompanionCommon;
 public final class Services {
 
     public static final PlatformInfo PLATFORM = load(PlatformInfo.class);
+    public static final NetworkPlatform NETWORK = load(NetworkPlatform.class);
+    public static final RegistrationPlatform REGISTRATION = load(RegistrationPlatform.class);
+    public static final EntityPlatform ENTITIES = load(EntityPlatform.class);
 
     private Services() {
     }

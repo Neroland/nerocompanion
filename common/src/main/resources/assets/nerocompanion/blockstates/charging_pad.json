@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "charging=false,powered=false": {
+      "model": "nerocompanion:block/charging_pad"
+    },
+    "charging=false,powered=true": {
+      "model": "nerocompanion:block/charging_pad_powered"
+    },
+    "charging=true,powered=false": {
+      "model": "nerocompanion:block/charging_pad_charging"
+    },
+    "charging=true,powered=true": {
+      "model": "nerocompanion:block/charging_pad_charging"
+    }
+  }
+}

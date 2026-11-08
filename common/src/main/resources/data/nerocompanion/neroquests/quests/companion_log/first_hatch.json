@@ -1,0 +1,11 @@
+{
+  "title": "quest.nerocompanion.companion_log.first_hatch.title",
+  "description": "quest.nerocompanion.companion_log.first_hatch.desc",
+  "icon": "nerocompanion:scrap_egg",
+  "objectives": [
+    { "type": "neroquests:gate_open", "gate": "nerocompanion:first_hatch" }
+  ],
+  "rewards": [
+    { "type": "neroquests:xp", "amount": 100 }
+  ]
+}

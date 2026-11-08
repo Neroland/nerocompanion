@@ -1,0 +1,27 @@
+{
+  "entity": "nerocompanion:carry_bot",
+  "locomotion": "ground",
+  "small": false,
+  "max_health": 20.0,
+  "armor": 1.0,
+  "speed": 0.27,
+  "flying_speed": 0.0,
+  "attack_damage": 0.0,
+  "energy": {
+    "capacity": 36000,
+    "drain_idle_per_second": 8,
+    "drain_active_per_second": 30
+  },
+  "modes": ["follow", "stay", "carry", "sleep"],
+  "default_mode": "follow",
+  "chip_slots": 3,
+  "chip_categories": ["stat", "capability", "cosmetic"],
+  "default_skin": "nerocompanion:carry_bot/default",
+  "goal_weights": {
+    "follow_distance": 3.0,
+    "teleport_distance": 16.0,
+    "wander_chance": 0.03
+  },
+  "work_goals": ["nerocompanion:carry_haul"],
+  "cargo_slots": 27
+}

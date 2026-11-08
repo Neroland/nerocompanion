@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:yellow_dye",
+    "minecraft:iron_ingot",
+    "minecraft:leather"
+  ],
+  "result": {
+    "id": "nerocompanion:hat_hard_hat",
+    "count": 1
+  }
+}

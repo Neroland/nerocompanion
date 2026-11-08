@@ -1,0 +1,27 @@
+{
+  "entity": "nerocompanion:mining_bot",
+  "locomotion": "ground",
+  "small": false,
+  "max_health": 20.0,
+  "armor": 2.0,
+  "speed": 0.25,
+  "flying_speed": 0.0,
+  "attack_damage": 0.0,
+  "energy": {
+    "capacity": 48000,
+    "drain_idle_per_second": 8,
+    "drain_active_per_second": 60
+  },
+  "modes": ["follow", "stay", "mine", "sleep"],
+  "default_mode": "follow",
+  "chip_slots": 3,
+  "chip_categories": ["stat", "capability", "cosmetic"],
+  "default_skin": "nerocompanion:mining_bot/default",
+  "goal_weights": {
+    "follow_distance": 3.0,
+    "teleport_distance": 16.0,
+    "wander_chance": 0.03
+  },
+  "work_goals": ["nerocompanion:mine_area"],
+  "cargo_slots": 9
+}

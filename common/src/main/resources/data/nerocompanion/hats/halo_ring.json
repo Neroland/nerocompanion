@@ -1,0 +1,11 @@
+{
+  "types": [
+    "*"
+  ],
+  "texture": "nerocompanion:entity/hat/halo_ring",
+  "glow": "nerocompanion:entity/hat/halo_ring_glow",
+  "unlock": {
+    "rule": "bond",
+    "level": 3
+  }
+}

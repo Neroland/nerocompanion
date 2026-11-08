@@ -1,0 +1,13 @@
+{
+  "types": [
+    "nerocompanion:scrapling"
+  ],
+  "texture": "nerocompanion:entity/scrapling/mossback",
+  "glow": "nerocompanion:entity/scrapling/mossback_glow",
+  "unlock": {
+    "rule": "bond",
+    "level": 3
+  },
+  "eye_color": "#7CFFB2",
+  "model_override": "nerocompanion:scrapling/mossback"
+}

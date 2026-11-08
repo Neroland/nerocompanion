@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocompanion:efficiency_chip_2",
+    "minecraft:lapis_lazuli",
+    "minecraft:diamond"
+  ],
+  "result": {
+    "id": "nerocompanion:efficiency_chip_3",
+    "count": 1
+  }
+}

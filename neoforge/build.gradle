@@ -67,6 +67,33 @@ repositories {
 sourceSets.main.java.srcDir rootProject.ext.commonJava
 sourceSets.main.resources.srcDir rootProject.ext.commonResources
 
+// NeroCreatures SPI — OPTIONAL, compile time only. NeroCompanion implements NeroCreatures' CompanionPetHooks
+// (compat/creatures/CompanionPetHooksImpl, listed in META-INF/services); NeroCreatures looks it up with
+// ServiceLoader only when NeroCompanion is installed, so nothing here is ever needed at runtime. The interface
+// (vanilla types only) compiles from a stub source set, common/src/creatures-spi/java, that sits on the main
+// (and test) compile classpath but is not part of sourceSets.main.output, so it is never packaged: the build needs
+// no NeroCreatures artifact or token, and the jar carries no NeroCreatures class.
+sourceSets {
+    creaturesSpi {
+        java.srcDir "${rootProject.projectDir}/common/src/creatures-spi/java"
+        compileClasspath = configurations.compileClasspath
+    }
+}
+sourceSets.main.compileClasspath += sourceSets.creaturesSpi.output
+sourceSets.test.compileClasspath += sourceSets.creaturesSpi.output
+sourceSets.test.runtimeClasspath += sourceSets.creaturesSpi.output
+
+// Sibling stubs (decision 020) — NeroLogistics' StorageNode and NeroSecurity's access classes, signature-copied
+// from their tags because neither publishes an artifact this build can resolve. Main compile classpath ONLY: never
+// packaged, and deliberately absent from the test classpath so the façade tests run as on a Core-only server.
+sourceSets {
+    siblingStubs {
+        java.srcDir "${rootProject.projectDir}/common/src/sibling-stubs/java"
+        compileClasspath = configurations.compileClasspath
+    }
+}
+sourceSets.main.compileClasspath += sourceSets.siblingStubs.output
+
 // Plain-JVM unit tests (JUnit 5, no game bootstrap). The shared tests live in common/src/test/java but,
 // since `common` is not a Gradle project (see settings.gradle), each loader node wires the source dir
 // itself. ModDevGradle exposes the modding classpath to extra source sets via addModdingDependenciesTo
@@ -91,6 +118,13 @@ dependencies {
     // NeroEconomy — OPTIONAL. compileOnly: never bundled, never a hard requirement. Only the economy bridge
     // class imports it, and only after isModLoaded("neroeconomy"), so NeroCompanion runs without it.
     compileOnly "za.co.neroland.neroeconomy:neroeconomy-neoforge-${mc}:${neroeconomyVersion}"
+    // NeroColonies, NeroFactions, Nerospace — OPTIONAL façades (compat/<sibling>, decision 020). compileOnly and
+    // non-transitive, so a sibling's POM never changes the Core on the compile classpath.
+    ['nerocolonies', 'nerofactions', 'nerospace'].each { sibling ->
+        compileOnly("za.co.neroland.${sibling}:${sibling}-neoforge-${mc}:${project.findProperty(sibling + '_version')}") {
+            transitive = false
+        }
+    }
     // Dev clients load NeroEconomy only with -PwithNeroEconomy; the default run proves it stays optional.
     if (project.hasProperty('withNeroEconomy')) {
         runtimeOnly "za.co.neroland.neroeconomy:neroeconomy-neoforge-${mc}:${neroeconomyVersion}"

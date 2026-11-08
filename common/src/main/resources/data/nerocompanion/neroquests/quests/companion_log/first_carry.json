@@ -1,0 +1,12 @@
+{
+  "title": "quest.nerocompanion.companion_log.first_carry.title",
+  "description": "quest.nerocompanion.companion_log.first_carry.desc",
+  "icon": "minecraft:chest",
+  "prerequisites": ["nerocompanion:companion_log/first_deploy"],
+  "objectives": [
+    { "type": "neroquests:gate_open", "gate": "nerocompanion:first_carry" }
+  ],
+  "rewards": [
+    { "type": "neroquests:xp", "amount": 100 }
+  ]
+}

@@ -1,5 +1,6 @@
 package za.co.neroland.nerocompanion.progression;
 
+import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.resources.Identifier;
@@ -17,14 +18,10 @@ import za.co.neroland.nerocompanion.NeroCompanionCommon;
  * {@code gate_open} objective. Nothing here is a lock: the gates have no {@code requires} and are never
  * checked to allow or deny anything.
  *
- * <p>Where to call each one once companions exist:
- *
- * <ul>
- *   <li>{@link #recordFirstDeploy}: a companion is bound to its owner on first deploy from its item.</li>
- *   <li>{@link #recordFirstChip}: the owner inserts an upgrade chip into one of their companions.</li>
- *   <li>{@link #recordPetAdopted}: a pet alien is adopted / bound.</li>
- *   <li>{@link #recordFullSquad}: the owner's active companion count reaches the configured cap.</li>
- * </ul>
+ * <p>The real events open them through {@link CompanionProgress} (deploy, chip install, charge, a unit of mining /
+ * carrying / repair / guard work, a Scrapling hatch or NeroCreatures pet adoption, bond level 3, a reclaimed lost
+ * companion, and the LIVE count reaching the cap); the {@code record...} methods below stay for callers that hold an
+ * online player.
  *
  * <p>Opening an already-open gate is a no-op in Core, so every call is idempotent and may be made on every
  * occurrence. The overloads taking a {@link MinecraftServer} and a UUID cover an owner who is offline when
@@ -45,6 +42,26 @@ public final class CompanionMilestones {
     public static final Identifier PET_ADOPTED = gate("pet_adopted");
     /** The owner's active companion count reached the configured cap. */
     public static final Identifier FULL_SQUAD = gate("full_squad");
+    /** A charger (Pad, Bay or Hand Crank) put energy into one of the owner's companions. */
+    public static final Identifier FIRST_CHARGE = gate("first_charge");
+    /** A Mining Bot of the owner finished a unit of mining work. */
+    public static final Identifier FIRST_MINE = gate("first_mine");
+    /** A carrier of the owner delivered cargo. */
+    public static final Identifier FIRST_CARRY = gate("first_carry");
+    /** A Repair Bot of the owner finished a repair. */
+    public static final Identifier FIRST_REPAIR = gate("first_repair");
+    /** A Combat Bot of the owner downed a target while guarding. */
+    public static final Identifier FIRST_GUARD = gate("first_guard");
+    /** A Scrap Egg of the owner hatched into a Scrapling. */
+    public static final Identifier FIRST_HATCH = gate("first_hatch");
+    /** One of the owner's companions reached bond level 3. */
+    public static final Identifier BOND_THREE = gate("bond_three");
+    /** The owner reclaimed a lost companion. */
+    public static final Identifier FIRST_RECOVERY = gate("first_recovery");
+
+    /** Every milestone gate this jar ships ({@code data/nerocompanion/neroland_gates/<path>.json}). */
+    public static final List<Identifier> ALL = List.of(FIRST_DEPLOY, FIRST_CHIP, PET_ADOPTED, FULL_SQUAD, FIRST_CHARGE,
+            FIRST_MINE, FIRST_CARRY, FIRST_REPAIR, FIRST_GUARD, FIRST_HATCH, BOND_THREE, FIRST_RECOVERY);
 
     private CompanionMilestones() {
     }

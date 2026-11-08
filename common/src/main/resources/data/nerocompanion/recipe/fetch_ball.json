@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": "minecraft:white_wool",
+    "S": "minecraft:slime_ball"
+  },
+  "pattern": [
+    " W ",
+    "WSW",
+    " W "
+  ],
+  "result": {
+    "id": "nerocompanion:fetch_ball",
+    "count": 2
+  }
+}

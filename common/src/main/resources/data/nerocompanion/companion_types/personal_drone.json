@@ -1,0 +1,26 @@
+{
+  "entity": "nerocompanion:personal_drone",
+  "locomotion": "flying",
+  "small": true,
+  "max_health": 10.0,
+  "armor": 0.0,
+  "speed": 0.3,
+  "flying_speed": 0.5,
+  "attack_damage": 0.0,
+  "energy": {
+    "capacity": 24000,
+    "drain_idle_per_second": 10,
+    "drain_active_per_second": 40
+  },
+  "modes": ["follow", "stay", "carry", "scout", "sleep"],
+  "default_mode": "follow",
+  "chip_slots": 2,
+  "chip_categories": ["stat", "capability", "cosmetic"],
+  "cargo_slots": 8,
+  "goal_weights": {
+    "follow_distance": 3.0,
+    "teleport_distance": 16.0,
+    "wander_chance": 0.05
+  },
+  "work_goals": ["nerocompanion:drone_carry_lite", "nerocompanion:scout_ahead", "nerocompanion:drone_lamp"]
+}

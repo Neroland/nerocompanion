@@ -1,0 +1,27 @@
+{
+  "entity": "nerocompanion:repair_bot",
+  "locomotion": "ground",
+  "small": false,
+  "max_health": 20.0,
+  "armor": 2.0,
+  "speed": 0.25,
+  "flying_speed": 0.0,
+  "attack_damage": 0.0,
+  "energy": {
+    "capacity": 36000,
+    "drain_idle_per_second": 8,
+    "drain_active_per_second": 30
+  },
+  "modes": ["follow", "stay", "repair", "sleep"],
+  "default_mode": "follow",
+  "chip_slots": 3,
+  "chip_categories": ["stat", "capability", "cosmetic"],
+  "default_skin": "nerocompanion:repair_bot/default",
+  "goal_weights": {
+    "follow_distance": 3.0,
+    "teleport_distance": 16.0,
+    "wander_chance": 0.05
+  },
+  "work_goals": ["nerocompanion:repair_gear"],
+  "cargo_slots": 0
+}

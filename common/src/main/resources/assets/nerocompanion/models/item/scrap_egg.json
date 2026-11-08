@@ -1,0 +1,20 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "nerocompanion:item/scrap_egg"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "nerocompanion:egg_stage": 0.5
+      },
+      "model": "nerocompanion:item/scrap_egg_1"
+    },
+    {
+      "predicate": {
+        "nerocompanion:egg_stage": 1.0
+      },
+      "model": "nerocompanion:item/scrap_egg_2"
+    }
+  ]
+}

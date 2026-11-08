@@ -1,0 +1,10 @@
+{
+  "types": [
+    "nerocompanion:combat_bot"
+  ],
+  "texture": "nerocompanion:entity/combat_bot/default",
+  "glow": "nerocompanion:entity/combat_bot/default_glow",
+  "unlock": {
+    "rule": "default"
+  }
+}

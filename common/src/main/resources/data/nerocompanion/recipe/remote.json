@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": "minecraft:redstone_torch",
+    "I": "minecraft:iron_ingot",
+    "G": "minecraft:glass_pane",
+    "C": "nerocompanion:blank_chip"
+  },
+  "pattern": [
+    " R ",
+    "IGI",
+    "ICI"
+  ],
+  "result": {
+    "id": "nerocompanion:remote",
+    "count": 1
+  }
+}

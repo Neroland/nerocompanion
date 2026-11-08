@@ -1,0 +1,12 @@
+{
+  "title": "quest.nerocompanion.companion_log.first_mine.title",
+  "description": "quest.nerocompanion.companion_log.first_mine.desc",
+  "icon": "minecraft:iron_pickaxe",
+  "prerequisites": ["nerocompanion:companion_log/first_deploy"],
+  "objectives": [
+    { "type": "neroquests:gate_open", "gate": "nerocompanion:first_mine" }
+  ],
+  "rewards": [
+    { "type": "neroquests:xp", "amount": 100 }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "title": "quest.nerocompanion.companion_log.first_recovery.title",
+  "description": "quest.nerocompanion.companion_log.first_recovery.desc",
+  "icon": "nerocompanion:companion_bay",
+  "prerequisites": ["nerocompanion:companion_log/first_deploy"],
+  "objectives": [
+    { "type": "neroquests:gate_open", "gate": "nerocompanion:first_recovery" }
+  ],
+  "rewards": [
+    { "type": "neroquests:xp", "amount": 100 }
+  ]
+}

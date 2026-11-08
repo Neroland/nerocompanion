@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocompanion:blank_chip",
+    "minecraft:glowstone_dust"
+  ],
+  "result": {
+    "id": "nerocompanion:lamp_chip",
+    "count": 1
+  }
+}

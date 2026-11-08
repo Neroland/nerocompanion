@@ -1,0 +1,11 @@
+{
+  "types": [
+    "*"
+  ],
+  "texture": "nerocompanion:entity/hat/sprout",
+  "glow": null,
+  "unlock": {
+    "rule": "advancement",
+    "id": "nerocompanion:first_deploy"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "types": [
+    "nerocompanion:carry_bot"
+  ],
+  "texture": "nerocompanion:entity/carry_bot/courier",
+  "glow": "nerocompanion:entity/carry_bot/courier_glow",
+  "unlock": {
+    "rule": "shop",
+    "price": 250
+  }
+}

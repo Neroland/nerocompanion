@@ -1,0 +1,26 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "nerocompanion:egg_stage",
+    "cases": [
+      {
+        "when": "1",
+        "model": {
+          "type": "minecraft:model",
+          "model": "nerocompanion:item/scrap_egg_1"
+        }
+      },
+      {
+        "when": "2",
+        "model": {
+          "type": "minecraft:model",
+          "model": "nerocompanion:item/scrap_egg_2"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "nerocompanion:item/scrap_egg_0"
+    }
+  }
+}

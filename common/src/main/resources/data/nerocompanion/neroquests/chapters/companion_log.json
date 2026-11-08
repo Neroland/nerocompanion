@@ -4,9 +4,17 @@
   "quests": [
     { "quest": "nerocompanion:companion_log/blueprint", "x": 0, "y": 0 },
     { "quest": "nerocompanion:companion_log/first_deploy", "x": 2, "y": 0 },
-    { "quest": "nerocompanion:companion_log/pet_adopted", "x": 2, "y": 2 },
     { "quest": "nerocompanion:companion_log/first_chip", "x": 4, "y": 0 },
     { "quest": "nerocompanion:companion_log/full_squad", "x": 6, "y": 0 },
-    { "quest": "nerocompanion:companion_log/companion_keeper", "x": 6, "y": 2 }
+    { "quest": "nerocompanion:companion_log/companion_keeper", "x": 8, "y": 0 },
+    { "quest": "nerocompanion:companion_log/first_charge", "x": 4, "y": 2 },
+    { "quest": "nerocompanion:companion_log/bond_three", "x": 6, "y": 2 },
+    { "quest": "nerocompanion:companion_log/first_recovery", "x": 8, "y": 2 },
+    { "quest": "nerocompanion:companion_log/first_mine", "x": 4, "y": 4 },
+    { "quest": "nerocompanion:companion_log/first_carry", "x": 6, "y": 4 },
+    { "quest": "nerocompanion:companion_log/first_repair", "x": 4, "y": 6 },
+    { "quest": "nerocompanion:companion_log/first_guard", "x": 6, "y": 6 },
+    { "quest": "nerocompanion:companion_log/first_hatch", "x": 0, "y": 8 },
+    { "quest": "nerocompanion:companion_log/pet_adopted", "x": 2, "y": 8 }
   ]
 }

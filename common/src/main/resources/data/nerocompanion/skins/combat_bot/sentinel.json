@@ -1,0 +1,11 @@
+{
+  "types": [
+    "nerocompanion:combat_bot"
+  ],
+  "texture": "nerocompanion:entity/combat_bot/sentinel",
+  "glow": "nerocompanion:entity/combat_bot/sentinel_glow",
+  "unlock": {
+    "rule": "bond",
+    "level": 4
+  }
+}

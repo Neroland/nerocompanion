@@ -69,6 +69,31 @@ jarJar.register()
 sourceSets.main.java.srcDir rootProject.ext.commonJava
 sourceSets.main.resources.srcDir rootProject.ext.commonResources
 
+// NeroCreatures SPI — OPTIONAL, compile time only. NeroCompanion implements NeroCreatures' CompanionPetHooks
+// (compat/creatures/CompanionPetHooksImpl, listed in META-INF/services); NeroCreatures looks it up with
+// ServiceLoader only when NeroCompanion is installed, so nothing here is ever needed at runtime. The interface
+// (vanilla types only) compiles from a stub source set, common/src/creatures-spi/java, that sits on the main
+// (and test) compile classpath but is not part of sourceSets.main.output, so it is never packaged: the build needs
+// no NeroCreatures artifact or token, and the jar carries no NeroCreatures class.
+sourceSets {
+    creaturesSpi {
+        java.srcDir "${rootProject.projectDir}/common/src/creatures-spi/java"
+        compileClasspath = configurations.compileClasspath
+    }
+}
+sourceSets.main.compileClasspath += sourceSets.creaturesSpi.output
+
+// Sibling stubs (decision 020) — NeroLogistics' StorageNode and NeroSecurity's access classes, signature-copied
+// from their tags because neither publishes an artifact this build can resolve. Main compile classpath only;
+// never packaged.
+sourceSets {
+    siblingStubs {
+        java.srcDir "${rootProject.projectDir}/common/src/sibling-stubs/java"
+        compileClasspath = configurations.compileClasspath
+    }
+}
+sourceSets.main.compileClasspath += sourceSets.siblingStubs.output
+
 // Forge 26's ModLauncher builds a JPMS layer from the dev runtime classpath. If classes and
 // processed resources are separate entries, the mod's classes can be seen as module "main" while
 // mods.toml names the resources entry "nerocompanion", producing split-package startup failures.
@@ -117,6 +142,13 @@ dependencies {
     // NeroEconomy — OPTIONAL. compileOnly: never bundled, never a hard requirement. Only the economy bridge
     // class imports it, and only after isModLoaded("neroeconomy"), so NeroCompanion runs without it.
     compileOnly "za.co.neroland.neroeconomy:neroeconomy-forge-${mc}:${neroeconomyVersion}"
+    // NeroColonies, NeroFactions, Nerospace — OPTIONAL façades (compat/<sibling>, decision 020). compileOnly and
+    // non-transitive, so a sibling's POM never changes the Core on the compile classpath.
+    ['nerocolonies', 'nerofactions', 'nerospace'].each { sibling ->
+        compileOnly("za.co.neroland.${sibling}:${sibling}-forge-${mc}:${project.findProperty(sibling + '_version')}") {
+            transitive = false
+        }
+    }
 
     implementation 'io.sentry:sentry:8.60.0'
     jarJar(group: 'io.sentry', name: 'sentry', version: '8.45.0')
@@ -143,6 +175,10 @@ def generateModMetadata = tasks.register('generateModMetadata', ProcessResources
         mod_authors               : rootProject.mod_authors,
         mod_license               : rootProject.mod_license,
         forge_loader_version_range: "[${forgeMajor},)",
+        // Floor the forge dependency at the compiled build: Forge adds API inside a major (the HUD's
+        // AddGuiOverlayLayersEvent is missing from early builds of a major), so "any build of the major" let an old
+        // Forge crash at mod construction instead of asking for an update. loaderVersion (javafml) stays at the major.
+        forge_version_range       : "[${forgeBuild},)",
         minecraft_version_range   : mcCeiling ? "[${mcFloor},${mcCeiling})" : "[${mc},)",
         // Floor at the compiled Core version — see the NeoForge build script for the reasoning.
         nerolandcore_version_range: "[${nerolandcoreVersion},2.0)",

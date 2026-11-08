@@ -1,0 +1,12 @@
+{
+  "types": [
+    "nerocompanion:mining_bot"
+  ],
+  "texture": "nerocompanion:entity/mining_bot/hazard",
+  "glow": "nerocompanion:entity/mining_bot/hazard_glow",
+  "unlock": {
+    "rule": "item",
+    "item": "nerocompanion:hazard_decal"
+  },
+  "eye_color": "#FFB347"
+}

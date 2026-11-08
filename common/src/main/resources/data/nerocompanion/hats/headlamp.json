@@ -1,0 +1,14 @@
+{
+  "types": [
+    "nerocompanion:mining_bot",
+    "nerocompanion:carry_bot",
+    "nerocompanion:repair_bot",
+    "nerocompanion:combat_bot"
+  ],
+  "texture": "nerocompanion:entity/hat/headlamp",
+  "glow": "nerocompanion:entity/hat/headlamp_glow",
+  "unlock": {
+    "rule": "item",
+    "item": "nerocompanion:hat_headlamp"
+  }
+}

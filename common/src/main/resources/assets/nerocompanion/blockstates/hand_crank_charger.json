@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "cranking=false,facing=north": {
+      "model": "nerocompanion:block/hand_crank_charger"
+    },
+    "cranking=true,facing=north": {
+      "model": "nerocompanion:block/hand_crank_charger_cranking"
+    },
+    "cranking=false,facing=east": {
+      "model": "nerocompanion:block/hand_crank_charger",
+      "y": 90
+    },
+    "cranking=true,facing=east": {
+      "model": "nerocompanion:block/hand_crank_charger_cranking",
+      "y": 90
+    },
+    "cranking=false,facing=south": {
+      "model": "nerocompanion:block/hand_crank_charger",
+      "y": 180
+    },
+    "cranking=true,facing=south": {
+      "model": "nerocompanion:block/hand_crank_charger_cranking",
+      "y": 180
+    },
+    "cranking=false,facing=west": {
+      "model": "nerocompanion:block/hand_crank_charger",
+      "y": 270
+    },
+    "cranking=true,facing=west": {
+      "model": "nerocompanion:block/hand_crank_charger_cranking",
+      "y": 270
+    }
+  }
+}

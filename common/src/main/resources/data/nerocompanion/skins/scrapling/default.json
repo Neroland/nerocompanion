@@ -1,0 +1,10 @@
+{
+  "types": [
+    "nerocompanion:scrapling"
+  ],
+  "texture": "nerocompanion:entity/scrapling/default",
+  "glow": "nerocompanion:entity/scrapling/default_glow",
+  "unlock": {
+    "rule": "default"
+  }
+}

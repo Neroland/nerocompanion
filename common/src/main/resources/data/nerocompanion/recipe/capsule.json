@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": "minecraft:glass",
+    "I": "minecraft:iron_ingot",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    " G ",
+    "IRI",
+    " I "
+  ],
+  "result": {
+    "id": "nerocompanion:capsule",
+    "count": 1
+  }
+}

@@ -49,7 +49,7 @@ class QuestPackTest {
         Map<String, JsonObject> gates = read(root.resolve("data/" + NAMESPACE + "/neroland_gates"));
         JsonObject lang = JsonParser.parseString(Files.readString(
                 root.resolve("assets/" + NAMESPACE + "/lang/en_us.json"))).getAsJsonObject();
-        assertEquals(6, quests.size(), "the Companion Log chapter ships six quests");
+        assertEquals(14, quests.size(), "the Companion Log chapter ships fourteen quests");
         assertEquals(1, chapters.size(), "one chapter");
 
         List<String> problems = new ArrayList<>();
@@ -140,8 +140,7 @@ class QuestPackTest {
     @Test
     void gatesTheCodeNamesAreShippedAndPlayerScoped() throws IOException, URISyntaxException {
         Map<String, JsonObject> gates = read(resourcesRoot().resolve("data/" + NAMESPACE + "/neroland_gates"));
-        List<String> expected = new ArrayList<>(List.of(CompanionMilestones.FIRST_DEPLOY, CompanionMilestones.FIRST_CHIP,
-                CompanionMilestones.PET_ADOPTED, CompanionMilestones.FULL_SQUAD).stream().map(Object::toString).toList());
+        List<String> expected = new ArrayList<>(CompanionMilestones.ALL.stream().map(Object::toString).toList());
         for (String skin : QuestHooks.SKINS) {
             expected.add(QuestHooks.skinHook(skin).toString());
         }
@@ -157,6 +156,32 @@ class QuestPackTest {
             }
         }
         assertEquals(expected.size(), gates.size(), "every shipped gate is one the code names");
+    }
+
+    /**
+     * The Stage 6 contract: at least ten quests, one per thing a companion owner does (deploy, charge, chip, mine,
+     * carry, repair, guard, hatch, bond level 3, recover a lost companion), each read from the milestone gate the real
+     * code path opens - so no quest can wait on a gate nothing opens.
+     */
+    @Test
+    void everyMilestoneHasAQuestAndEveryQuestGateIsOpenedByCode() throws IOException, URISyntaxException {
+        Map<String, JsonObject> quests = read(resourcesRoot().resolve("data/" + NAMESPACE + "/neroquests/quests"));
+        assertTrue(quests.size() >= 10, "at least ten quests");
+        Set<String> read = new HashSet<>();
+        for (JsonObject q : quests.values()) {
+            for (JsonElement e : q.getAsJsonArray("objectives")) {
+                JsonObject o = e.getAsJsonObject();
+                if (o.get("type").getAsString().endsWith("gate_open")) {
+                    read.add(o.get("gate").getAsString());
+                }
+            }
+        }
+        Set<String> opened = new HashSet<>(CompanionMilestones.ALL.stream().map(Object::toString).toList());
+        assertEquals(opened, read, "the quests read exactly the milestone gates the code opens");
+        for (String need : List.of("first_deploy", "first_charge", "first_chip", "first_mine", "first_carry",
+                "first_repair", "first_guard", "first_hatch", "bond_three", "first_recovery")) {
+            assertTrue(read.contains(NAMESPACE + ":" + need), "a quest for " + need);
+        }
     }
 
     @Test

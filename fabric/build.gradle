@@ -69,6 +69,31 @@ publishing {
 sourceSets.main.java.srcDir rootProject.ext.commonJava
 sourceSets.main.resources.srcDir rootProject.ext.commonResources
 
+// NeroCreatures SPI — OPTIONAL, compile time only. NeroCompanion implements NeroCreatures' CompanionPetHooks
+// (compat/creatures/CompanionPetHooksImpl, listed in META-INF/services); NeroCreatures looks it up with
+// ServiceLoader only when NeroCompanion is installed, so nothing here is ever needed at runtime. The interface
+// (vanilla types only) compiles from a stub source set, common/src/creatures-spi/java, that sits on the main
+// (and test) compile classpath but is not part of sourceSets.main.output, so it is never packaged: the build needs
+// no NeroCreatures artifact or token, and the jar carries no NeroCreatures class.
+sourceSets {
+    creaturesSpi {
+        java.srcDir "${rootProject.projectDir}/common/src/creatures-spi/java"
+        compileClasspath = configurations.compileClasspath
+    }
+}
+sourceSets.main.compileClasspath += sourceSets.creaturesSpi.output
+
+// Sibling stubs (decision 020) — NeroLogistics' StorageNode and NeroSecurity's access classes, signature-copied
+// from their tags because neither publishes an artifact this build can resolve. Main compile classpath only;
+// never packaged.
+sourceSets {
+    siblingStubs {
+        java.srcDir "${rootProject.projectDir}/common/src/sibling-stubs/java"
+        compileClasspath = configurations.compileClasspath
+    }
+}
+sourceSets.main.compileClasspath += sourceSets.siblingStubs.output
+
 dependencies {
     minecraft "com.mojang:minecraft:${mc}"
     if (obfuscated) {
@@ -101,6 +126,13 @@ dependencies {
         modCompileOnly "za.co.neroland.neroeconomy:neroeconomy-fabric-${mc}:${neroeconomyVersion}"
     } else {
         compileOnly "za.co.neroland.neroeconomy:neroeconomy-fabric-${mc}:${neroeconomyVersion}"
+    }
+    // NeroColonies, NeroFactions, Nerospace — OPTIONAL façades (compat/<sibling>, decision 020). compileOnly
+    // (remapped on 1.21.x) and non-transitive, so a sibling's POM never changes the Core on the compile classpath.
+    ['nerocolonies', 'nerofactions', 'nerospace'].each { sibling ->
+        "${obfuscated ? 'modCompileOnly' : 'compileOnly'}"("za.co.neroland.${sibling}:${sibling}-fabric-${mc}:${project.findProperty(sibling + '_version')}") {
+            transitive = false
+        }
     }
     // Dev clients load NeroEconomy only with -PwithNeroEconomy; the default run proves it stays optional.
     if (project.hasProperty('withNeroEconomy')) {

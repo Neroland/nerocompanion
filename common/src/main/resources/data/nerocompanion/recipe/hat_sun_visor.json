@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:black_dye",
+    "minecraft:light_blue_stained_glass_pane",
+    "minecraft:leather"
+  ],
+  "result": {
+    "id": "nerocompanion:hat_sun_visor",
+    "count": 1
+  }
+}

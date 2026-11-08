@@ -1,0 +1,25 @@
+{
+  "entity": "nerocompanion:scrapling",
+  "locomotion": "ground",
+  "small": true,
+  "max_health": 8.0,
+  "armor": 0.0,
+  "speed": 0.3,
+  "attack_damage": 0.0,
+  "energy": {
+    "capacity": 6000,
+    "drain_idle_per_second": 2,
+    "drain_active_per_second": 2
+  },
+  "modes": ["follow", "stay", "sleep"],
+  "default_mode": "follow",
+  "chip_slots": 1,
+  "chip_categories": ["cosmetic"],
+  "cargo_slots": 0,
+  "goal_weights": {
+    "follow_distance": 2.5,
+    "teleport_distance": 16.0,
+    "wander_chance": 0.08
+  },
+  "work_goals": ["nerocompanion:pet_fetch", "nerocompanion:pet_nap", "nerocompanion:pet_play"]
+}

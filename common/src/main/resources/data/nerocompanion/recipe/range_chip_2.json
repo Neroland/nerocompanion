@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "nerocompanion:range_chip_1",
+    "minecraft:amethyst_shard",
+    "minecraft:gold_ingot"
+  ],
+  "result": {
+    "id": "nerocompanion:range_chip_2",
+    "count": 1
+  }
+}

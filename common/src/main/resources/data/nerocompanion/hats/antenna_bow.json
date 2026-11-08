@@ -1,0 +1,13 @@
+{
+  "types": [
+    "nerocompanion:personal_drone",
+    "nerocompanion:scout_drone",
+    "nerocompanion:scrapling"
+  ],
+  "texture": "nerocompanion:entity/hat/antenna_bow",
+  "glow": null,
+  "unlock": {
+    "rule": "bond",
+    "level": 2
+  }
+}

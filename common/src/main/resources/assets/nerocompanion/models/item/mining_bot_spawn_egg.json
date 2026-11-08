@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "nerocompanion:item/mining_bot_spawn_egg"
+  }
+}
