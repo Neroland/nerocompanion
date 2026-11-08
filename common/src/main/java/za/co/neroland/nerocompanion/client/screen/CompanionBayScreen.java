@@ -179,12 +179,15 @@ public class CompanionBayScreen extends CompanionScreenBase<BayMenu> {
             this.tooltip(Component.translatable("gui.nerocompanion.bay.power.tip"));
         }
         // 5 nearby list
-        this.text(g, Component.translatable("gui.nerocompanion.bay.nearby"), x + 8, y + 120, CompanionColours.SUBTLE);
+        // Each header fits its own column (the two sit side by side), cut between words if a translation is long.
+        this.text(g, this.fitWords(Component.translatable("gui.nerocompanion.bay.nearby").getString(), 116), x + 8, y + 120,
+                CompanionColours.SUBTLE);
         Sheet.nine(g, x + 8, y + LIST_Y, 112, LIST_H, 144, 240, 3);
         this.list(g, mx, my, x + 8, s.nearby(), this.nearbyScroll, true, s.slots().size() > 0 && this.occupied(s) >= 4,
                 Component.translatable("gui.nerocompanion.bay.nearby.none"));
         // 6 lost list
-        this.text(g, Component.translatable("gui.nerocompanion.bay.lost"), x + 128, y + 120, CompanionColours.SUBTLE);
+        this.text(g, this.fitWords(Component.translatable("gui.nerocompanion.bay.lost").getString(), 112), x + 128, y + 120,
+                CompanionColours.SUBTLE);
         Sheet.nine(g, x + 128, y + LIST_Y, 112, LIST_H, 144, 240, 3);
         this.list(g, mx, my, x + 128, s.lost(), this.lostScroll, false, false,
                 Component.translatable("gui.nerocompanion.bay.lost.none"));
@@ -199,8 +202,9 @@ public class CompanionBayScreen extends CompanionScreenBase<BayMenu> {
             boolean nearby, boolean full, Component none) {
         int top = this.topPos + LIST_Y + 3;
         if (entries.isEmpty()) {
-            List<net.minecraft.util.FormattedCharSequence> lines = this.font.split(none, 100);
-            for (int l = 0; l < Math.min(3, lines.size()); l++) {
+            // Four lines fit in the list box; anything longer ends in an ellipsis instead of losing its last words.
+            List<String> lines = this.wrap(none.getString(), 98, 98, 98, 98);
+            for (int l = 0; l < lines.size(); l++) {
                 g.text(this.font, lines.get(l), lx + 4, top + 2 + 10 * l, CompanionColours.SUBTLE, false);
             }
             return;

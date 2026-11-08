@@ -98,6 +98,10 @@ public class CompanionScreen extends CompanionScreenBase<CompanionMenu> {
         if (s == null) {
             return Component.translatable("gui.nerocompanion.companion.menu");
         }
+        if (s.name().isEmpty()) {
+            // Unnamed: the type is the name, so say it once.
+            return ClientText.typeName(s.chassis());
+        }
         return Component.translatable("gui.nerocompanion.companion.title",
                 ClientText.displayName(s.name(), s.chassis()), ClientText.typeName(s.chassis()));
     }
@@ -232,32 +236,32 @@ public class CompanionScreen extends CompanionScreenBase<CompanionMenu> {
         // 3 type line
         Component typeLine = Component.translatable("gui.nerocompanion.companion.typeline",
                 ClientText.traitName(s.trait()), ClientText.typeName(s.chassis()));
-        this.text(g, typeLine, x + 8, y + 50, CompanionColours.SUBTLE);
-        if (inside(mx, my, x + 8, y + 49, this.font.width(typeLine), 10)) {
+        this.text(g, this.fitWords(typeLine.getString(), 118), x + 8, y + 49, CompanionColours.SUBTLE);
+        if (inside(mx, my, x + 8, y + 48, Math.min(118, this.font.width(typeLine)), 10)) {
             this.tooltip(Component.translatable("gui.nerocompanion.companion.trait.tip."
                     + ClientText.traitId(s.trait())));
         }
 
         // 4/5 energy
-        this.text(g, Component.translatable("gui.nerocompanion.companion.section.energy"), x + 8, y + 56,
+        this.text(g, Component.translatable("gui.nerocompanion.companion.section.energy"), x + 8, y + 59,
                 CompanionColours.SUBTLE);
         int pct = s.capacityFe() <= 0 ? 0 : (int) Math.min(100L, s.energyFe() * 100L / s.capacityFe());
-        this.bar(g, x + 8, y + 64, 112, pct, away, s.has(Payloads.CompanionSnapshot.SLEEPING),
+        this.bar(g, x + 8, y + 68, 112, pct, away, s.has(Payloads.CompanionSnapshot.SLEEPING),
                 s.has(Payloads.CompanionSnapshot.LOW_BATTERY), s.has(Payloads.CompanionSnapshot.CHARGING));
         Component line = this.energyLine(s);
-        this.text(g, this.fit(line.getString(), 118), x + 8, y + 72, CompanionColours.TITLE);
-        if (inside(mx, my, x + 8, y + 63, 112, 18)) {
+        this.text(g, this.fit(line.getString(), 118), x + 8, y + 76, CompanionColours.TITLE);
+        if (inside(mx, my, x + 8, y + 67, 112, 18)) {
             this.tooltip(Component.translatable("gui.nerocompanion.companion.energy.tip"));
         }
 
         // 6 bond
-        this.text(g, Component.translatable("gui.nerocompanion.companion.section.bond"), x + 8, y + 84,
+        this.text(g, Component.translatable("gui.nerocompanion.companion.section.bond"), x + 8, y + 87,
                 CompanionColours.SUBTLE);
         for (int i = 0; i < 4; i++) {
             boolean lit = i < s.bondLevel();
-            Sheet.blit(g, x + 40 + 10 * i, y + 84, lit ? 8 : 0, 48, 8, 8);
+            Sheet.blit(g, x + 40 + 10 * i, y + 87, lit ? 8 : 0, 48, 8, 8);
         }
-        if (inside(mx, my, x + 40, y + 84, 38, 8)) {
+        if (inside(mx, my, x + 40, y + 87, 38, 8)) {
             Component next = s.bondLevel() >= 4 ? Component.translatable("gui.nerocompanion.bond.max")
                     : Component.translatable("gui.nerocompanion.bond.next." + (s.bondLevel() + 1));
             this.tooltip(Component.translatable("gui.nerocompanion.companion.bond.tip", s.bondLevel(), next));

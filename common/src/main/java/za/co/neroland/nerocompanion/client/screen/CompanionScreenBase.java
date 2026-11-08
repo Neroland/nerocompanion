@@ -180,6 +180,16 @@ public abstract class CompanionScreenBase<T extends AbstractContainerMenu> exten
         return cut + "…";
     }
 
+    /** {@code text} word-wrapped into lines of the given widths; ends in an ellipsis when it does not all fit. */
+    protected List<String> wrap(String text, int... widths) {
+        return za.co.neroland.nerocompanion.client.gui.TextWrap.wrap(text, this.font::width, widths);
+    }
+
+    /** {@code text} on one line of {@code width} px, cut between words with an ellipsis. */
+    protected String fitWords(String text, int width) {
+        return za.co.neroland.nerocompanion.client.gui.TextWrap.fitWords(text, this.font::width, width);
+    }
+
     /** A procedural button: body + 1-px edge, centred label, the three states plus primary / selected. */
     protected void button(GuiGraphicsExtractor g, int x, int y, int w, int h, Component label, boolean enabled,
             boolean hovered, boolean primary, boolean selected) {
