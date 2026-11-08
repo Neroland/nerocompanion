@@ -7,8 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0-beta.1] - 2026-11-08
+
 ### Fixed
 
+- **Left-clicks did nothing in any NeroCompanion screen on Minecraft 26.3.** Minecraft 26.3 numbers mouse buttons
+  differently, so the Companion screen, the Remote's radial menu, the Skin Studio and the Companion Bay ignored
+  left-clicks (the Skin Studio button looked missing because it never responded). Every button works again on
+  26.3, and older Minecraft versions are unaffected.
+- The Skin Studio keeps the look you just applied selected instead of jumping to a different card.
+- Text no longer overlaps or gets cut mid-word: the type line and Energy label on the Companion screen, the Bay's
+  column headers and empty-list hint, Skin Studio card names, descriptions and scroll arrows, the radial's job
+  description and Recall button, and companion names on the HUD.
+- An unnamed companion's title shows its type once ("Helper Drone", not "Helper Drone — Helper Drone").
+- Chip hints read "Needs the Guard Protocol Chip." instead of "…Chip chip."
+- The Companion Bay only says a parked companion is charging when the Bay has power; otherwise it says it is
+  parked without power.
 - The Remote's radial menu no longer closes when you let go of the Remote before choosing. Hold the Remote, let
   go, then left-click a job (or the centre for "Come here", or Recall); holding, aiming and letting go still works,
   and so do the number keys. Clicking the job the companion already has now closes the menu instead of doing
