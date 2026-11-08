@@ -213,8 +213,8 @@ public abstract class CompanionScreenBase<T extends AbstractContainerMenu> exten
         g.fill(x + 1, y + 1, x + w - 1, y + h - 1, CompanionColours.INK);
         g.fill(x + 2, y + 2, x + w - 2, y + h - 2, CompanionColours.PANEL);
         g.fill(x + 2, y + h - FOOTER, x + w - 2, y + h - 2, CompanionColours.TROUGH);
-        this.text(g, this.fit(this.getTitle().getString(), w - 24), x + 8, y + 6, CompanionColours.TITLE);
-        this.text(g, this.fit(this.subtitle().getString(), w - 16), x + 8, y + 17, CompanionColours.SUBTLE);
+        this.text(g, this.fitWords(this.getTitle().getString(), w - 24), x + 8, y + 6, CompanionColours.TITLE);
+        this.text(g, this.fitWords(this.subtitle().getString(), w - 16), x + 8, y + 17, CompanionColours.SUBTLE);
         int cx = x + w - 11;
         int cy = y + 5;
         boolean hot = inside(mx, my, cx, cy, 11, 11);
@@ -226,7 +226,7 @@ public abstract class CompanionScreenBase<T extends AbstractContainerMenu> exten
         }
         Component line = this.isWaiting() ? Component.translatable("gui.nerocompanion.waiting") : this.footer;
         if (line != null) {
-            this.text(g, this.fit(line.getString(), w - 16), x + 8, y + h - FOOTER + 3,
+            this.text(g, this.fitWords(line.getString(), w - 16), x + 8, y + h - FOOTER + 3,
                     this.isWaiting() ? CompanionColours.SUBTLE : this.footerColour);
         }
     }

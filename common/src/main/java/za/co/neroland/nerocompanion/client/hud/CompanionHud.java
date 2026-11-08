@@ -24,7 +24,9 @@ import za.co.neroland.nerocompanion.network.payload.Payloads;
  */
 public final class CompanionHud {
 
-    private static final int FULL_W = 110;
+    /** Full entry width: 58 px of icons, then up to {@link #NAME_W} px of name. */
+    private static final int FULL_W = 160;
+    private static final int NAME_W = FULL_W - 60;
     private static final int COMPACT_W = 60;
     private static final int ENTRY_H = 12;
     private static final int MINIMAL_W = 12;
@@ -113,8 +115,8 @@ public final class CompanionHud {
         }
         if (names) {
             String name = ClientText.displayName(e.name(), e.type()).getString();
-            if (font.width(name) > 50) {
-                name = font.plainSubstrByWidth(name, 50 - font.width("…")) + "…";
+            if (font.width(name) > NAME_W) {
+                name = font.plainSubstrByWidth(name, NAME_W - font.width("\u2026")) + "\u2026";
             }
             g.fill(x + 58, y + 11, x + 58 + font.width(name), y + 12, 0x80000000);
             g.text(font, name, x + 58, y + 2, sleeping ? CompanionColours.SUBTLE : CompanionColours.TITLE, true);

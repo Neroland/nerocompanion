@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import za.co.neroland.nerocompanion.client.ClientState;
 import za.co.neroland.nerocompanion.client.screen.CompanionBayScreen;
 import za.co.neroland.nerocompanion.client.screen.CompanionScreen;
+import za.co.neroland.nerocompanion.client.screen.RadialLayout;
 import za.co.neroland.nerocompanion.client.screen.RemoteRadialScreen;
 import za.co.neroland.nerocompanion.client.screen.SkinStudioScreen;
 import za.co.neroland.nerocompanion.entity.CompanionEntity;
@@ -73,6 +74,7 @@ public class NeroCompanionUiClientGameTest implements FabricClientGameTest {
             this.section("setup+deploy", () -> this.setupAndDeploy(ctx, in, server));
             this.section("radial", () -> this.radial(ctx, in));
             this.section("companion screen", () -> this.companionScreen(ctx, in));
+            this.section("chips", () -> this.chips(ctx, in, server));
             this.section("bay", () -> this.bay(ctx, in, server));
             this.section("recall via radial", () -> this.recall(ctx, in));
             this.section("gallery", () -> this.gallery(ctx, in, server));
@@ -239,6 +241,21 @@ public class NeroCompanionUiClientGameTest implements FabricClientGameTest {
         this.clickPanel(ctx, in, 248, 150, modeX[1] + 26, modeY[0] + 8);
         ctx.waitTicks(10);
 
+        // Keyboard: Tab x3 focuses the first job (Follow), Down twice moves to Carry, Enter picks it.
+        for (int t = 0; t < 3; t++) {
+            in.pressKey(InputConstants.KEY_TAB);
+        }
+        in.pressKey(InputConstants.KEY_DOWN);
+        in.pressKey(InputConstants.KEY_DOWN);
+        ctx.waitTicks(2);
+        this.shot(ctx, "companion_keyboard_focus_carry");
+        in.pressKey(InputConstants.KEY_RETURN);
+        ctx.waitTicks(15);
+        this.check("companion.keyboard_tab_arrows_enter", "CARRY".equals(this.snapMode(ctx)),
+                "after Tab x3, Down x2, Enter: snapshot mode=" + this.snapMode(ctx));
+        this.clickPanel(ctx, in, 248, 150, modeX[1] + 26, modeY[0] + 8);
+        ctx.waitTicks(10);
+
         // Rename: click the name box, select all, type, save tick.
         String nameBefore = ctx.computeOnClient(mc -> ClientState.companion() == null ? "?" : ClientState.companion().name());
         this.clickPanel(ctx, in, 248, 150, 8 + 52, 32 + 7);
@@ -294,7 +311,7 @@ public class NeroCompanionUiClientGameTest implements FabricClientGameTest {
         this.log("studio", "unlocked skins=" + this.unlocked(ctx, false) + " unlocked hats=" + this.unlocked(ctx, true)
                );
         this.shot(ctx, "studio_skins_tab");
-        int[] cardX = {116, 168, 220};
+        int[] cardX = {114, 164, 214};
         int[] cardY = {48, 100};
         // Skins: select each visible card, then try Apply on the second card.
         for (int c = 1; c < 3; c++) {
@@ -312,7 +329,7 @@ public class NeroCompanionUiClientGameTest implements FabricClientGameTest {
         this.shot(ctx, "studio_skins_after_apply");
 
         // Hats tab
-        this.clickPanel(ctx, in, 276, 210, 168 + 24, 30 + 7);
+        this.clickPanel(ctx, in, 276, 210, 164 + 24, 30 + 7);
         ctx.waitTicks(3);
         this.shot(ctx, "studio_hats_tab");
         for (int c = 1; c < 3; c++) {
@@ -327,6 +344,32 @@ public class NeroCompanionUiClientGameTest implements FabricClientGameTest {
         this.check("studio.apply_hat_card2", !hatBefore.equals(this.look(ctx, true)),
                 "hat " + hatBefore + " -> " + this.look(ctx, true) + " (server entity hat=" + this.serverLook(ctx, true) + ")");
         this.shot(ctx, "studio_hats_after_apply");
+        this.check("studio.selection_stays_on_applied_look", ("Optional[" + this.look(ctx, true) + "]")
+                .equals(String.valueOf(this.field(ctx, "selectedId"))), "selected=" + this.field(ctx, "selectedId")
+                + " applied hat=" + this.look(ctx, true));
+        // Scrolling: the down arrow, then the mouse wheel back up.
+        this.clickPanel(ctx, in, 276, 210, 265 + 4, 140 + 4);
+        ctx.waitTicks(3);
+        this.check("studio.scroll_arrow_down", Integer.valueOf(1).equals(this.field(ctx, "scrollRow")),
+                "scrollRow=" + this.field(ctx, "scrollRow"));
+        this.shot(ctx, "studio_hats_scrolled_down");
+        this.clickPanel(ctx, in, 276, 210, 164 + 24, 100 + 24);
+        in.scroll(1.0D);
+        ctx.waitTicks(3);
+        this.check("studio.scroll_wheel_up", Integer.valueOf(0).equals(this.field(ctx, "scrollRow")),
+                "scrollRow=" + this.field(ctx, "scrollRow"));
+        // Keyboard: Tab to Skins and back to Hats (selection resets to the first card), Right, Enter.
+        in.pressKey(InputConstants.KEY_TAB);
+        in.pressKey(InputConstants.KEY_TAB);
+        in.pressKey(InputConstants.KEY_RIGHT);
+        ctx.waitTicks(2);
+        this.shot(ctx, "studio_keyboard_select_second_hat");
+        String hatBeforeKey = this.look(ctx, true);
+        in.pressKey(InputConstants.KEY_RETURN);
+        ctx.waitTicks(15);
+        this.check("studio.keyboard_tab_right_enter", !hatBeforeKey.equals(this.look(ctx, true)),
+                "hat " + hatBeforeKey + " -> " + this.look(ctx, true) + " selected=" + this.field(ctx, "selectedId"));
+        this.shot(ctx, "studio_keyboard_after_apply");
         // Back
         this.clickPanel(ctx, in, 276, 210, 8 + 24, 178 + 8);
         ctx.waitTicks(5);
@@ -336,6 +379,73 @@ public class NeroCompanionUiClientGameTest implements FabricClientGameTest {
         this.lookAtCompanion(ctx, in);
         ctx.waitTicks(5);
         this.shot(ctx, "world_companion_with_look");
+    }
+
+    private void chips(ClientGameTestContext ctx, TestInput in, TestServerContext server) {
+        this.escapeAll(ctx, in);
+        server.runCommand("give @a nerocompanion:guard_protocol_chip");
+        ctx.waitTicks(5);
+        int slot = ctx.computeOnClient(mc -> {
+            for (int i = 0; i < 9; i++) {
+                if (mc.player.getInventory().getItem(i).getItem().getDescriptionId().endsWith("guard_protocol_chip")) {
+                    return i;
+                }
+            }
+            return -1;
+        });
+        this.log("chips", "chip in hotbar slot=" + slot);
+        if (slot < 0) {
+            return;
+        }
+        in.pressKey(o -> o.keyHotbarSlots[slot]);
+        this.lookAtCompanion(ctx, in);
+        in.pressKey(InputConstants.KEY_K);
+        if (!this.awaitScreen(ctx, CompanionScreen.class, 40)) {
+            this.check("chips.open_with_K", false, "screen=" + this.screenName(ctx));
+            return;
+        }
+        ctx.waitTicks(5);
+        int slots = ctx.computeOnClient(mc -> ClientState.companion() == null ? 0 : Math.min(3, ClientState.companion().chipSlots()));
+        int before = this.chipCount(ctx);
+        this.clickPanel(ctx, in, 248, 150, 208 - 20 * (slots - 1) + 9, 112 + 9);
+        ctx.waitTicks(15);
+        this.check("chips.insert_by_click", this.chipCount(ctx) == before + 1, "chips " + before + " -> " + this.chipCount(ctx)
+                + ", hand now=" + this.handItem(ctx));
+        this.shot(ctx, "companion_chip_inserted");
+        // Guard is now unlocked by the chip.
+        this.clickPanel(ctx, in, 248, 150, 132 + 26, 58 + 8);
+        ctx.waitTicks(15);
+        this.check("chips.guard_after_chip", "GUARD".equals(this.snapMode(ctx)), "snapshot mode=" + this.snapMode(ctx));
+        this.shot(ctx, "companion_guard_with_chip");
+        // Take it back out.
+        this.clickPanel(ctx, in, 248, 150, 208 - 20 * (slots - 1) + 9, 112 + 9);
+        ctx.waitTicks(15);
+        this.check("chips.remove_by_click", this.chipCount(ctx) == before, "chips now=" + this.chipCount(ctx));
+        this.shot(ctx, "companion_chip_removed");
+        this.clickPanel(ctx, in, 248, 150, 186 + 26, 40 + 8);
+        ctx.waitTicks(10);
+        this.escapeAll(ctx, in);
+    }
+
+    private int chipCount(ClientGameTestContext ctx) {
+        return ctx.computeOnClient(mc -> ClientState.companion() == null ? -1 : ClientState.companion().chips().size());
+    }
+
+    /** A private field of the open screen, for checks the screen does not expose (selection, scroll row). */
+    private Object field(ClientGameTestContext ctx, String name) {
+        return ctx.computeOnClient(mc -> {
+            Screen screen = screen(mc);
+            if (screen == null) {
+                return "no-screen";
+            }
+            try {
+                java.lang.reflect.Field f = screen.getClass().getDeclaredField(name);
+                f.setAccessible(true);
+                return f.get(screen);
+            } catch (ReflectiveOperationException e) {
+                return "n/a";
+            }
+        });
     }
 
     private void bay(ClientGameTestContext ctx, TestInput in, TestServerContext server) {
@@ -350,7 +460,7 @@ public class NeroCompanionUiClientGameTest implements FabricClientGameTest {
         BlockPos bayPos = ground.above();
         String placed = ctx.computeOnClient(mc -> mc.level.getBlockState(bayPos).getBlock().getDescriptionId());
         this.log("bay.place", "block at target=" + placed);
-        in.pressKey(o -> o.keyHotbarSlots[3]);
+        in.pressKey(o -> o.keyHotbarSlots[8]);
         in.lookAt(bayPos);
         ctx.waitTicks(2);
         in.pressKey(o -> o.keyUse);
@@ -381,7 +491,7 @@ public class NeroCompanionUiClientGameTest implements FabricClientGameTest {
         this.escapeAll(ctx, in);
         in.pressKey(o -> o.keyHotbarSlots[1]);
         this.openRadialAndRelease(ctx, in);
-        this.moveToGui(ctx, in, 0, 65);
+        this.moveToGui(ctx, in, 0, RadialLayout.PILL_Y + 7);
         this.shot(ctx, "radial_hover_recall");
         int before = this.serverCompanionCount(ctx);
         in.pressMouse(LEFT);
@@ -443,11 +553,11 @@ public class NeroCompanionUiClientGameTest implements FabricClientGameTest {
         this.moveToGui(ctx, in, Math.sin(rad) * 28.0D, -Math.cos(rad) * 28.0D);
     }
 
-    /** Moves the cursor to (dx, dy) GUI px from the centre of the screen. */
+    /** Moves the cursor to (dx, dy) GUI px from the radial's centre (the screen's x middle, RadialLayout.centreY). */
     private void moveToGui(ClientGameTestContext ctx, TestInput in, double dx, double dy) {
         int gw = ctx.computeOnClient(mc -> mc.getWindow().getGuiScaledWidth());
         int gh = ctx.computeOnClient(mc -> mc.getWindow().getGuiScaledHeight());
-        this.cursorAtGui(ctx, in, gw / 2 + dx, gh / 2 + dy);
+        this.cursorAtGui(ctx, in, gw / 2 + dx, RadialLayout.centreY(gh) + dy);
     }
 
     private void cursorAtGui(ClientGameTestContext ctx, TestInput in, double gx, double gy) {

@@ -49,6 +49,9 @@ public class RemoteRadialScreen extends Screen {
      * moves at least {@link RadialLayout#MOVE_PX} px a release selects nothing (it must not send "Come here").
      */
     private boolean moved;
+    /** Where the cursor was when the radial opened (NaN until the first frame); movement is measured from here. */
+    private double startX = Double.NaN;
+    private double startY = Double.NaN;
 
     public RemoteRadialScreen() {
         super(Component.translatable("gui.nerocompanion.radial.title"));
@@ -96,8 +99,12 @@ public class RemoteRadialScreen extends Screen {
     /** The element under the cursor; {@code click} lets a deliberate left click choose the hub without moving. */
     private int pick(double mx, double my, boolean click) {
         double dx = mx - this.width / 2;
-        double dy = my - this.height / 2;
-        if (RadialLayout.movedOff(dx, dy)) {
+        double dy = my - RadialLayout.centreY(this.height);
+        if (Double.isNaN(this.startX)) {
+            this.startX = mx;
+            this.startY = my;
+        }
+        if (RadialLayout.movedOff(mx - this.startX, my - this.startY)) {
             this.moved = true;
         }
         return RadialLayout.pick(dx, dy, this.moved, click, this.hovered);
@@ -109,13 +116,15 @@ public class RemoteRadialScreen extends Screen {
             return;
         }
         int cx = this.width / 2;
-        int cy = this.height / 2;
+        int cy = RadialLayout.centreY(this.height);
         this.hovered = this.pick(mx, my);
         // name plate
         Sheet.nine(g, cx - 60, cy - 66, 120, 14, 0, 240, 4);
         Sheet.blit(g, cx - 56, cy - 63, 32 + 8 * ClientText.typeIndex(t.type()), 56, 8, 8);
-        Component plate = Component.translatable("gui.nerocompanion.radial.target",
-                ClientText.displayName(t.name(), t.type()), ClientText.typeName(t.type()));
+        // Unnamed: the type is the name, so it is said once.
+        Component plate = t.name().isEmpty() ? ClientText.typeName(t.type())
+                : Component.translatable("gui.nerocompanion.radial.target", ClientText.displayName(t.name(), t.type()),
+                        ClientText.typeName(t.type()));
         String plateText = plate.getString();
         boolean several = ClientState.hud().stream().filter(e -> e.has(Payloads.HudEntry.LOADED)).count() > 1;
         int room = several ? 60 : 104;
@@ -167,16 +176,22 @@ public class RemoteRadialScreen extends Screen {
         }
         if (line != null) {
             String text = this.fit(line.getString(), 176);
-            g.text(this.font, text, cx - this.font.width(text) / 2, cy + 46, colour, false);
+            int lw = this.font.width(text);
+            int ly = cy + RadialLayout.LINE_Y;
+            // A dark backing so the line stays readable over the world and the chat behind the radial.
+            g.fill(cx - lw / 2 - 3, ly - 2, cx - lw / 2 + lw + 3, ly + 10, 0xB0000000);
+            g.text(this.font, text, cx - lw / 2, ly, colour, false);
         }
         // recall pill
         boolean pillHot = this.hovered == 8;
-        int pillX = cx - 48;
-        int pillY = cy + 58;
-        g.fill(pillX, pillY, pillX + 96, pillY + 14, pillHot ? CompanionColours.EDGE_HOT : CompanionColours.PRIMARY_EDGE);
-        g.fill(pillX + 1, pillY + 1, pillX + 95, pillY + 13,
+        int pillX = cx + RadialLayout.PILL_X;
+        int pillY = cy + RadialLayout.PILL_Y;
+        int pillW = RadialLayout.PILL_W;
+        g.fill(pillX, pillY, pillX + pillW, pillY + RadialLayout.PILL_H,
+                pillHot ? CompanionColours.EDGE_HOT : CompanionColours.PRIMARY_EDGE);
+        g.fill(pillX + 1, pillY + 1, pillX + pillW - 1, pillY + RadialLayout.PILL_H - 1,
                 pillHot ? CompanionColours.BUTTON_HOVER : CompanionColours.BUTTON_BODY);
-        String pill = Component.translatable("gui.nerocompanion.radial.recall").getString();
+        String pill = this.fit(Component.translatable("gui.nerocompanion.radial.recall").getString(), pillW - 6);
         g.text(this.font, pill, cx - this.font.width(pill) / 2, pillY + 3, CompanionColours.TITLE, false);
     }
 

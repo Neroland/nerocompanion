@@ -237,7 +237,9 @@ public class CompanionBayBlockEntity extends AbstractMachineBlockEntity {
         }
         this.setChanged();
         this.syncToClients();
-        return Payloads.Feedback.ok("gui.nerocompanion.bay.parked.ok", name);
+        // Say "charging" only when the Bay has power to give; an empty buffer charges nothing.
+        return Payloads.Feedback.ok(this.storedFe() > 0 ? "gui.nerocompanion.bay.parked.ok"
+                : "gui.nerocompanion.bay.parked.no_power", name);
     }
 
     /** Whether a NeroLink recall or reclaim could park one more companion here (readable and not full). */

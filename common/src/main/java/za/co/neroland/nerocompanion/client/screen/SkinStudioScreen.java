@@ -36,7 +36,10 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
 
     public static final int WIDTH = 276;
     public static final int HEIGHT = 210;
-    private static final int[] CARD_X = {116, 168, 220};
+    /** Card columns; the third ends at 262 so the scroll arrows (x 265) sit clear of it. */
+    private static final int[] CARD_X = {114, 164, 214};
+    private static final int ARROW_X = 265;
+    private static final int[] TAB_X = {114, 164};
     private static final int[] CARD_Y = {48, 100};
     /** Preview stage height: it ends at y 160, above the caption (165-173), the buttons (178-194) and the footer (196). */
     private static final int STAGE_H = 130;
@@ -48,7 +51,12 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
 
     private final Inventory inventory;
     private boolean hats;
-    private int selected;
+    /**
+     * The selected card, by look id (empty = the standard card), so the selection stays on the same look when the
+     * cards re-sort (the applied card moves first after an Apply). {@code selectFirst}: whichever card is first.
+     */
+    private Optional<Identifier> selectedId = Optional.empty();
+    private boolean selectFirst = true;
     private int scrollRow;
     private boolean paused;
     private float yaw;
@@ -98,6 +106,37 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
                 this.showFeedback(s.feedback());
             }
         }
+    }
+
+    private int selectedIndex(List<Card> cards) {
+        if (!this.selectFirst) {
+            for (int i = 0; i < cards.size(); i++) {
+                if (cards.get(i).id().equals(this.selectedId)) {
+                    return i;
+                }
+            }
+        }
+        return 0;
+    }
+
+    /** Selects the card at {@code index} (clamped) by its id and scrolls it into view. */
+    private void select(List<Card> cards, int index) {
+        int i = Math.max(0, Math.min(index, cards.size() - 1));
+        this.selectedId = cards.isEmpty() ? Optional.empty() : cards.get(i).id();
+        this.selectFirst = false;
+        int row = i / 3;
+        if (row < this.scrollRow) {
+            this.scrollRow = row;
+        } else if (row > this.scrollRow + 1) {
+            this.scrollRow = row - 1;
+        }
+    }
+
+    private void showTab(boolean hats) {
+        this.hats = hats;
+        this.selectFirst = true;
+        this.selectedId = Optional.empty();
+        this.scrollRow = 0;
     }
 
     /** Applied first, then unlocked (default first), then locked - alphabetical within a group. */
@@ -232,7 +271,7 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
         // 1 preview stage: the live companion wearing the selected look; the type glyph while it is away
         Sheet.nine(g, x + 8, y + 30, 100, STAGE_H, 144, 240, 3);
         List<Card> all = this.cards(s);
-        Card chosen = all.get(Math.max(0, Math.min(this.selected, all.size() - 1)));
+        Card chosen = all.get(this.selectedIndex(all));
         if (!this.drawPreview(g, s, chosen, x + 10, y + 32, 96, STAGE_H - 20)) {
             int glyph = ClientText.typeIndex(s.chassis());
             int size = 64;
@@ -246,17 +285,18 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
             this.tooltip(Component.translatable("gui.nerocompanion.studio.preview.tip"));
         }
         // 2 caption
-        this.text(g, this.fit(Component.translatable("gui.nerocompanion.companion.typeline",
-                ClientText.displayName(s.name(), s.chassis()), ClientText.typeName(s.chassis())).getString(), 100),
-                x + 8, y + 165, CompanionColours.SUBTLE);
+        Component caption = s.name().isEmpty() ? ClientText.typeName(s.chassis())
+                : Component.translatable("gui.nerocompanion.companion.typeline", ClientText.displayName(s.name(),
+                        s.chassis()), ClientText.typeName(s.chassis()));
+        this.text(g, this.fitWords(caption.getString(), 100), x + 8, y + 165, CompanionColours.SUBTLE);
         // 3 tabs
-        this.tab(g, mx, my, x + 116, y + 30, Component.translatable("gui.nerocompanion.studio.tab.skins"), !this.hats,
+        this.tab(g, mx, my, x + TAB_X[0], y + 30, Component.translatable("gui.nerocompanion.studio.tab.skins"), !this.hats,
                 "gui.nerocompanion.studio.tab.skins.tip");
-        this.tab(g, mx, my, x + 168, y + 30, Component.translatable("gui.nerocompanion.studio.tab.hats"), this.hats,
+        this.tab(g, mx, my, x + TAB_X[1], y + 30, Component.translatable("gui.nerocompanion.studio.tab.hats"), this.hats,
                 "gui.nerocompanion.studio.tab.hats.tip");
         // 4 cards
         List<Card> cards = this.cards(s);
-        this.selected = Math.max(0, Math.min(this.selected, cards.size() - 1));
+        int selected = this.selectedIndex(cards);
         for (int i = 0; i < 6; i++) {
             int index = this.scrollRow * 3 + i;
             if (index >= cards.size()) {
@@ -265,7 +305,7 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
             Card card = cards.get(index);
             int cx = x + CARD_X[i % 3];
             int cy = y + CARD_Y[i / 3];
-            boolean sel = index == this.selected;
+            boolean sel = index == selected;
             boolean hot = inside(mx, my, cx, cy, 48, 48);
             Sheet.nine(g, cx, cy, 48, 48, sel ? 128 : 0, 240, sel ? 3 : 4);
             if (hot) {
@@ -273,8 +313,10 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
             }
             int alpha = card.unlocked() ? 0xFF000000 : 0x80000000;
             g.fill(cx + 2, cy + 2, cx + 46, cy + 8, (card.swatch() & 0x00FFFFFF) | alpha);
-            List<net.minecraft.util.FormattedCharSequence> lines = this.font.split(card.name(), 42);
-            for (int l = 0; l < Math.min(2, lines.size()); l++) {
+            // Two lines, broken between words; a word too long for the card ends in an ellipsis (the full name is in
+            // the tooltip and the detail line).
+            List<String> lines = this.wrap(card.name().getString(), 42, 42);
+            for (int l = 0; l < lines.size(); l++) {
                 g.text(this.font, lines.get(l), cx + 3, cy + 10 + 10 * l,
                         card.unlocked() ? CompanionColours.TITLE : CompanionColours.SUBTLE, false);
             }
@@ -289,16 +331,17 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
             }
         }
         // 5 scroll arrows
-        Sheet.blit(g, x + 262, y + 48, 176, 240, 8, 8);
-        Sheet.blit(g, x + 262, y + 140, 184, 240, 8, 8);
+        Sheet.blit(g, x + ARROW_X, y + 48, 176, 240, 8, 8);
+        Sheet.blit(g, x + ARROW_X, y + 140, 184, 240, 8, 8);
         // 6/7 detail
-        Card current = cards.get(this.selected);
-        this.text(g, this.fit(current.name().getString(), 150), x + 116, y + 152, CompanionColours.TITLE);
+        Card current = cards.get(selected);
+        this.text(g, this.fitWords(current.name().getString(), 150), x + 116, y + 151, CompanionColours.TITLE);
         Component sentence = current.applied() ? Component.translatable("gui.nerocompanion.unlock.applied")
                 : current.sentence();
-        List<net.minecraft.util.FormattedCharSequence> detail = this.font.split(sentence, 84);
-        for (int l = 0; l < Math.min(2, detail.size()); l++) {
-            g.text(this.font, detail.get(l), x + 116, y + 163 + 10 * l, CompanionColours.SUBTLE, false);
+        // Two full-width lines at a 9 px pitch end at y 177, just above the Back / Apply buttons (y 178).
+        List<String> detail = this.wrap(sentence.getString(), 150, 150);
+        for (int l = 0; l < detail.size(); l++) {
+            g.text(this.font, detail.get(l), x + 116, y + 160 + 9 * l, CompanionColours.SUBTLE, false);
         }
         // 8 back, 9 apply
         boolean backHot = inside(mx, my, x + 8, y + 178, 48, 16);
@@ -358,10 +401,8 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
             clickSound();
             return true;
         }
-        if (inside(mx, my, x + 116, y + 30, 48, 14) || inside(mx, my, x + 168, y + 30, 48, 14)) {
-            this.hats = inside(mx, my, x + 168, y + 30, 48, 14);
-            this.selected = 0;
-            this.scrollRow = 0;
+        if (inside(mx, my, x + TAB_X[0], y + 30, 48, 14) || inside(mx, my, x + TAB_X[1], y + 30, 48, 14)) {
+            this.showTab(inside(mx, my, x + TAB_X[1], y + 30, 48, 14));
             clickSound();
             return true;
         }
@@ -369,16 +410,16 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
         for (int i = 0; i < 6; i++) {
             int index = this.scrollRow * 3 + i;
             if (index < cards.size() && inside(mx, my, x + CARD_X[i % 3], y + CARD_Y[i / 3], 48, 48)) {
-                this.selected = index;
+                this.select(cards, index);
                 clickSound();
                 return true;
             }
         }
-        if (inside(mx, my, x + 262, y + 48, 8, 8)) {
+        if (inside(mx, my, x + ARROW_X, y + 48, 8, 8)) {
             this.scrollRow = Math.max(0, this.scrollRow - 1);
             return true;
         }
-        if (inside(mx, my, x + 262, y + 140, 8, 8)) {
+        if (inside(mx, my, x + ARROW_X, y + 140, 8, 8)) {
             this.scrollRow = Math.min(Math.max(0, (cards.size() - 1) / 3 - 1), this.scrollRow + 1);
             return true;
         }
@@ -394,7 +435,7 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
     }
 
     private void apply(Payloads.CompanionSnapshot s, List<Card> cards) {
-        Card card = cards.get(Math.max(0, Math.min(this.selected, cards.size() - 1)));
+        Card card = cards.get(this.selectedIndex(cards));
         if (this.isWaiting() || !card.unlocked() || card.applied()) {
             return;
         }
@@ -431,16 +472,14 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
             return false;
         }
         List<Card> cards = this.cards(s);
+        int sel = this.selectedIndex(cards);
         switch (key) {
-            case InputConstants.KEY_LEFT -> this.selected = Math.max(0, this.selected - 1);
-            case InputConstants.KEY_RIGHT -> this.selected = Math.min(cards.size() - 1, this.selected + 1);
-            case InputConstants.KEY_UP -> this.selected = Math.max(0, this.selected - 3);
-            case InputConstants.KEY_DOWN -> this.selected = Math.min(cards.size() - 1, this.selected + 3);
+            case InputConstants.KEY_LEFT -> this.select(cards, sel - 1);
+            case InputConstants.KEY_RIGHT -> this.select(cards, sel + 1);
+            case InputConstants.KEY_UP -> this.select(cards, sel - 3);
+            case InputConstants.KEY_DOWN -> this.select(cards, sel + 3);
             case InputConstants.KEY_RETURN, InputConstants.KEY_NUMPADENTER -> this.apply(s, cards);
-            case InputConstants.KEY_TAB -> {
-                this.hats = !this.hats;
-                this.selected = 0;
-            }
+            case InputConstants.KEY_TAB -> this.showTab(!this.hats);
             default -> {
                 return false;
             }

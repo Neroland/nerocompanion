@@ -21,10 +21,12 @@ public final class RadialLayout {
     public static final int INNER = 10;
     /** How far the cursor must move from the centre before the hub can be selected by direction alone. */
     public static final int MOVE_PX = 4;
+    /** The description line under the ring, relative to the centre (below the wedge numbers, which end at +50). */
+    public static final int LINE_Y = 52;
     /** The Recall pill, relative to the centre: x, y, width, height. */
-    public static final int PILL_X = -48;
-    public static final int PILL_Y = 58;
-    public static final int PILL_W = 96;
+    public static final int PILL_X = -56;
+    public static final int PILL_Y = 64;
+    public static final int PILL_W = 112;
     public static final int PILL_H = 14;
 
     /** What a mouse button does once the element under the cursor is known. */
@@ -37,7 +39,23 @@ public final class RadialLayout {
         STAY_OPEN
     }
 
+    /** Space the name plate needs above the centre, and the pill below it. */
+    static final int ABOVE = 68;
+    static final int BELOW = PILL_Y + PILL_H;
+    /** Room kept clear at the bottom of the screen: the hotbar, and the held-item name vanilla draws above it. */
+    static final int BOTTOM_CLEAR = 62;
+
     private RadialLayout() {
+    }
+
+    /**
+     * The ring's centre y on a screen {@code height} GUI px tall: the middle, raised when needed so the Recall pill
+     * stays above the hotbar and the held-item name, but never so high that the name plate leaves the screen. When it
+     * is raised the cursor opens below the ring's centre, which is why {@link #pick} selects nothing until the cursor
+     * has moved.
+     */
+    public static int centreY(int height) {
+        return Math.max(ABOVE, Math.min(height / 2, height - BOTTOM_CLEAR - BELOW));
     }
 
     /** Whether the cursor is far enough from the centre to count as having moved off it. */
@@ -54,6 +72,11 @@ public final class RadialLayout {
      *                stays selected so a flick works
      */
     public static int pick(double dx, double dy, boolean moved, boolean click, int current) {
+        if (!moved && !click) {
+            // Until the cursor moves, nothing is selected: the cursor may open off-centre (see centreY), and letting
+            // go of the Remote without aiming must never send anything.
+            return NONE;
+        }
         if (dx >= PILL_X && dy >= PILL_Y && dx < PILL_X + PILL_W && dy < PILL_Y + PILL_H) {
             return RECALL;
         }
