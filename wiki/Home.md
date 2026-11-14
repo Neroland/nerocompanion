@@ -1,7 +1,7 @@
 # NeroCompanion Wiki
 
 Personal drones, helper bots and a scrap pet for the Neroland sci-fi Minecraft mods. Built on **Neroland Core**.
-Version `0.6.0-beta.1`.
+Version `0.7.0-beta.1`.
 
 ## Start here
 

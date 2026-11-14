@@ -11,7 +11,7 @@ something when it is installed and nothing breaks when it is not.
 | **NeroEconomy** | Shop looks can be bought in the Skin Studio and stay unlocked; servers can charge credits for reclaiming. See [NeroEconomy integration](NeroEconomy-Integration.md) |
 | **NeroColonies** | Companions never break, place, open, enter or attack inside a colony where their owner may not build |
 | **NeroSecurity** | Companions never open, break or enter a secured device their owner may not use |
-| **NeroFactions** | A Combat Bot never attacks a member of its owner's faction |
+| **NeroFactions** (0.7.0-beta.1 or later) | A Combat Bot never attacks a member of its owner's faction |
 | **NeroCreatures** | Taming a creature counts for the *Pet Adopted* quest |
 | **NeroQuests** | The Companion Log quest chapter. See [NeroQuests integration](NeroQuests-Integration.md) |
 | **NeroLink** | The phone app shows and controls your companions. See [NeroLink](NeroLink.md) |

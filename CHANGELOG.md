@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0-beta.1] - 2026-11-14
+
+### Changed
+
+- **NeroFactions 0.7.0-beta.1 or later.** The Combat Bot's "never attack your own faction" check now reads
+  faction membership through NeroFactions' public API, built against 0.7.0-beta.1. An older NeroFactions is
+  treated as installed but unreachable: combat bots play safe and do not attack other players or their companions,
+  and the server log says so once. Without NeroFactions nothing changes.
+
 ## [0.6.0-beta.1] - 2026-11-08
 
 ### Fixed

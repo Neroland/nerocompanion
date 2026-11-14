@@ -2,7 +2,7 @@
 
 > Part of the Neroland sci-fi Minecraft mod ecosystem, built on **Neroland Core**.
 
-**Version `0.6.0-beta.1`.** Personal drones, helper bots and a scrap pet that follow you, work for you and grow
+**Version `0.7.0-beta.1`.** Personal drones, helper bots and a scrap pet that follow you, work for you and grow
 attached to you. Player documentation lives in the [wiki](wiki/Home.md); this file describes what the source does.
 
 ## What the mod does

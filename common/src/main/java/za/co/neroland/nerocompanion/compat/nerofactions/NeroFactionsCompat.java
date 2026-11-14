@@ -21,6 +21,9 @@ import za.co.neroland.nerocompanion.entity.CompanionEntity;
  * with its own owner. NeroFactions has no claims or territory, so breaking, placing, opening and entering get no
  * objection from it; claim checks come from NeroColonies and NeroSecurity.
  *
+ * <p>Membership comes from NeroFactions' public API ({@code NeroFactionsApi.membershipOf}, 0.7.0-beta.1 and
+ * later). An older NeroFactions without that API fails the probe and is treated as installed but unreachable.
+ *
  * <p>Privacy: membership sets are read for the two UUIDs already in hand and never stored or logged.
  */
 public final class NeroFactionsCompat {
@@ -72,8 +75,12 @@ public final class NeroFactionsCompat {
         if (query.action() != AuthorityAction.ATTACK) {
             return Decision.ALLOW;
         }
-        UUID other = answersTo(query.target());
-        return other == null || other.equals(query.owner()) ? Decision.ALLOW : Decision.deny("sibling_unavailable");
+        return failClosed(query.owner(), answersTo(query.target()));
+    }
+
+    /** The fail-closed answer to an attack by {@code owner}'s companion on something {@code other} answers to. */
+    static Decision failClosed(UUID owner, @Nullable UUID other) {
+        return other == null || other.equals(owner) ? Decision.ALLOW : Decision.deny("sibling_unavailable");
     }
 
     static Decision check(AuthorityQuery query) {
