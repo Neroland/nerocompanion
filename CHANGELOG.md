@@ -7,9 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.1-beta.1] - 2026-11-16
+
+Your companions and Bays on a Neroland map. Requires **Neroland Core 1.19.0**.
+
+### Added
+
+- Two map layers through Neroland Core's map API, both shown only to the owner: `nerocompanion:companions`
+  (companions out in the world where they stand, or where they were last seen if out of range, and lost
+  companions at their last-known spot) and `nerocompanion:home_bays` (the Bays your companions are parked in or
+  call home, numbered as in the NeroLink app). Positions are read on each request and not stored. Salvage has
+  no position and is not on the map.
+
 ### Dependencies
 
-- Updated Neroland Core from 1.17.4 to 1.17.6.
+- Updated Neroland Core from 1.17.4 to 1.19.0 (map API).
 - Updated NeroEconomy from 0.5.0-beta.1 to 0.5.1-beta.1.
 - Updated NeroColonies from 0.6.1-beta.1 to 0.8.0-beta.1.
 - Updated NeroFactions from 0.7.0-beta.1 to 0.7.0-beta.2.

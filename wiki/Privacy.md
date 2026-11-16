@@ -13,6 +13,8 @@ have it deleted. The full policy is in
 
 Nothing is written to logs about you, and notifications and alerts never contain a position.
 
+With a Neroland map mod installed, your own companions (lost ones at their last-known spot) and home Bays appear on your own map; nobody else sees them, and nothing new is stored.
+
 ## Your controls
 
 | Command | What it does |

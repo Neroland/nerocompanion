@@ -80,6 +80,11 @@ with each one carries the same text (for salvage also the minutes left) and a li
 NeroCompanion keeps a one-minute, memory-only note of what it last sent you so it does not repeat itself. The app
 only ever sees your own companions, and never a coordinate.
 
+The one exception is the map. Through Neroland Core's map API, a map mod (and, through that map mod's own NeroLink
+module, its app) can show you where your own companions are, where a lost one was last seen, and where your home Bays
+are. Only you see them; positions are read from the Recovery ledger and the loaded companion on each request and
+NeroCompanion stores nothing new for it.
+
 With `/nscomp privacy push off`, NeroCompanion sends nothing at all about your companions to NeroLink: no push and no
 alert, so the app's alert list shows none from NeroCompanion (the companion list still shows how they are). With push
 on (the default), the *Companions* category in the app, which is off until you turn it on, still decides whether any

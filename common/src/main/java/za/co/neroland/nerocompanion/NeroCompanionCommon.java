@@ -100,6 +100,9 @@ public final class NeroCompanionCommon {
         //    The milestone gates' bond listener (the other milestones are opened inline by the code that earns them).
         za.co.neroland.nerocompanion.progression.CompanionProgress.init();
 
+        // 7b. Map layers for a Neroland map consumer (Core map API): the viewer's own companions and Bays only.
+        za.co.neroland.nerocompanion.map.CompanionMapLayers.register();
+
         // 8. NeroLink module, last and isolated: a link failure must never stop the mod loading (Stage 8).
         try {
             initLink();
