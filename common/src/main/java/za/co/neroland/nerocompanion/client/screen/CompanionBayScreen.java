@@ -1,9 +1,11 @@
 package za.co.neroland.nerocompanion.client.screen;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.blaze3d.platform.InputConstants;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -13,6 +15,8 @@ import org.jetbrains.annotations.Nullable;
 import za.co.neroland.nerocompanion.client.ClientState;
 import za.co.neroland.nerocompanion.client.ClientText;
 import za.co.neroland.nerocompanion.client.CompanionColours;
+import za.co.neroland.nerocompanion.client.GaugeMath;
+import za.co.neroland.nerocompanion.client.GaugeTooltips;
 import za.co.neroland.nerocompanion.client.gui.Sheet;
 import za.co.neroland.nerocompanion.client.gui.UiFormat;
 import za.co.neroland.nerocompanion.menu.BayMenu;
@@ -37,6 +41,9 @@ public class CompanionBayScreen extends CompanionScreenBase<BayMenu> {
     private int nearbyScroll;
     private int lostScroll;
     private int focus = -1;
+    /** Client-side rate windows over the synced gauge values (a park or unpark jump resets a slot's). */
+    private final GaugeMath.RateWindow bufferWindow = new GaugeMath.RateWindow();
+    private final GaugeMath.RateWindow[] slotWindows = new GaugeMath.RateWindow[4];
 
     public CompanionBayScreen(BayMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title, WIDTH, HEIGHT);
@@ -80,6 +87,51 @@ public class CompanionBayScreen extends CompanionScreenBase<BayMenu> {
         return count;
     }
 
+    /** The current game tick (the rate windows' clock), or 0 before a level exists. */
+    private static long gameTick() {
+        Minecraft mc = Minecraft.getInstance();
+        return mc.level == null ? 0L : mc.level.getGameTime();
+    }
+
+    private GaugeMath.RateWindow slotWindow(int k) {
+        if (this.slotWindows[k] == null) {
+            this.slotWindows[k] = new GaugeMath.RateWindow(30);
+        }
+        return this.slotWindows[k];
+    }
+
+    /** The Bay's stored FE: live from the menu once synced, else the snapshot's. */
+    private long storedFe(Payloads.BaySnapshot s) {
+        return this.menu.live() ? this.menu.storedFe() : s.bufferFe();
+    }
+
+    private long capacityFe(Payloads.BaySnapshot s) {
+        return this.menu.live() ? this.menu.capacityFe() : s.bufferCapacityFe();
+    }
+
+    /** One parked slot's charge percent: live for the viewer's own companion once synced. */
+    private int slotPercent(Payloads.BaySlotView slot, int k) {
+        return this.menu.live() && slot.kind() == Payloads.BaySlotView.MINE ? this.menu.slotPercent(k)
+                : slot.energyPct();
+    }
+
+    /** Sample the gauges once per frame (one sample per game tick is kept). */
+    private void sampleGauges(Payloads.BaySnapshot s) {
+        if (!this.menu.live()) {
+            return;
+        }
+        long tick = gameTick();
+        this.bufferWindow.sample(tick, this.menu.storedFe());
+        for (int k = 0; k < this.slotWindows.length; k++) {
+            Payloads.BaySlotView slot = k < s.slots().size() ? s.slots().get(k) : Payloads.BaySlotView.empty();
+            if (slot.kind() == Payloads.BaySlotView.MINE) {
+                this.slotWindow(k).sample(tick, this.menu.slotPercent(k));
+            } else {
+                this.slotWindow(k).reset();
+            }
+        }
+    }
+
     private boolean atCap(Payloads.BaySnapshot s) {
         return s.liveCount() >= s.liveCap();
     }
@@ -92,6 +144,7 @@ public class CompanionBayScreen extends CompanionScreenBase<BayMenu> {
         if (s == null) {
             return;
         }
+        this.sampleGauges(s);
         this.text(g, Component.translatable("gui.nerocompanion.bay.parked", this.occupied(s)), x + 8, y + 30,
                 CompanionColours.SUBTLE);
         // 2/3 cards + unpark
@@ -105,19 +158,27 @@ public class CompanionBayScreen extends CompanionScreenBase<BayMenu> {
                 Sheet.blit(g, cx + 3, cy + 3, 16 * ClientText.typeIndex(slot.type()), 32, 16, 16);
                 Component name = ClientText.displayName(slot.name(), slot.type());
                 this.text(g, this.fit(name.getString(), 22), cx + 22, cy + 7, CompanionColours.TITLE);
-                int fill = UiFormat.fill(slot.energyPct(), 40);
+                int slotPct = this.slotPercent(slot, k);
+                int fill = UiFormat.fill(slotPct, 40);
                 Sheet.blit(g, cx + 4, cy + 23, fill, 4, 0, 72, Math.min(fill, 64), 4, Sheet.WHITE);
                 int led = slot.state() == Payloads.BaySlotView.STATE_FULL ? CompanionColours.OK_GREEN
                         : slot.state() == Payloads.BaySlotView.STATE_CHARGING ? CompanionColours.COMPANION_TEAL
                                 : CompanionColours.TEAL_DIM;
                 Sheet.tinted(g, cx + 41, cy + 3, 112, 48, 4, 4, led);
-                if (cardHot) {
-                    this.tooltip(Component.translatable("gui.nerocompanion.bay.slot.mine.tip", name, slot.energyPct(),
-                            Component.translatable("gui.nerocompanion.bay.state." + switch (slot.state()) {
-                                case Payloads.BaySlotView.STATE_CHARGING -> "charging";
-                                case Payloads.BaySlotView.STATE_FULL -> "full";
-                                default -> "parked";
-                            })));
+                Component state = Component.translatable("gui.nerocompanion.bay.state." + switch (slot.state()) {
+                    case Payloads.BaySlotView.STATE_CHARGING -> "charging";
+                    case Payloads.BaySlotView.STATE_FULL -> "full";
+                    default -> "parked";
+                });
+                if (inside(mx, my, cx + 3, cy + 21, 42, 8)) {
+                    // The charge bar itself: what it is, how much, and the charge rate.
+                    List<Component> lines = new ArrayList<>();
+                    GaugeTooltips.parkedCharge(lines, name, slotPct,
+                            this.menu.live() ? this.slotWindow(k).perTick() : 0D,
+                            slotPct >= 100 ? Component.translatable("gui.nerocompanion.bay.state.full") : state);
+                    this.tooltip(lines);
+                } else if (cardHot) {
+                    this.tooltip(Component.translatable("gui.nerocompanion.bay.slot.mine.tip", name, slotPct, state));
                 }
             } else if (slot.kind() == Payloads.BaySlotView.FOREIGN) {
                 Sheet.blit(g, cx, cy, 144, 176, 48, 32);
@@ -156,7 +217,9 @@ public class CompanionBayScreen extends CompanionScreenBase<BayMenu> {
         this.text(g, Component.translatable("gui.nerocompanion.bay.power.section"), x + 8, y + 91,
                 CompanionColours.SUBTLE);
         Sheet.threeSlice(g, x + 8, y + 100, 204, 0, 64, 64, 6, 2);
-        int pct = s.bufferCapacityFe() <= 0 ? 0 : (int) Math.min(100L, s.bufferFe() * 100L / s.bufferCapacityFe());
+        long storedFe = this.storedFe(s);
+        long capacityFe = this.capacityFe(s);
+        int pct = capacityFe <= 0 ? 0 : (int) Math.min(100L, storedFe * 100L / capacityFe);
         int fill = UiFormat.fill(pct, 202);
         for (int drawn = 0; drawn < fill; drawn += 64) {
             Sheet.blit(g, x + 9 + drawn, y + 101, Math.min(64, fill - drawn), 4, 0, 72, Math.min(64, fill - drawn), 4,
@@ -168,15 +231,18 @@ public class CompanionBayScreen extends CompanionScreenBase<BayMenu> {
                 charging++;
             }
         }
-        Component power = Component.translatable("gui.nerocompanion.bay.power", UiFormat.fe(s.bufferFe()),
-                UiFormat.fe(s.bufferCapacityFe()), charging);
-        if (s.bufferFe() <= 0) {
+        Component power = Component.translatable("gui.nerocompanion.bay.power", UiFormat.fe(storedFe),
+                UiFormat.fe(capacityFe), charging);
+        if (storedFe <= 0) {
             power = Component.translatable("gui.nerocompanion.bay.power.with_empty", power,
                     Component.translatable("gui.nerocompanion.bay.power.empty"));
         }
         this.text(g, this.fit(power.getString(), 232), x + 8, y + 108, CompanionColours.TITLE);
         if (inside(mx, my, x + 8, y + 99, 204, 18)) {
-            this.tooltip(Component.translatable("gui.nerocompanion.bay.power.tip"));
+            List<Component> lines = new ArrayList<>();
+            GaugeTooltips.buffer(lines, storedFe, capacityFe, this.bufferWindow.perTick(), charging);
+            lines.add(Component.translatable("gui.nerocompanion.bay.power.tip"));
+            this.tooltip(lines);
         }
         // 5 nearby list
         // Each header fits its own column (the two sit side by side), cut between words if a translation is long.

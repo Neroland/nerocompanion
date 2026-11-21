@@ -21,6 +21,7 @@ import za.co.neroland.nerocompanion.chip.ChipKinds;
 import za.co.neroland.nerocompanion.client.ClientState;
 import za.co.neroland.nerocompanion.client.ClientText;
 import za.co.neroland.nerocompanion.client.CompanionColours;
+import za.co.neroland.nerocompanion.client.GaugeTooltips;
 import za.co.neroland.nerocompanion.client.gui.Sheet;
 import za.co.neroland.nerocompanion.client.gui.UiFormat;
 import za.co.neroland.nerocompanion.entity.CompanionMode;
@@ -251,7 +252,15 @@ public class CompanionScreen extends CompanionScreenBase<CompanionMenu> {
         Component line = this.energyLine(s);
         this.text(g, this.fit(line.getString(), 118), x + 8, y + 76, CompanionColours.TITLE);
         if (inside(mx, my, x + 8, y + 67, 112, 18)) {
-            this.tooltip(Component.translatable("gui.nerocompanion.companion.energy.tip"));
+            // What it is, how much, and the server's known charge or drain rate for the current job.
+            List<Component> lines = new ArrayList<>();
+            boolean asleep = s.has(Payloads.CompanionSnapshot.SLEEPING) || s.mode() == CompanionMode.SLEEP;
+            long drain = s.mode().isActiveDrain() ? s.drainActiveFePerSec() : s.drainIdleFePerSec();
+            GaugeTooltips.battery(lines, s.has(Payloads.CompanionSnapshot.LOADED), s.energyFe(), s.capacityFe(),
+                    s.has(Payloads.CompanionSnapshot.CHARGING) ? s.chargingFePerTick() : 0L, drain, asleep,
+                    ClientText.modeName(s.mode()));
+            lines.add(Component.translatable("gui.nerocompanion.companion.energy.tip"));
+            this.tooltip(lines);
         }
 
         // 6 bond
@@ -264,7 +273,10 @@ public class CompanionScreen extends CompanionScreenBase<CompanionMenu> {
         if (inside(mx, my, x + 40, y + 87, 38, 8)) {
             Component next = s.bondLevel() >= 4 ? Component.translatable("gui.nerocompanion.bond.max")
                     : Component.translatable("gui.nerocompanion.bond.next." + (s.bondLevel() + 1));
-            this.tooltip(Component.translatable("gui.nerocompanion.companion.bond.tip", s.bondLevel(), next));
+            List<Component> lines = new ArrayList<>();
+            lines.add(Component.translatable("gui.nerocompanion.companion.bond.tip", s.bondLevel(), next));
+            GaugeTooltips.bondPoints(lines, s.bondLevel(), s.bondPointsToNext());
+            this.tooltip(lines);
         }
 
         // 7 modes
