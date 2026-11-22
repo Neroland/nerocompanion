@@ -574,6 +574,8 @@
   "nerocompanion.gui.gauge.parked.rate": "Charging, +%s%%/min",
   "quest.nerocompanion.companion_log.blueprint.desc": "Craft your first companion Capsule. A Helper Drone Capsule is the simplest place to start.",
   "quest.nerocompanion.companion_log.blueprint.title": "Blueprint",
+  "quest.nerocompanion.companion_log.bond_max.desc": "Keep at it with one companion until your bond reaches the top level.",
+  "quest.nerocompanion.companion_log.bond_max.title": "Soulbound",
   "quest.nerocompanion.companion_log.bond_three.desc": "Work, play and spend time with one companion until your bond reaches level 3.",
   "quest.nerocompanion.companion_log.bond_three.title": "Best Friends",
   "quest.nerocompanion.companion_log.companion_keeper.desc": "Deploy, upgrade, adopt and fill out a squad. Finishing all four earns the Aurora cosmetic skin for your companions.",

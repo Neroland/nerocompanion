@@ -19,7 +19,7 @@ import za.co.neroland.nerocompanion.NeroCompanionCommon;
  * checked to allow or deny anything.
  *
  * <p>The real events open them through {@link CompanionProgress} (deploy, chip install, charge, a unit of mining /
- * carrying / repair / guard work, a Scrapling hatch or NeroCreatures pet adoption, bond level 3, a reclaimed lost
+ * carrying / repair / guard work, a Scrapling hatch or NeroCreatures pet adoption, bond level 3 and the top bond level, a reclaimed lost
  * companion, and the LIVE count reaching the cap); the {@code record...} methods below stay for callers that hold an
  * online player.
  *
@@ -56,12 +56,14 @@ public final class CompanionMilestones {
     public static final Identifier FIRST_HATCH = gate("first_hatch");
     /** One of the owner's companions reached bond level 3. */
     public static final Identifier BOND_THREE = gate("bond_three");
+    /** One of the owner's companions reached the top bond level ({@link za.co.neroland.nerocompanion.bond.BondLevels#MAX_LEVEL}). */
+    public static final Identifier BOND_MAX = gate("bond_max");
     /** The owner reclaimed a lost companion. */
     public static final Identifier FIRST_RECOVERY = gate("first_recovery");
 
     /** Every milestone gate this jar ships ({@code data/nerocompanion/neroland_gates/<path>.json}). */
     public static final List<Identifier> ALL = List.of(FIRST_DEPLOY, FIRST_CHIP, PET_ADOPTED, FULL_SQUAD, FIRST_CHARGE,
-            FIRST_MINE, FIRST_CARRY, FIRST_REPAIR, FIRST_GUARD, FIRST_HATCH, BOND_THREE, FIRST_RECOVERY);
+            FIRST_MINE, FIRST_CARRY, FIRST_REPAIR, FIRST_GUARD, FIRST_HATCH, BOND_THREE, BOND_MAX, FIRST_RECOVERY);
 
     private CompanionMilestones() {
     }

@@ -9,6 +9,7 @@
     { "quest": "nerocompanion:companion_log/companion_keeper", "x": 8, "y": 0 },
     { "quest": "nerocompanion:companion_log/first_charge", "x": 4, "y": 2 },
     { "quest": "nerocompanion:companion_log/bond_three", "x": 6, "y": 2 },
+    { "quest": "nerocompanion:companion_log/bond_max", "x": 8, "y": 4 },
     { "quest": "nerocompanion:companion_log/first_recovery", "x": 8, "y": 2 },
     { "quest": "nerocompanion:companion_log/first_mine", "x": 4, "y": 4 },
     { "quest": "nerocompanion:companion_log/first_carry", "x": 6, "y": 4 },

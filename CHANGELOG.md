@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.2] - 2026-11-26
+
+### Added
+
+- New player milestone `nerocompanion:bond_max`, opened when one of your companions reaches the top bond level, and a **Soulbound** quest in the Companion Log chapter that reads it (the chapter now has 15 quests). NeroTrophies can award a trophy from it. Only the owner's UUID goes into Core's progression store, as for the other milestones.
+
 ## [0.7.1] - 2026-11-21
 
 ### Changed

@@ -1,7 +1,7 @@
 # NeroQuests integration
 
 NeroCompanion works with or without **NeroQuests**. When NeroQuests is installed, the quest book gains a
-**Companion Log** chapter with 14 quests that follow what you actually do:
+**Companion Log** chapter with 15 quests that follow what you actually do:
 
 | Quest | What to do |
 | --- | --- |
@@ -13,6 +13,7 @@ NeroCompanion works with or without **NeroQuests**. When NeroQuests is installed
 | Companion Keeper | Finish the four above. Rewards the **Aurora** skin for every companion type. |
 | Topped Up | Charge a companion on a Charging Pad, in a Companion Bay or with the Hand Crank Charger. |
 | Best Friends | Reach bond level 3 with one companion. |
+| Soulbound | Reach the top bond level with one companion. |
 | First Dig | Mark an area with the Remote and let a Mining Bot dig it out. |
 | Special Delivery | Bind a container and let a carrier deliver its cargo there. |
 | Good as New | Let a Repair Bot mend a worn tool or piece of gear. |

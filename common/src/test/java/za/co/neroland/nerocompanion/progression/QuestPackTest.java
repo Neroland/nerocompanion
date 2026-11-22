@@ -49,7 +49,7 @@ class QuestPackTest {
         Map<String, JsonObject> gates = read(root.resolve("data/" + NAMESPACE + "/neroland_gates"));
         JsonObject lang = JsonParser.parseString(Files.readString(
                 root.resolve("assets/" + NAMESPACE + "/lang/en_us.json"))).getAsJsonObject();
-        assertEquals(14, quests.size(), "the Companion Log chapter ships fourteen quests");
+        assertEquals(15, quests.size(), "the Companion Log chapter ships fifteen quests");
         assertEquals(1, chapters.size(), "one chapter");
 
         List<String> problems = new ArrayList<>();

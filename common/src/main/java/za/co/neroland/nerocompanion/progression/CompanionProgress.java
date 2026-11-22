@@ -15,6 +15,7 @@ import za.co.neroland.nerolandcore.progression.ProgressionGates;
 
 import za.co.neroland.nerocompanion.NeroCompanionCommon;
 import za.co.neroland.nerocompanion.bond.BondEvents;
+import za.co.neroland.nerocompanion.bond.BondLevels;
 import za.co.neroland.nerocompanion.entity.CompanionEntity;
 
 /**
@@ -97,6 +98,11 @@ public final class CompanionProgress {
         };
     }
 
+    /** Whether a level-up from {@code from} to {@code to} reaches the top bond level. */
+    public static boolean bondMaxMilestone(int from, int to) {
+        return to >= BondLevels.MAX_LEVEL && to > from;
+    }
+
     /** Whether a level-up from {@code from} to {@code to} reaches bond level 3. */
     public static boolean bondMilestone(int from, int to) {
         return to >= 3 && to > from;
@@ -130,6 +136,9 @@ public final class CompanionProgress {
     public static void bondLevelUp(@Nullable MinecraftServer server, @Nullable UUID owner, int from, int to) {
         if (bondMilestone(from, to)) {
             open(server, owner, CompanionMilestones.BOND_THREE);
+        }
+        if (bondMaxMilestone(from, to)) {
+            open(server, owner, CompanionMilestones.BOND_MAX);
         }
     }
 

@@ -26,6 +26,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import za.co.neroland.nerocompanion.bond.BondLevels;
 import za.co.neroland.nerocompanion.entity.type.ValidationIssue;
 import za.co.neroland.nerocompanion.look.Look;
 import za.co.neroland.nerocompanion.look.LookKind;
@@ -77,6 +78,7 @@ class CompanionProgressTest {
             CompanionProgress.workDone(null, OWNER, work);
         }
         CompanionProgress.bondLevelUp(null, OWNER, 2, 3);
+        CompanionProgress.bondLevelUp(null, OWNER, 3, BondLevels.MAX_LEVEL);
         CompanionProgress.hatched(null, OWNER);
         CompanionProgress.recovered(null, OWNER);
         CompanionProgress.deployed(null, OWNER, 4, 4);
@@ -101,8 +103,18 @@ class CompanionProgressTest {
         assertFalse(CompanionProgress.bondMilestone(3, 3));
         CompanionProgress.bondLevelUp(null, OWNER, 0, 1);
         assertTrue(this.opened.isEmpty());
-        CompanionProgress.bondLevelUp(null, OWNER, 3, 4);
+        CompanionProgress.bondLevelUp(null, OWNER, 2, 3);
         assertEquals(List.of(CompanionMilestones.BOND_THREE), this.opened);
+    }
+
+    @Test
+    void bondMaxOnlyWhenTheTopLevelIsReached() {
+        assertFalse(CompanionProgress.bondMaxMilestone(2, 3));
+        assertTrue(CompanionProgress.bondMaxMilestone(3, BondLevels.MAX_LEVEL));
+        assertTrue(CompanionProgress.bondMaxMilestone(1, BondLevels.MAX_LEVEL), "a jump to the top counts");
+        assertFalse(CompanionProgress.bondMaxMilestone(BondLevels.MAX_LEVEL, BondLevels.MAX_LEVEL));
+        CompanionProgress.bondLevelUp(null, OWNER, 3, BondLevels.MAX_LEVEL);
+        assertEquals(List.of(CompanionMilestones.BOND_THREE, CompanionMilestones.BOND_MAX), this.opened);
     }
 
     @Test
