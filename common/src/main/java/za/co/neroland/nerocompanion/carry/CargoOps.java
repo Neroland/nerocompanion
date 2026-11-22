@@ -59,7 +59,8 @@ public final class CargoOps {
 
     /**
      * The container block entity at a bound position, if it is loaded, in this level, and still a container - or,
-     * with NeroLogistics installed, an insert-only inlet in front of an active network drive bay.
+     * with NeroLogistics installed, an insert-only inlet in front of an active drive bay or an item network reached
+     * from the bound block.
      */
     public static Container containerAt(ServerLevel level, HomePos bound) {
         if (!bound.isIn(level) || !level.isLoaded(bound.pos())) {

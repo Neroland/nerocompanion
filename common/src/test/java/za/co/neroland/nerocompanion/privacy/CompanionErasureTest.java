@@ -196,6 +196,13 @@ class CompanionErasureTest {
     }
 
     @Test
+    void initRegistersTheCoreExporterNextToTheEraser() {
+        CompanionErasure.init();
+        assertTrue(za.co.neroland.nerolandcore.data.PlayerDataExport.registeredIds().contains("nerocompanion"),
+                "/neroland data exportme includes NeroCompanion's document");
+    }
+
+    @Test
     void theProductionExportStoreDeletesTheFileAndTheCooldownOfTheSubjectOnly() throws IOException {
         CompanionExport.overrideDirectory(exports);
         CompanionExport.write(exports, subject, new JsonObject());

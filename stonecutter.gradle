@@ -172,7 +172,7 @@ subprojects {
                 content { includeGroup 'za.co.neroland.neroeconomy' }
             }
             // The other optional siblings with a façade (decision 020), same rule: credentials only.
-            ['nerocolonies', 'nerofactions', 'nerospace'].each { sibling ->
+            ['nerocolonies', 'nerofactions', 'nerologistics', 'nerosecurity', 'nerospace'].each { sibling ->
                 maven {
                     name = "${sibling}-github-packages"
                     url = "https://maven.pkg.github.com/Neroland/${sibling}"

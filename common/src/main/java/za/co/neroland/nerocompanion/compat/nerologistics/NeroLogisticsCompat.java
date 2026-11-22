@@ -11,7 +11,8 @@ import za.co.neroland.nerocompanion.compat.SiblingCompat;
 import za.co.neroland.nerocompanion.entity.CompanionEntity;
 
 /**
- * NeroLogistics façade (decision 020). When a bot's bound block is an active network drive bay, {@link #driveBayInlet}
+ * NeroLogistics façade (decision 020). When a bot's bound block is an active network drive bay (or reaches an item
+ * network), {@link #driveBayInlet}
  * returns a one-slot insert-only {@link Container} in front of it, so the carry and mining bots' existing deposit
  * path (bind, room check, {@code mayOpen}, deposit) works unchanged. With NeroLogistics absent nothing here loads a
  * NeroLogistics class and every call answers its no-op value.
@@ -56,12 +57,12 @@ public final class NeroLogisticsCompat {
     }
 
     /**
-     * An insert-only container in front of the drive bay {@code blockEntity}, or null when it is not an active drive
-     * bay or NeroLogistics is absent.
+     * An insert-only container in front of the drive bay at {@code pos}, or the item network reached from it (a
+     * terminal or conduit), or null when there is neither or NeroLogistics is absent.
      */
     @Nullable
     public static Container driveBayInlet(ServerLevel level, BlockPos pos, @Nullable BlockEntity blockEntity) {
-        if (!active || blockEntity == null) {
+        if (!active) {
             return null;
         }
         try {
@@ -74,8 +75,9 @@ public final class NeroLogisticsCompat {
     }
 
     /**
-     * The 0.7.0 seam: registering a bot as a network endpoint (so the network could route to it). NeroLogistics has no
-     * endpoint API yet, so this is a no-op that reports false.
+     * The 0.7.0 seam: registering a bot as a network endpoint (so the network could route to it). NeroLogistics
+     * declined a mobile-endpoint API (stale ids, crash leftovers, a server table of bot ids) in favour of stateless
+     * {@code insertIntoNetwork}, which {@link #driveBayInlet} uses; this stays a no-op that reports false.
      */
     public static boolean registerEndpoint(CompanionEntity bot) {
         return false;

@@ -10,11 +10,16 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 
 import io.sentry.Breadcrumb;
+import io.sentry.IScopes;
 import io.sentry.ITransaction;
-import io.sentry.Sentry;
+import io.sentry.Scope;
+import io.sentry.Scopes;
+import io.sentry.SentryClient;
 import io.sentry.SentryEvent;
 import io.sentry.SentryLevel;
+import io.sentry.SentryOptions;
 import io.sentry.SpanStatus;
+import io.sentry.UncaughtExceptionHandlerIntegration;
 import io.sentry.protocol.Message;
 import io.sentry.protocol.SentryException;
 import io.sentry.protocol.SentryStackFrame;
@@ -107,6 +112,13 @@ public final class NeroCompanionTelemetry {
             "\\(\\s*-?\\d+(?:\\.\\d+)?\\s*,\\s*-?\\d+(?:\\.\\d+)?\\s*,\\s*-?\\d+(?:\\.\\d+)?\\s*\\)");
 
     private static volatile boolean active;
+    /**
+     * NeroCompanion's own Sentry scopes, never the global hub: every Nero mod embeds the same un-relocated Sentry jar,
+     * so a global init from any mod would replace (and filter away) the others' reports. Null until start() succeeds.
+     */
+    private static volatile IScopes scopes;
+    /** Chains to the previous default handler; process lifetime, never closed. */
+    private static UncaughtExceptionHandlerIntegration uncaughtHandler;
     private static final AtomicInteger eventsSent = new AtomicInteger();
     private static final Set<String> seenFingerprints = ConcurrentHashMap.newKeySet();
     private static SentryLogAppender appender;
@@ -166,25 +178,28 @@ public final class NeroCompanionTelemetry {
         }
         String modVersion = Services.PLATFORM.getModVersion();
         boolean dev = Services.PLATFORM.isDevelopmentEnvironment();
-        Sentry.init(options -> {
-            options.setDsn(DSN);
-            options.setRelease("nerocompanion@" + modVersion);
-            // Dev/IDE runs report under a dedicated environment so they never mix with real releases.
-            options.setEnvironment(dev ? "development" : environmentOf(modVersion));
-            // POPIA/GDPR: never store the sender's IP address or identity.
-            options.setSendDefaultPii(false);
-            // The machine's hostname is identifying; never attach it.
-            options.setAttachServerName(false);
-            options.setEnableUncaughtExceptionHandler(true);
-            // Release health: session lifecycle managed manually (started below, ended on JVM
-            // shutdown). The session id is random per launch and is NOT linked across sessions.
-            options.setEnableAutoSessionTracking(false);
-            // Performance: sample a small fraction of traced operations. Timing data only — no
-            // personal data in a transaction.
-            options.setTracesSampleRate(0.05D);
-            options.setBeforeSend((event, hint) -> ForeignMixinFailure.matches(event) ? null : filterAndScrub(event));
-        });
-        Sentry.configureScope(scope -> {
+        SentryOptions options = new SentryOptions();
+        options.setDsn(DSN);
+        options.setRelease("nerocompanion@" + modVersion);
+        // Dev/IDE runs report under a dedicated environment so they never mix with real releases.
+        options.setEnvironment(dev ? "development" : environmentOf(modVersion));
+        // POPIA/GDPR: never store the sender's IP address or identity.
+        options.setSendDefaultPii(false);
+        // The machine's hostname is identifying; never attach it.
+        options.setAttachServerName(false);
+        options.setEnableUncaughtExceptionHandler(true);
+        // Release health: session lifecycle managed manually (started below, ended on JVM
+        // shutdown). The session id is random per launch and is NOT linked across sessions.
+        options.setEnableAutoSessionTracking(false);
+        // Performance: sample a small fraction of traced operations. Timing data only — no
+        // personal data in a transaction.
+        options.setTracesSampleRate(0.05D);
+        options.setBeforeSend((event, hint) -> ForeignMixinFailure.matches(event) ? null : filterAndScrub(event));
+        // Our own client and scopes (no global init), so other mods' telemetry is untouched.
+        options.setEnableShutdownHook(false);
+        IScopes own = isolatedScopes(options, "nerocompanion");
+        scopes = own;
+        own.configureScope(scope -> {
             scope.setTag("loader", Services.PLATFORM.getPlatformName().toLowerCase(Locale.ROOT));
             scope.setTag("dist", Services.PLATFORM.isClient() ? "client" : "dedicated_server");
             scope.setTag("runtime", dev ? "development" : "production");
@@ -207,11 +222,11 @@ public final class NeroCompanionTelemetry {
             }
         });
         // Manual release-health session for this play session; closed on a clean JVM shutdown.
-        Sentry.startSession();
+        own.startSession();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                Sentry.endSession();
-                Sentry.flush(2000L);
+                own.endSession();
+                own.flush(2000L);
             } catch (RuntimeException ignored) {
                 // best-effort flush on shutdown
             }
@@ -225,6 +240,21 @@ public final class NeroCompanionTelemetry {
         NeroCompanionCommon.LOGGER.info(
                 "[NeroCompanion] Telemetry enabled (anonymous error reports, EU servers; opt out via "
                         + "telemetryEnabled=false in config/nerocompanion.properties).");
+    }
+
+    /**
+     * Builds NeroCompanion's own client and scopes from {@code options} (what a global init would do, without
+     * touching the shared hub) and registers an uncaught-exception handler that chains to the previous one.
+     */
+    static IScopes isolatedScopes(SentryOptions options, String creator) {
+        options.activate();
+        Scopes own = new Scopes(new Scope(options), new Scope(options), new Scope(options), creator);
+        own.bindClient(new SentryClient(options));
+        if (options.isEnableUncaughtExceptionHandler()) {
+            uncaughtHandler = new UncaughtExceptionHandlerIntegration();
+            uncaughtHandler.register(own, options);
+        }
+        return own;
     }
 
     /**
@@ -242,7 +272,10 @@ public final class NeroCompanionTelemetry {
         crumb.setCategory(category);
         crumb.setLevel(SentryLevel.INFO);
         crumb.setMessage(scrub(message));
-        Sentry.addBreadcrumb(crumb);
+        IScopes s = scopes;
+        if (s != null) {
+            s.addBreadcrumb(crumb);
+        }
     }
 
     /**
@@ -251,10 +284,11 @@ public final class NeroCompanionTelemetry {
      * Only timing + operation name are recorded — never personal data.
      */
     public static <T> T trace(String operation, String name, java.util.function.Supplier<T> body) {
-        if (!active) {
+        IScopes s = scopes;
+        if (!active || s == null) {
             return body.get();
         }
-        ITransaction tx = Sentry.startTransaction(name, operation);
+        ITransaction tx = s.startTransaction(name, operation);
         try {
             return body.get();
         } catch (RuntimeException | Error e) {
@@ -328,10 +362,11 @@ public final class NeroCompanionTelemetry {
 
     /** Capture an exception already known to touch NeroCompanion code. */
     static void capture(Throwable t) {
-        if (!active || t == null) {
+        IScopes s = scopes;
+        if (!active || s == null || t == null) {
             return;
         }
-        Sentry.captureException(t);
+        s.captureException(t);
     }
 
     /** Capture a handled exception if it is still clearly from NeroCompanion code. */
@@ -343,11 +378,12 @@ public final class NeroCompanionTelemetry {
 
     /** Capture a handled exception with a non-identifying source label for triage. */
     public static void captureHandledException(Throwable t, String source, String operation) {
-        if (!active || t == null || !touchesNeroCompanion(t)) {
+        IScopes s = scopes;
+        if (!active || s == null || t == null || !touchesNeroCompanion(t)) {
             return;
         }
         // Sentry 8.x: tags set inside withScope never reach the event; the ScopeCallback overload applies them.
-        Sentry.captureException(t, scope -> {
+        s.captureException(t, scope -> {
             scope.setTag("handled", "true");
             scope.setTag("source", source);
             scope.setExtra("operation", operation);
@@ -368,7 +404,10 @@ public final class NeroCompanionTelemetry {
         Message msg = new Message();
         msg.setFormatted(scrubbed);
         event.setMessage(msg);
-        Sentry.captureEvent(event);
+        IScopes s = scopes;
+        if (s != null) {
+            s.captureEvent(event);
+        }
     }
 
     /**

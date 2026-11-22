@@ -83,16 +83,9 @@ sourceSets {
 }
 sourceSets.main.compileClasspath += sourceSets.creaturesSpi.output
 
-// Sibling stubs (decision 020) — NeroLogistics' StorageNode and NeroSecurity's access classes, signature-copied
-// from their tags because neither publishes an artifact this build can resolve. Main compile classpath only;
-// never packaged.
-sourceSets {
-    siblingStubs {
-        java.srcDir "${rootProject.projectDir}/common/src/sibling-stubs/java"
-        compileClasspath = configurations.compileClasspath
-    }
-}
-sourceSets.main.compileClasspath += sourceSets.siblingStubs.output
+// NeroLogistics and NeroSecurity used to compile from a stub source set (common/src/sibling-stubs/java); since
+// NeroSecurity 0.7.2 and NeroLogistics 0.7.5 they compile compileOnly against each mod's public api package, like the
+// other optional siblings below. The stub folder is no longer on any classpath.
 
 // Forge 26's ModLauncher builds a JPMS layer from the dev runtime classpath. If classes and
 // processed resources are separate entries, the mod's classes can be seen as module "main" while
@@ -142,9 +135,9 @@ dependencies {
     // NeroEconomy — OPTIONAL. compileOnly: never bundled, never a hard requirement. Only the economy bridge
     // class imports it, and only after isModLoaded("neroeconomy"), so NeroCompanion runs without it.
     compileOnly "za.co.neroland.neroeconomy:neroeconomy-forge-${mc}:${neroeconomyVersion}"
-    // NeroColonies, NeroFactions, Nerospace — OPTIONAL façades (compat/<sibling>, decision 020). compileOnly and
+    // NeroColonies, NeroFactions, NeroLogistics, NeroSecurity, Nerospace — OPTIONAL façades (compat/<sibling>, decision 020). compileOnly and
     // non-transitive, so a sibling's POM never changes the Core on the compile classpath.
-    ['nerocolonies', 'nerofactions', 'nerospace'].each { sibling ->
+    ['nerocolonies', 'nerofactions', 'nerologistics', 'nerosecurity', 'nerospace'].each { sibling ->
         compileOnly("za.co.neroland.${sibling}:${sibling}-forge-${mc}:${project.findProperty(sibling + '_version')}") {
             transitive = false
         }

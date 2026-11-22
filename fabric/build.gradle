@@ -83,16 +83,9 @@ sourceSets {
 }
 sourceSets.main.compileClasspath += sourceSets.creaturesSpi.output
 
-// Sibling stubs (decision 020) — NeroLogistics' StorageNode and NeroSecurity's access classes, signature-copied
-// from their tags because neither publishes an artifact this build can resolve. Main compile classpath only;
-// never packaged.
-sourceSets {
-    siblingStubs {
-        java.srcDir "${rootProject.projectDir}/common/src/sibling-stubs/java"
-        compileClasspath = configurations.compileClasspath
-    }
-}
-sourceSets.main.compileClasspath += sourceSets.siblingStubs.output
+// NeroLogistics and NeroSecurity used to compile from a stub source set (common/src/sibling-stubs/java); since
+// NeroSecurity 0.7.2 and NeroLogistics 0.7.5 they compile compileOnly against each mod's public api package, like the
+// other optional siblings below. The stub folder is no longer on any classpath.
 
 dependencies {
     minecraft "com.mojang:minecraft:${mc}"
@@ -127,9 +120,9 @@ dependencies {
     } else {
         compileOnly "za.co.neroland.neroeconomy:neroeconomy-fabric-${mc}:${neroeconomyVersion}"
     }
-    // NeroColonies, NeroFactions, Nerospace — OPTIONAL façades (compat/<sibling>, decision 020). compileOnly
+    // NeroColonies, NeroFactions, NeroLogistics, NeroSecurity, Nerospace — OPTIONAL façades (compat/<sibling>, decision 020). compileOnly
     // (remapped on 1.21.x) and non-transitive, so a sibling's POM never changes the Core on the compile classpath.
-    ['nerocolonies', 'nerofactions', 'nerospace'].each { sibling ->
+    ['nerocolonies', 'nerofactions', 'nerologistics', 'nerosecurity', 'nerospace'].each { sibling ->
         "${obfuscated ? 'modCompileOnly' : 'compileOnly'}"("za.co.neroland.${sibling}:${sibling}-fabric-${mc}:${project.findProperty(sibling + '_version')}") {
             transitive = false
         }
@@ -285,5 +278,5 @@ if (mc == '26.3') {
         }
     }
     // Stonecutter maps the branch's fabric/src/gametest onto this source set itself (like src/main), so no srcDir here.
-    sourceSets.gametest.compileClasspath += sourceSets.creaturesSpi.output + sourceSets.siblingStubs.output
+    sourceSets.gametest.compileClasspath += sourceSets.creaturesSpi.output
 }

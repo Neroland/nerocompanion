@@ -178,6 +178,23 @@ public final class CompanionPrivacy {
         return out;
     }
 
+    /** {@code subject}'s export document: their own rows only (see {@link CompanionExport#build}). Server thread. */
+    static JsonObject document(MinecraftServer server, UUID subject, long now) {
+        CompanionExport.Sources sources = new CompanionExport.Sources(RecoveryLedger.book(server),
+                CapsuleVault.get(server), SalvageHold.book(server), IncubatorStore.get(server),
+                CreaturePets.petsOf(subject), prefs(server));
+        return CompanionExport.build(subject, sources, exportSettings(), CompanionPrivacy::describeItem, now);
+    }
+
+    /**
+     * Neroland Core's per-player export ({@code /neroland data exportme}): the same document as {@code /nscomp export},
+     * returned to Core instead of written to a file. No cooldown (Core rate-limits its own command), nothing is
+     * written, logged or changed.
+     */
+    public static JsonElement coreExport(MinecraftServer server, UUID player) {
+        return document(server, player, System.currentTimeMillis());
+    }
+
     /** {@code /nscomp export}: builds and writes {@code subject}'s export. Server thread. */
     public static ExportResult export(MinecraftServer server, UUID subject) {
         long now = System.currentTimeMillis();
@@ -186,11 +203,7 @@ public final class CompanionPrivacy {
             return new ExportResult.Cooldown(left);
         }
         try {
-            CompanionExport.Sources sources = new CompanionExport.Sources(RecoveryLedger.book(server),
-                    CapsuleVault.get(server), SalvageHold.book(server), IncubatorStore.get(server),
-                    CreaturePets.petsOf(subject), prefs(server));
-            JsonObject document = CompanionExport.build(subject, sources, exportSettings(),
-                    CompanionPrivacy::describeItem, now);
+            JsonObject document = document(server, subject, now);
             Path directory = CompanionExport.directory(server);
             if (directory == null) {
                 throw new IOException("no export folder");

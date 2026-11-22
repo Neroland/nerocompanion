@@ -44,3 +44,19 @@ mandatory = false
 versionRange = "[0.3.0-beta.1,)"
 ordering = "AFTER"
 side = "BOTH"
+
+# NeroSecurity — OPTIONAL; companions honour secured devices through its public access API (first release with that API).
+[[dependencies.${mod_id}]]
+modId = "nerosecurity"
+mandatory = false
+versionRange = "[0.7.2,)"
+ordering = "AFTER"
+side = "BOTH"
+
+# NeroLogistics — OPTIONAL; carry and mining bots deposit through its public storage API (first release with that API).
+[[dependencies.${mod_id}]]
+modId = "nerologistics"
+mandatory = false
+versionRange = "[0.7.6,)"
+ordering = "AFTER"
+side = "BOTH"

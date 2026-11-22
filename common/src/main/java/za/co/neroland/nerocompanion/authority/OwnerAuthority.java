@@ -9,6 +9,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import za.co.neroland.nerolandcore.protection.ClaimChecks;
+
 import za.co.neroland.nerocompanion.NeroCompanionCommon;
 import za.co.neroland.nerocompanion.config.NeroCompanionConfig;
 import za.co.neroland.nerocompanion.entity.CompanionEntity;
@@ -28,6 +30,20 @@ public final class OwnerAuthority {
     /** Adds a provider. Compat facades call this only when their sibling mod is loaded. */
     public static void registerProvider(AuthorityProvider provider) {
         PROVIDERS.add(provider);
+    }
+
+    /**
+     * The providers a decision asks: Core's land claims first (only while a claims mod has registered a check), then
+     * the sibling façades.
+     */
+    static List<AuthorityProvider> providers() {
+        if (!ClaimChecks.active()) {
+            return PROVIDERS;
+        }
+        List<AuthorityProvider> all = new java.util.ArrayList<>(PROVIDERS.size() + 1);
+        all.add(CoreClaimsAuthority::check);
+        all.addAll(PROVIDERS);
+        return all;
     }
 
     /** How many providers are registered (0 on a Core-only server; the façade tests read it). */
@@ -75,7 +91,7 @@ public final class OwnerAuthority {
             return Decision.deny("no_interact");
         }
         AuthorityQuery query = new AuthorityQuery(AuthorityAction.PLACE, player.getUUID(), level, pos, null);
-        for (AuthorityProvider provider : PROVIDERS) {
+        for (AuthorityProvider provider : providers()) {
             Decision answer;
             try {
                 answer = provider.check(query);
@@ -96,7 +112,7 @@ public final class OwnerAuthority {
         }
         AuthorityFacts facts = new VanillaAuthorityFacts(bot, level, pos, target);
         AuthorityQuery query = new AuthorityQuery(action, bot.ownerId(), level, pos, target);
-        return AuthorityChain.decide(action, facts, NeroCompanionConfig.authorityRules(), PROVIDERS, query,
+        return AuthorityChain.decide(action, facts, NeroCompanionConfig.authorityRules(), providers(), query,
                 message -> NeroCompanionCommon.LOGGER.warn("[NeroCompanion] authority provider {}", message));
     }
 }

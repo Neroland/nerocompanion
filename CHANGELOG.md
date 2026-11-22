@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-11-22
+
+### Added
+
+- NeroCompanion's data now appears in Neroland Core's `/neroland data exportme` (Core 1.20.1): the same document as `/nscomp export`, delivered by Core instead of written to a file.
+- Companions respect land claims from any claims mod registered with Neroland Core: before a bot breaks, places or opens a block for you, Core's claim checks must let you interact there. With no claims mod installed nothing changes.
+- With NeroLogistics installed, carry and mining bots bound to a terminal or conduit (not only a drive bay) now unload into that item network.
+
+### Changed
+
+- Requires Neroland Core **1.20.1** or later.
+- NeroSecurity and NeroLogistics support now uses their public APIs (`SecurityAccess`, `NeroLogisticsStorage`) instead of their internal classes, so it no longer breaks when their internals change. Needs NeroSecurity **0.7.2** / NeroLogistics **0.7.6** or later when installed; older versions are refused at load.
+
+### Fixed
+
+- Error reports no longer go missing when another mod also uses Sentry: NeroCompanion now has its own Sentry client instead of the shared global one, which the last mod to start used to take over.
+
 ## [0.7.2] - 2026-11-26
 
 ### Added

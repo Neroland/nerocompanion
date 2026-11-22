@@ -13,6 +13,7 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 import za.co.neroland.nerolandcore.data.PlayerDataErasure;
+import za.co.neroland.nerolandcore.data.PlayerDataExport;
 import za.co.neroland.nerolandcore.data.SavedDataRecovery;
 
 import za.co.neroland.nerocompanion.NeroCompanionCommon;
@@ -166,6 +167,8 @@ public final class CompanionErasure {
         }));
         STORES.addAll(CompanionPrivacy.erasureStores());
         PlayerDataErasure.register(CompanionErasure::erase);
+        // The read-side twin (Core 1.20.1): the same document as /nscomp export, for Core's /neroland data exportme.
+        PlayerDataExport.register(NeroCompanionCommon.MOD_ID, CompanionPrivacy::coreExport);
     }
 
     private static Store memory(String name, java.util.function.BiConsumer<MinecraftServer, UUID> erase) {
