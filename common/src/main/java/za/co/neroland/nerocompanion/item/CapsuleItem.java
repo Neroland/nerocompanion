@@ -50,27 +50,27 @@ public class CapsuleItem extends Item {
     public static void store(net.minecraft.server.MinecraftServer server, ItemStack stack, CompanionRecord record,
             int chargePercent, long ticket) {
         CapsuleVault.get(server).store(record);
-        stack.set(ModDataComponents.COMPANION.get(), record.forNetwork());
-        stack.set(ModDataComponents.CHARGE.get(), Math.max(0, Math.min(100, chargePercent)));
+        ModDataComponents.COMPANION.set(stack, record.forNetwork());
+        ModDataComponents.CHARGE.set(stack, Math.max(0, Math.min(100, chargePercent)));
         if (ticket != 0L) {
-            stack.set(ModDataComponents.TICKET.get(), ticket);
+            ModDataComponents.TICKET.set(stack, ticket);
         } else {
-            stack.remove(ModDataComponents.TICKET.get());
+            ModDataComponents.TICKET.remove(stack);
         }
     }
 
     /** Empties {@code stack}. */
     public static void clear(ItemStack stack) {
-        stack.remove(ModDataComponents.COMPANION.get());
-        stack.remove(ModDataComponents.CHARGE.get());
-        stack.remove(ModDataComponents.TICKET.get());
+        ModDataComponents.COMPANION.remove(stack);
+        ModDataComponents.CHARGE.remove(stack);
+        ModDataComponents.TICKET.remove(stack);
     }
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
         ItemStack stack = context.getItemInHand();
-        CompanionRecord record = stack.get(ModDataComponents.COMPANION.get());
-        net.minecraft.resources.Identifier blueprint = stack.get(ModDataComponents.BLUEPRINT.get());
+        CompanionRecord record = ModDataComponents.COMPANION.get(stack);
+        net.minecraft.resources.Identifier blueprint = ModDataComponents.BLUEPRINT.get(stack);
         if (record == null && blueprint == null) {
             return InteractionResult.PASS;
         }
@@ -82,7 +82,7 @@ public class CapsuleItem extends Item {
             CompanionEntity fresh = CompanionDeployer.deploy(level, player, CompanionDeployer.spawnPos(context),
                     CompanionDeployer.freshRecord(level, blueprint, player), false);
             if (fresh != null) {
-                stack.remove(ModDataComponents.BLUEPRINT.get());
+                ModDataComponents.BLUEPRINT.remove(stack);
             }
             return InteractionResult.SUCCESS_SERVER;
         }
@@ -92,14 +92,14 @@ public class CapsuleItem extends Item {
                         ::isTombstoned);
         if (scrubbed.isPresent()) {
             record = scrubbed.get();
-            stack.set(ModDataComponents.COMPANION.get(), record);
+            ModDataComponents.COMPANION.set(stack, record);
         }
         // Peek, deploy, and only then consume the private part: a refused deploy leaves the vault entry in place.
         CapsuleVault vault = CapsuleVault.get(level.getServer());
         // The private part is merged only for its own owner; someone else's Capsule deploys without it.
         CompanionRecord full = za.co.neroland.nerocompanion.data.CapsuleTransfer.forDeploy(record,
                 vault.peek(record.companionId()), player.getUUID());
-        Long ticket = stack.get(ModDataComponents.TICKET.get());
+        Long ticket = ModDataComponents.TICKET.get(stack);
         CompanionEntity companion = CompanionDeployer.tryDeploy(level, player, CompanionDeployer.spawnPos(context),
                 full, false, new za.co.neroland.nerocompanion.recovery.Recovery.Source.Capsule(
                         ticket == null ? 0L : ticket)).companion();
@@ -122,8 +122,8 @@ public class CapsuleItem extends Item {
         super.appendHoverText(stack, context, lines, flag);
         Consumer<Component> tooltip = lines::add;
     *///?}
-        CompanionRecord record = stack.get(ModDataComponents.COMPANION.get());
-        net.minecraft.resources.Identifier blueprint = stack.get(ModDataComponents.BLUEPRINT.get());
+        CompanionRecord record = ModDataComponents.COMPANION.get(stack);
+        net.minecraft.resources.Identifier blueprint = ModDataComponents.BLUEPRINT.get(stack);
         if (record == null && blueprint != null) {
             tooltip.accept(Component.translatable("item.nerocompanion.capsule.new",
                     Component.translatable("companion_type." + blueprint.getNamespace() + "."
@@ -139,7 +139,7 @@ public class CapsuleItem extends Item {
                         + record.type().getPath().replace('/', '.'))).withStyle(ChatFormatting.GRAY));
         record.name().ifPresent(name -> tooltip.accept(Component.translatable("item.nerocompanion.capsule.name",
                 name).withStyle(ChatFormatting.GRAY)));
-        Integer charge = stack.get(ModDataComponents.CHARGE.get());
+        Integer charge = ModDataComponents.CHARGE.get(stack);
         tooltip.accept(Component.translatable("item.nerocompanion.capsule.charge", charge == null ? 0 : charge)
                 .withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.translatable("item.nerocompanion.capsule.chips", record.chips().size())

@@ -7,7 +7,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+//? if >=1.20.5 {
 import net.minecraft.core.component.DataComponents;
+//?}
 import net.minecraft.world.Container;
 import net.minecraft.world.LockCode;
 import net.minecraft.world.SimpleContainer;
@@ -116,7 +118,11 @@ public final class CargoOps {
         if (!(blockEntity instanceof BaseContainerBlockEntity)) {
             return false;
         }
+        //? if >=1.20.5 {
         LockCode lock = blockEntity.collectComponents().get(DataComponents.LOCK);
+        //?} else {
+        /*LockCode lock = LockCode.fromTag(blockEntity.saveWithoutMetadata());
+        *///?}
         if (lock == null || LockCode.NO_LOCK.equals(lock)) {
             return false;
         }

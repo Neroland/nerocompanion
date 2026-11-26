@@ -46,12 +46,30 @@ public final class Quads {
 
     private static void vertex(VertexConsumer c, PoseStack.Pose pose, float x, float y, float z, int argb, int light,
             float nx, float ny, float nz) {
+        //? if >=1.21 {
         c.addVertex(pose, x, y, z)
                 .setColor((argb >> 16) & 0xFF, (argb >> 8) & 0xFF, argb & 0xFF, (argb >>> 24) & 0xFF)
                 .setUv(0.5F, 0.5F)
                 .setOverlay(OverlayTexture.NO_OVERLAY)
                 .setLight(light)
                 .setNormal(pose, nx, ny, nz);
+        //?} else if >=1.20.5 {
+        /*c.vertex(pose.pose(), x, y, z)
+                .color((argb >> 16) & 0xFF, (argb >> 8) & 0xFF, argb & 0xFF, (argb >>> 24) & 0xFF)
+                .uv(0.5F, 0.5F)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(light)
+                .normal(pose, nx, ny, nz)
+                .endVertex();
+        *///?} else {
+        /*c.vertex(pose.pose(), x, y, z)
+                .color((argb >> 16) & 0xFF, (argb >> 8) & 0xFF, argb & 0xFF, (argb >>> 24) & 0xFF)
+                .uv(0.5F, 0.5F)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(light)
+                .normal(pose.normal(), nx, ny, nz)
+                .endVertex();
+        *///?}
     }
 
     /** A horizontal quad at height {@code y} (pixels) covering {@code x0..x1, z0..z1}, facing up. */

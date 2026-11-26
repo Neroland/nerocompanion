@@ -5,7 +5,9 @@ import java.util.function.Consumer;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.ChatFormatting;
+//? if >=1.20.5 {
 import net.minecraft.core.component.DataComponents;
+//?}
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -17,7 +19,9 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+//? if >=1.20.5 {
 import net.minecraft.world.item.component.CustomData;
+//?}
 //? if >=1.21.5 {
 import net.minecraft.world.item.component.TooltipDisplay;
 //?}
@@ -55,16 +59,22 @@ public class ScrapEggItem extends Item {
 
     /** Incubation progress the egg carries from an earlier incubator (0 for a new egg). */
     public static int carriedTicks(ItemStack stack) {
+        //? if >=1.20.5 {
         CustomData data = stack.get(DataComponents.CUSTOM_DATA);
         if (data == null) {
             return 0;
         }
         return Incubation.clamp(TICKS.parse(NbtOps.INSTANCE, data.copyTag()).result().orElse(0));
+        //?} else {
+        /*CompoundTag tag = stack.getTag();
+        return tag == null ? 0 : Incubation.clamp(tag.getInt(TICKS_KEY));
+        *///?}
     }
 
     /** {@code stack} carrying {@code ticks} of progress (0 clears it). */
     public static ItemStack withTicks(ItemStack stack, int ticks) {
         int clamped = Incubation.clamp(ticks);
+        //? if >=1.20.5 {
         if (clamped <= 0) {
             stack.remove(DataComponents.CUSTOM_DATA);
             return stack;
@@ -72,6 +82,13 @@ public class ScrapEggItem extends Item {
         CompoundTag tag = new CompoundTag();
         tag.putInt(TICKS_KEY, clamped);
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+        //?} else {
+        /*if (clamped == 0) {
+            stack.removeTagKey(TICKS_KEY);
+        } else {
+            stack.getOrCreateTag().putInt(TICKS_KEY, clamped);
+        }
+        *///?}
         return stack;
     }
 

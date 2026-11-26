@@ -64,7 +64,7 @@ public class CompanionBayRenderer implements BlockEntityRenderer<CompanionBayBlo
             ItemStack stack = new ItemStack(ModItems.CAPSULE.get());
             Identifier id = Identifier.tryParse(key);
             if (id != null) {
-                stack.set(ModDataComponents.BLUEPRINT.get(), id);
+                ModDataComponents.BLUEPRINT.set(stack, id);
             }
             return stack;
         });

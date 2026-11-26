@@ -5,6 +5,9 @@
 **Version `0.7.0-beta.1`.** Personal drones, helper bots and a scrap pet that follow you, work for you and grow
 attached to you. Player documentation lives in the [wiki](wiki/Home.md); this file describes what the source does.
 
+Fabric supports Minecraft 1.20 through 1.20.6. Forge supports 1.20 through 1.20.4 and 1.20.6. NeoForge supports 1.20.4 through 1.20.6, with the Forge jar for legacy NeoForge 1.20.1.
+Use the matching Neroland Core build. Minecraft 1.20.x builds require Core 1.23.0 or newer, and NeoForge 1.20.5 requires Core 1.24.0 or newer. Both require Core below 2.0.
+
 ## What the mod does
 
 - **Seven companion types**: Helper Drone, Scout Drone, Mining Bot, Carry Bot, Repair Bot, Combat Bot and the

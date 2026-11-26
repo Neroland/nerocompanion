@@ -33,8 +33,18 @@ public class FlyingCompanion extends CompanionEntity {
                 .add(Attributes.ATTACK_DAMAGE, 0.0D)
                 .add(Attributes.ARMOR, 0.0D)
                 .add(Attributes.FOLLOW_RANGE, 32.0D)
-                .add(Attributes.FALL_DAMAGE_MULTIPLIER, 0.0D);
+                //? if >=1.20.5 {
+                .add(Attributes.FALL_DAMAGE_MULTIPLIER, 0.0D)
+                //?}
+                ;
     }
+
+    //? if <1.20.5 {
+    /*@Override
+    public boolean causeFallDamage(float distance, float multiplier, net.minecraft.world.damagesource.DamageSource source) {
+        return false;
+    }
+    *///?}
 
     @Override
     public Locomotion locomotion() {

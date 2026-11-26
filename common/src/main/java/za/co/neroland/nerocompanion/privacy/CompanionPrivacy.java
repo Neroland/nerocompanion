@@ -462,13 +462,13 @@ public final class CompanionPrivacy {
             if (stack.isEmpty()) {
                 continue;
             }
-            CompanionRecord record = stack.get(ModDataComponents.COMPANION.get());
+            CompanionRecord record = ModDataComponents.COMPANION.get(stack);
             if (record == null) {
                 continue;
             }
             Optional<CompanionRecord> clean = scrubbedCapsule(record, book::isTombstoned);
             if (clean.isPresent()) {
-                stack.set(ModDataComponents.COMPANION.get(), clean.get());
+                ModDataComponents.COMPANION.set(stack, clean.get());
                 scrubbed++;
             }
         }

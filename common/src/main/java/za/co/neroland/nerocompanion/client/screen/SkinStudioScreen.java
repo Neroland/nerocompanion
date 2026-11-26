@@ -248,9 +248,14 @@ public class SkinStudioScreen extends CompanionScreenBase<CompanionMenu> {
             //? if >=26.1 {
             net.minecraft.client.gui.screens.inventory.InventoryScreen.extractEntityInInventoryFollowsMouse(g, x0, y0,
                     x0 + w, y0 + h, scale, 0.0625F, mouseX, cy, entity);
-            //?} else {
+            //?} else if >=1.20.2 {
             /*net.minecraft.client.gui.screens.inventory.InventoryScreen.renderEntityInInventoryFollowsMouse(g, x0, y0,
                     x0 + w, y0 + h, scale, 0.0625F, mouseX, cy, entity);
+            *///?} else {
+            /*int previewX = x0 + w / 2;
+            int previewY = y0 + h;
+            net.minecraft.client.gui.screens.inventory.InventoryScreen.renderEntityInInventoryFollowsMouse(
+                    g, previewX, previewY, scale, previewX - mouseX, y0 + h / 2.0F - cy, entity);
             *///?}
         } finally {
             za.co.neroland.nerocompanion.client.LookPreview.end();

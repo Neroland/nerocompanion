@@ -102,11 +102,29 @@ final class BubbleArt {
 
     private static void vertex(PoseStack.Pose pose, VertexConsumer c, float x, float y, float z, float u, float v,
             int argb) {
+        //? if >=1.21 {
         c.addVertex(pose, x, y, z)
                 .setColor((argb >> 16) & 0xFF, (argb >> 8) & 0xFF, argb & 0xFF, (argb >>> 24) & 0xFF)
                 .setUv(u, v)
                 .setOverlay(OverlayTexture.NO_OVERLAY)
                 .setLight(FULL_BRIGHT)
                 .setNormal(pose, 0.0F, 0.0F, 1.0F);
+        //?} else if >=1.20.5 {
+        /*c.vertex(pose.pose(), x, y, z)
+                .color((argb >> 16) & 0xFF, (argb >> 8) & 0xFF, argb & 0xFF, (argb >>> 24) & 0xFF)
+                .uv(u, v)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(FULL_BRIGHT)
+                .normal(pose, 0.0F, 0.0F, 1.0F)
+                .endVertex();
+        *///?} else {
+        /*c.vertex(pose.pose(), x, y, z)
+                .color((argb >> 16) & 0xFF, (argb >> 8) & 0xFF, argb & 0xFF, (argb >>> 24) & 0xFF)
+                .uv(u, v)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(FULL_BRIGHT)
+                .normal(pose.normal(), 0.0F, 0.0F, 1.0F)
+                .endVertex();
+        *///?}
     }
 }

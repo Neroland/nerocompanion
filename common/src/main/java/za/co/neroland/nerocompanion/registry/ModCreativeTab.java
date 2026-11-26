@@ -28,7 +28,7 @@ public final class ModCreativeTab {
                         for (net.minecraft.resources.Identifier type : ModEntities.COMPANION_TYPES) {
                             if (!type.getPath().equals("scrapling")) {
                                 ItemStack crafted = new ItemStack(ModItems.CAPSULE.get());
-                                crafted.set(ModDataComponents.BLUEPRINT.get(), type);
+                                ModDataComponents.BLUEPRINT.set(crafted, type);
                                 output.accept(crafted);
                             }
                         }

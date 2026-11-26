@@ -139,6 +139,12 @@ public class HatLayer extends RenderLayer<CompanionRenderer.State, EntityModel<L
         PoseStack stack = new PoseStack();
         stack.last().pose().set(pose.pose());
         stack.last().normal().set(pose.normal());
+        //? if >=1.21 {
         part.render(stack, consumer, light, OverlayTexture.NO_OVERLAY, colour);
+        //?} else {
+        /*part.render(stack, consumer, light, OverlayTexture.NO_OVERLAY,
+                ((colour >>> 16) & 255) / 255.0F, ((colour >>> 8) & 255) / 255.0F,
+                (colour & 255) / 255.0F, ((colour >>> 24) & 255) / 255.0F);
+        *///?}
     }
 }

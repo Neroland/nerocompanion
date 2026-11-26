@@ -1,6 +1,7 @@
 package za.co.neroland.nerocompanion.mining;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.BlockPos;
@@ -18,9 +19,13 @@ public record MineArea(BlockPos min, BlockPos max) {
     public static final Codec<MineArea> CODEC = RecordCodecBuilder.<MineArea>create(instance -> instance.group(
             BlockPos.CODEC.fieldOf("min").forGetter(MineArea::min),
             BlockPos.CODEC.fieldOf("max").forGetter(MineArea::max)
-    ).apply(instance, MineArea::new)).validate(area -> area.withinCap()
-            ? com.mojang.serialization.DataResult.success(area)
-            : com.mojang.serialization.DataResult.error(() -> "mining area edge over " + HARD_MAX_EDGE));
+    ).apply(instance, MineArea::new)).flatXmap(MineArea::validate, MineArea::validate);
+
+    private static DataResult<MineArea> validate(MineArea area) {
+        return area.withinCap()
+            ? DataResult.success(area)
+            : DataResult.error(() -> "mining area edge over " + HARD_MAX_EDGE);
+    }
 
     public MineArea {
         BlockPos lo = new BlockPos(Math.min(min.getX(), max.getX()), Math.min(min.getY(), max.getY()),

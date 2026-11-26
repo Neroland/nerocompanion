@@ -5,7 +5,9 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+//? if >=1.20.5 {
 import net.minecraftforge.client.event.AddGuiOverlayLayersEvent;
+//?}
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -78,14 +80,37 @@ public final class ForgeClientSetup {
         CompanionClient.init();
         modBus.addListener(ForgeClientSetup::onRegisterRenderers);
         modBus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(ForgeClientSetup::screens));
-        modBus.addListener((AddGuiOverlayLayersEvent event) ->
-                event.getLayeredDraw().add(HUD, (g, delta) -> CompanionHud.render(g)));
+        registerHud(modBus);
         modBus.addListener((RegisterKeyMappingsEvent event) -> ClientKeys.all().forEach(event::register));
-        MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent.Post event) -> CompanionClient.tick());
+        registerClientTick();
         MinecraftForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut event) -> ClientState.clear());
         modBus.addListener(ForgeClientSetup::particles);
         MinecraftForge.EVENT_BUS.addListener((net.minecraftforge.client.event.RegisterClientCommandsEvent event) ->
                 za.co.neroland.nerocompanion.client.GalleryCaptureHarness.registerClientCommands(event.getDispatcher()));
+    }
+    *///?}
+
+    //? if >=1.20.5 && <1.21.6 {
+    /*private static void registerHud(net.minecraftforge.eventbus.api.IEventBus modBus) {
+        modBus.addListener((AddGuiOverlayLayersEvent event) ->
+                event.getLayeredDraw().add(HUD, (g, delta) -> CompanionHud.render(g)));
+    }
+
+    private static void registerClientTick() {
+        MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent.Post event) -> CompanionClient.tick());
+    }
+    *///?} else if <1.20.5 {
+    /*private static void registerHud(net.minecraftforge.eventbus.api.IEventBus modBus) {
+        modBus.addListener((net.minecraftforge.client.event.RegisterGuiOverlaysEvent event) ->
+                event.registerAboveAll("companion_hud", (gui, graphics, delta, width, height) -> CompanionHud.render(graphics)));
+    }
+
+    private static void registerClientTick() {
+        MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
+            if (event.phase == TickEvent.Phase.END) {
+                CompanionClient.tick();
+            }
+        });
     }
     *///?}
 

@@ -7,7 +7,9 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+//? if >=1.20.5 {
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+//?}
 
 import za.co.neroland.nerocompanion.NeroCompanionCommon;
 import za.co.neroland.nerocompanion.budget.BudgetProbe;
@@ -34,11 +36,21 @@ public final class NeroCompanionNeoForge {
         });
         NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> CompanionCommands.register(event.getDispatcher()));
         // Quest hook delivery (skin unlock notice) needs the running server; captured from the server tick.
+        //? if >=1.20.5 {
         NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post event) -> {
             QuestHooks.tick(event.getServer());
             NeroCompanionCommon.onServerTick(event.getServer());
             BudgetProbe.endServerTick();
         });
+        //?} else {
+        /*NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.TickEvent.ServerTickEvent event) -> {
+            if (event.phase == net.neoforged.neoforge.event.TickEvent.Phase.END) {
+                QuestHooks.tick(event.getServer());
+                NeroCompanionCommon.onServerTick(event.getServer());
+                BudgetProbe.endServerTick();
+            }
+        });
+        *///?}
         NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppedEvent event) ->
                 NeroCompanionCommon.onServerStopped());
         // Client-only: renderers. Gated so the client classes never load on a dedicated server.

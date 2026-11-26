@@ -54,7 +54,7 @@ public final class Payloads {
 
     /** Mode button, radial wedge, or the radial hub ({@code FOLLOW} + {@code comeHere}). */
     public record SetMode(UUID companionId, CompanionMode mode, boolean comeHere) implements CustomPacketPayload {
-        public static final Type<SetMode> TYPE = Wire.type("set_mode");
+        public static final Type<SetMode> TYPE = Wire.type("set_mode", SetMode.class);
         public static final StreamCodec<FriendlyByteBuf, SetMode> STREAM_CODEC = StreamCodec.of(
                 (buf, p) -> { buf.writeUUID(p.companionId); Wire.mode(buf, p.mode); buf.writeBoolean(p.comeHere); },
                 buf -> new SetMode(buf.readUUID(), Wire.mode(buf), buf.readBoolean()));
@@ -67,7 +67,7 @@ public final class Payloads {
 
     /** The name box. The server filters, strips formatting and caps at 24 characters. */
     public record Rename(UUID companionId, String name) implements CustomPacketPayload {
-        public static final Type<Rename> TYPE = Wire.type("rename");
+        public static final Type<Rename> TYPE = Wire.type("rename", Rename.class);
         public static final StreamCodec<FriendlyByteBuf, Rename> STREAM_CODEC = StreamCodec.of(
                 (buf, p) -> { buf.writeUUID(p.companionId); buf.writeUtf(p.name, 64); },
                 buf -> new Rename(buf.readUUID(), buf.readUtf(64)));
@@ -80,7 +80,7 @@ public final class Payloads {
 
     /** Hold a chip and click a slot ({@code insert}), or click a filled slot. Slot {@code -1} = first that fits. */
     public record ChipEdit(UUID companionId, int slot, boolean insert) implements CustomPacketPayload {
-        public static final Type<ChipEdit> TYPE = Wire.type("chip_edit");
+        public static final Type<ChipEdit> TYPE = Wire.type("chip_edit", ChipEdit.class);
         public static final StreamCodec<FriendlyByteBuf, ChipEdit> STREAM_CODEC = StreamCodec.of(
                 (buf, p) -> { buf.writeUUID(p.companionId); buf.writeVarInt(p.slot + 1); buf.writeBoolean(p.insert); },
                 buf -> new ChipEdit(buf.readUUID(), buf.readVarInt() - 1, buf.readBoolean()));
@@ -93,7 +93,7 @@ public final class Payloads {
 
     /** Recall into a Capsule (screen button, radial 0). */
     public record Recall(UUID companionId) implements CustomPacketPayload {
-        public static final Type<Recall> TYPE = Wire.type("recall");
+        public static final Type<Recall> TYPE = Wire.type("recall", Recall.class);
         public static final StreamCodec<FriendlyByteBuf, Recall> STREAM_CODEC = StreamCodec.of(
                 (buf, p) -> buf.writeUUID(p.companionId), buf -> new Recall(buf.readUUID()));
 
@@ -105,7 +105,7 @@ public final class Payloads {
 
     /** Bay Park / Unpark. */
     public record ParkUnpark(BlockPos bay, UUID companionId, boolean park) implements CustomPacketPayload {
-        public static final Type<ParkUnpark> TYPE = Wire.type("park_unpark");
+        public static final Type<ParkUnpark> TYPE = Wire.type("park_unpark", ParkUnpark.class);
         public static final StreamCodec<FriendlyByteBuf, ParkUnpark> STREAM_CODEC = StreamCodec.of(
                 (buf, p) -> { buf.writeBlockPos(p.bay); buf.writeUUID(p.companionId); buf.writeBoolean(p.park); },
                 buf -> new ParkUnpark(buf.readBlockPos(), buf.readUUID(), buf.readBoolean()));
@@ -118,7 +118,7 @@ public final class Payloads {
 
     /** Skin Studio Apply: a skin, or a hat ({@code id} empty = remove the hat). */
     public record ApplySkin(UUID companionId, boolean hat, Optional<Identifier> id) implements CustomPacketPayload {
-        public static final Type<ApplySkin> TYPE = Wire.type("apply_skin");
+        public static final Type<ApplySkin> TYPE = Wire.type("apply_skin", ApplySkin.class);
         public static final StreamCodec<FriendlyByteBuf, ApplySkin> STREAM_CODEC = StreamCodec.of(
                 (buf, p) -> { buf.writeUUID(p.companionId); buf.writeBoolean(p.hat); Wire.id(buf, p.id); },
                 buf -> new ApplySkin(buf.readUUID(), buf.readBoolean(), Wire.id(buf)));
@@ -131,7 +131,7 @@ public final class Payloads {
 
     /** Bay Reclaim on a lost companion. */
     public record Reclaim(BlockPos bay, UUID companionId) implements CustomPacketPayload {
-        public static final Type<Reclaim> TYPE = Wire.type("reclaim");
+        public static final Type<Reclaim> TYPE = Wire.type("reclaim", Reclaim.class);
         public static final StreamCodec<FriendlyByteBuf, Reclaim> STREAM_CODEC = StreamCodec.of(
                 (buf, p) -> { buf.writeBlockPos(p.bay); buf.writeUUID(p.companionId); },
                 buf -> new Reclaim(buf.readBlockPos(), buf.readUUID()));
@@ -144,7 +144,7 @@ public final class Payloads {
 
     /** Open the Companion screen (Remote tap on a companion, the open-companion key). */
     public record OpenCompanion(UUID companionId) implements CustomPacketPayload {
-        public static final Type<OpenCompanion> TYPE = Wire.type("open_companion");
+        public static final Type<OpenCompanion> TYPE = Wire.type("open_companion", OpenCompanion.class);
         public static final StreamCodec<FriendlyByteBuf, OpenCompanion> STREAM_CODEC = StreamCodec.of(
                 (buf, p) -> buf.writeUUID(p.companionId), buf -> new OpenCompanion(buf.readUUID()));
 
@@ -202,7 +202,7 @@ public final class Payloads {
 
     /** The owner's companions (LIVE only, deploy order). No positions, no dimension. */
     public record HudSync(List<HudEntry> entries) implements CustomPacketPayload {
-        public static final Type<HudSync> TYPE = Wire.type("hud_sync");
+        public static final Type<HudSync> TYPE = Wire.type("hud_sync", HudSync.class);
         public static final StreamCodec<FriendlyByteBuf, HudSync> STREAM_CODEC = StreamCodec.of(
                 (buf, p) -> Wire.list(buf, p.entries, HudEntry::write),
                 buf -> new HudSync(Wire.list(buf, HudEntry::read)));
@@ -261,7 +261,7 @@ public final class Payloads {
         public static final int AWAY = 8;
         public static final int CHARGING = 16;
 
-        public static final Type<CompanionSnapshot> TYPE = Wire.type("companion_snapshot");
+        public static final Type<CompanionSnapshot> TYPE = Wire.type("companion_snapshot", CompanionSnapshot.class);
         public static final StreamCodec<FriendlyByteBuf, CompanionSnapshot> STREAM_CODEC = StreamCodec.of(
                 Payloads::writeSnapshot, Payloads::readSnapshot);
 
@@ -377,7 +377,7 @@ public final class Payloads {
     public record BaySnapshot(BlockPos bay, long bufferFe, long bufferCapacityFe, List<BaySlotView> slots,
             List<BayListEntry> nearby, List<BayListEntry> lost, int liveCount, int liveCap, Feedback feedback)
             implements CustomPacketPayload {
-        public static final Type<BaySnapshot> TYPE = Wire.type("bay_snapshot");
+        public static final Type<BaySnapshot> TYPE = Wire.type("bay_snapshot", BaySnapshot.class);
         public static final StreamCodec<FriendlyByteBuf, BaySnapshot> STREAM_CODEC = StreamCodec.of(
                 (buf, s) -> {
                     buf.writeBlockPos(s.bay);
@@ -408,7 +408,7 @@ public final class Payloads {
 
     /** An emote bubble: a lang key from the trait's line pool, never free text, never player data. */
     public record Chatter(int entityId, String key, int trait) implements CustomPacketPayload {
-        public static final Type<Chatter> TYPE = Wire.type("chatter");
+        public static final Type<Chatter> TYPE = Wire.type("chatter", Chatter.class);
         public static final StreamCodec<FriendlyByteBuf, Chatter> STREAM_CODEC = StreamCodec.of(
                 (buf, p) -> { buf.writeVarInt(p.entityId); Wire.string(buf, p.key); buf.writeByte(p.trait); },
                 buf -> new Chatter(buf.readVarInt(), Wire.string(buf), buf.readByte()));
@@ -437,7 +437,7 @@ public final class Payloads {
     /** The owner's scout marks (max 32, 2-second TTL). Wired fully in Stage 3. */
     public record ScoutMarks(List<Mark> marks, int ttlTicks) implements CustomPacketPayload {
         public static final int MAX_MARKS = 32;
-        public static final Type<ScoutMarks> TYPE = Wire.type("scout_marks");
+        public static final Type<ScoutMarks> TYPE = Wire.type("scout_marks", ScoutMarks.class);
         public static final StreamCodec<FriendlyByteBuf, ScoutMarks> STREAM_CODEC = StreamCodec.of(
                 (buf, p) -> { Wire.list(buf, p.marks, Mark::write); buf.writeVarInt(p.ttlTicks); },
                 buf -> new ScoutMarks(Wire.list(buf, Mark::read), buf.readVarInt()));
@@ -457,7 +457,7 @@ public final class Payloads {
      * colours, rules - never who has unlocked what (that is in the owner's {@link CompanionSnapshot}).
      */
     public record LookCatalogue(List<za.co.neroland.nerocompanion.look.Look> looks) implements CustomPacketPayload {
-        public static final Type<LookCatalogue> TYPE = Wire.type("look_catalogue");
+        public static final Type<LookCatalogue> TYPE = Wire.type("look_catalogue", LookCatalogue.class);
         public static final StreamCodec<FriendlyByteBuf, LookCatalogue> STREAM_CODEC = StreamCodec.of(
                 (buf, p) -> Wire.list(buf, p.looks, za.co.neroland.nerocompanion.look.Look::write),
                 buf -> new LookCatalogue(Wire.list(buf, za.co.neroland.nerocompanion.look.Look::read)));

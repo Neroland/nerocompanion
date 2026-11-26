@@ -16,6 +16,9 @@ public class GroundCompanion extends CompanionEntity {
 
     public GroundCompanion(EntityType<? extends GroundCompanion> type, Level level) {
         super(type, level);
+        //? if <1.20.5 {
+        /*this.setMaxUpStep(1.0F);
+        *///?}
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -25,7 +28,10 @@ public class GroundCompanion extends CompanionEntity {
                 .add(Attributes.ATTACK_DAMAGE, 0.0D)
                 .add(Attributes.ARMOR, 0.0D)
                 .add(Attributes.FOLLOW_RANGE, 32.0D)
-                .add(Attributes.STEP_HEIGHT, 1.0D);
+                //? if >=1.20.5 {
+                .add(Attributes.STEP_HEIGHT, 1.0D)
+                //?}
+                ;
     }
 
     @Override

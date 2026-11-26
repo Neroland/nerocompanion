@@ -16,7 +16,12 @@ import za.co.neroland.nerocompanion.progression.QuestHooks;
 @Mod(NeroCompanionCommon.MOD_ID)
 public final class NeroCompanionForge {
 
+    //? if >=1.20.5 {
     public NeroCompanionForge(FMLJavaModLoadingContext context) {
+    //?} else {
+    /*public NeroCompanionForge() {
+        FMLJavaModLoadingContext context = FMLJavaModLoadingContext.get();
+    *///?}
         NeroCompanionCommon.LOGGER.info("[NeroCompanion] Forge bootstrap");
         NeroCompanionCommon.init();
         //? if >=1.21.6 {
@@ -69,12 +74,7 @@ public final class NeroCompanionForge {
                 event -> NeroCompanionCommon.onServerStopped());
         *///?} else {
         /*// Forge before 1.21.6 runs EventBus 6: one game bus, listeners typed by their parameter.
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener(
-                (TickEvent.ServerTickEvent.Post event) -> {
-                    QuestHooks.tick(event.getServer());
-                    NeroCompanionCommon.onServerTick(event.getServer());
-                    BudgetProbe.endServerTick();
-                });
+        registerServerTick();
         net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener(
                 (net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event) -> {
                     if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player) {
@@ -87,4 +87,23 @@ public final class NeroCompanionForge {
                 (net.minecraftforge.event.server.ServerStoppedEvent event) -> NeroCompanionCommon.onServerStopped());
         *///?}
     }
+    //? if <1.21.6 {
+    /*private static void registerServerTick() {
+        //? if >=1.20.5 {
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.ServerTickEvent.Post event) -> tick(event.getServer()));
+        //?} else {
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.addListener((TickEvent.ServerTickEvent event) -> {
+            if (event.phase == TickEvent.Phase.END) {
+                tick(event.getServer());
+            }
+        });
+        //?}
+    }
+
+    private static void tick(net.minecraft.server.MinecraftServer server) {
+        QuestHooks.tick(server);
+        NeroCompanionCommon.onServerTick(server);
+        BudgetProbe.endServerTick();
+    }
+    *///?}
 }

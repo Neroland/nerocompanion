@@ -122,12 +122,23 @@ public class GlowEyesLayer extends RenderLayer<CompanionRenderer.State, EntityMo
         int band = bandColour(info);
         if ((band >>> 24) != 0) {
             models.glowBody().setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+            //? if >=1.21 {
             models.glowBody().renderToBuffer(poseStack, buffers.getBuffer(type), FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
                     band);
+            //?} else {
+            models.glowBody().renderToBuffer(poseStack, buffers.getBuffer(type), FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
+                    channel(band, 16), channel(band, 8), channel(band, 0), channel(band, 24));
+            //?}
         }
         models.glowEyes().setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        //? if >=1.21 {
         models.glowEyes().renderToBuffer(poseStack, buffers.getBuffer(type), FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
                 eyeColour(info, models.glowEyes().activeEye()));
+        //?} else {
+        int colour = eyeColour(info, models.glowEyes().activeEye());
+        models.glowEyes().renderToBuffer(poseStack, buffers.getBuffer(type), FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
+                channel(colour, 16), channel(colour, 8), channel(colour, 0), channel(colour, 24));
+        //?}
     }
     *///?}
 
@@ -194,4 +205,9 @@ public class GlowEyesLayer extends RenderLayer<CompanionRenderer.State, EntityMo
         int a = Math.max(0, Math.min(255, Math.round(alpha * 255.0F)));
         return (a << 24) | (rgb & 0xFFFFFF);
     }
+    //? if <1.21 {
+    /*private static float channel(int colour, int shift) {
+        return ((colour >>> shift) & 255) / 255.0F;
+    }
+    *///?}
 }

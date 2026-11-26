@@ -141,4 +141,35 @@ class CompanionRecordTest {
         record.jobData().putString("area", "tampered");
         assertEquals(StringTag.valueOf("north"), record.jobData().get("area"));
     }
+
+    //? if <1.20.5 {
+    /*@org.junit.jupiter.api.BeforeAll
+    static void bootstrapLegacyItems() {
+        net.minecraft.SharedConstants.tryDetectVersion();
+        net.minecraft.server.Bootstrap.bootStrap();
+    }
+
+    @Test
+    void legacyCapsuleStoresOnlyTheShareableRecord() {
+        var stack = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.PAPER);
+        var record = everyField();
+        za.co.neroland.nerocompanion.registry.ModDataComponents.COMPANION.set(stack, record);
+        var reloaded = net.minecraft.world.item.ItemStack.of(stack.save(new CompoundTag()));
+        Tag raw = reloaded.getTag().get("nerocompanion:companion");
+        var persisted = CompanionRecord.CODEC.parse(NbtOps.INSTANCE, raw).result().orElseThrow();
+        assertEquals(record.forNetwork(), persisted);
+        assertEquals(CompanionRecord.NO_OWNER, persisted.ownerId());
+        assertTrue(persisted.home().isEmpty());
+        assertTrue(persisted.jobData().isEmpty());
+    }
+
+    @Test
+    void malformedLegacyCapsuleDataIsRejected() {
+        var stack = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.PAPER);
+        stack.getOrCreateTag().putString("nerocompanion:companion", "invalid");
+        var component = za.co.neroland.nerocompanion.registry.ModDataComponents.COMPANION;
+        org.junit.jupiter.api.Assertions.assertNull(component.get(stack));
+        assertTrue(component.has(stack));
+    }
+    *///?}
 }

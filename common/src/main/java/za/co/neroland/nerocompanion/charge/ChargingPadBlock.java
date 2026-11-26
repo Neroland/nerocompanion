@@ -63,9 +63,19 @@ public class ChargingPadBlock extends BaseEntityBlock {
     }
 
     /** Sneak-use with an empty hand checks or takes back an incubating Scrap Egg; otherwise nothing. */
+    //? if >=1.20.5 {
     @Override
     protected net.minecraft.world.InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
             net.minecraft.world.entity.player.Player player, net.minecraft.world.phys.BlockHitResult hit) {
+    //?} else {
+    /*@Override
+    public net.minecraft.world.InteractionResult use(BlockState state, Level level, BlockPos pos,
+            net.minecraft.world.entity.player.Player player, net.minecraft.world.InteractionHand hand,
+            net.minecraft.world.phys.BlockHitResult hit) {
+        if (!player.getItemInHand(hand).isEmpty()) {
+            return net.minecraft.world.InteractionResult.PASS;
+        }
+    *///?}
         if (!level.isClientSide() && player.isShiftKeyDown()
                 && player instanceof net.minecraft.server.level.ServerPlayer serverPlayer
                 && level instanceof net.minecraft.server.level.ServerLevel server

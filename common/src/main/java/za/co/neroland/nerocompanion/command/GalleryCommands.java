@@ -230,14 +230,14 @@ public final class GalleryCommands {
             case FILLED_CAPSULE -> {
                 ItemStack capsule = new ItemStack(ModItems.CAPSULE.get());
                 // The shareable part only (no owner), full charge, no ticket and nothing in the vault: a display.
-                capsule.set(ModDataComponents.COMPANION.get(),
+                ModDataComponents.COMPANION.set(capsule,
                         CompanionDeployer.freshRecord(level, item.type(), player).forNetwork());
-                capsule.set(ModDataComponents.CHARGE.get(), 100);
+                ModDataComponents.CHARGE.set(capsule, 100);
                 yield capsule;
             }
             case BLUEPRINT -> {
                 ItemStack capsule = new ItemStack(ModItems.CAPSULE.get());
-                capsule.set(ModDataComponents.BLUEPRINT.get(), item.type());
+                ModDataComponents.BLUEPRINT.set(capsule, item.type());
                 yield capsule;
             }
             case EGG_STAGE -> ScrapEggItem.withTicks(new ItemStack(ModItems.SCRAP_EGG.get()), eggTicks(item.stage()));

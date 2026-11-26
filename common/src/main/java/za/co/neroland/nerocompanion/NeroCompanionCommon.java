@@ -68,6 +68,9 @@ public final class NeroCompanionCommon {
         ModEntities.registerEntitySupport();
         ModBlocks.init();
         ModItems.init();
+        //? if <1.20.5 {
+        /*za.co.neroland.nerocompanion.registry.LegacyCapsuleRecipe.init();
+        *///?}
         ModBlockEntities.init();
         ModMenuTypes.init();
         za.co.neroland.nerocompanion.registry.ModSounds.init();

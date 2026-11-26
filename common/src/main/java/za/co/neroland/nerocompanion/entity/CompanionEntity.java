@@ -248,6 +248,7 @@ public abstract class CompanionEntity extends PathfinderMob {
     /** How this chassis moves. */
     public abstract Locomotion locomotion();
 
+    //? if >=1.20.5 {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
@@ -260,6 +261,20 @@ public abstract class CompanionEntity extends PathfinderMob {
         builder.define(DATA_FLAGS, (byte) 0);
         builder.define(DATA_OWNER_ENTITY_ID, -1);
     }
+    //?} else {
+    /*@Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(DATA_MODE, (byte) CompanionMode.FOLLOW.ordinal());
+        entityData.define(DATA_ENERGY_PCT, (byte) 0);
+        entityData.define(DATA_SKIN, "");
+        entityData.define(DATA_HAT, "");
+        entityData.define(DATA_BOND_LEVEL, (byte) 0);
+        entityData.define(DATA_TRAIT, (byte) 0);
+        entityData.define(DATA_FLAGS, (byte) 0);
+        entityData.define(DATA_OWNER_ENTITY_ID, -1);
+    }
+    *///?}
 
     /** Goals are installed per mode by {@link ModeController}, not here (fields are not set yet in this call). */
     @Override
@@ -1794,8 +1809,8 @@ public abstract class CompanionEntity extends PathfinderMob {
             }
             return InteractionResult.SUCCESS_SERVER;
         }
-        boolean emptyCapsule = held.is(ModItems.CAPSULE.get()) && !held.has(ModDataComponents.COMPANION.get())
-                && !held.has(ModDataComponents.BLUEPRINT.get());
+        boolean emptyCapsule = held.is(ModItems.CAPSULE.get()) && !ModDataComponents.COMPANION.has(held)
+                && !ModDataComponents.BLUEPRINT.has(held);
         boolean sneakEmpty = player.isSecondaryUseActive() && held.isEmpty();
         if (held.isEmpty() && !player.isSecondaryUseActive() && hand == InteractionHand.MAIN_HAND) {
             // Petting: an empty main hand, not sneaking.

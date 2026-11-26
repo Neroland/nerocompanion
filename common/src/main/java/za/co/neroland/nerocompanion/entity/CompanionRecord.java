@@ -11,7 +11,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+//? if >=1.20.5 {
 import net.minecraft.network.codec.ByteBufCodecs;
+//?}
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 
@@ -150,8 +152,9 @@ public record CompanionRecord(
     ).apply(instance, (schema, companionId, owner, type, mode, energy, chips, bond, name, skin, hat, seed, home, job,
             health) -> new CompanionRecord(schema, companionId, owner, type, mode, energy, chips, bond, name, skin, hat,
                     seed, home, job.orElseGet(CompoundTag::new), health)))
-            .validate(CompanionRecord::upgrade);
+            .flatXmap(CompanionRecord::upgrade, CompanionRecord::upgrade);
 
+    //? if >=1.20.5 {
     /**
      * Network form: the persistent codec over a stripped copy (no owner UUID, no home position, no job data). Used for the
      * Capsule's item component so tooltips work on the client without the owner or base location leaving the
@@ -159,6 +162,7 @@ public record CompanionRecord(
      */
     public static final StreamCodec<RegistryFriendlyByteBuf, CompanionRecord> STREAM_CODEC =
             ByteBufCodecs.fromCodecWithRegistries(CODEC).map(record -> record, CompanionRecord::forNetwork);
+    //?}
 
     /** Accepts every schema up to {@link #SCHEMA}; a newer one (a downgraded world) is an error, not a guess. */
     private static DataResult<CompanionRecord> upgrade(CompanionRecord record) {

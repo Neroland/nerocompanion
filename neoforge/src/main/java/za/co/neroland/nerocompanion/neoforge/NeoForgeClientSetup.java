@@ -6,9 +6,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+//? if >=1.20.5 {
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+//?}
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+//? if >=1.20.5 {
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+//?}
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -42,11 +46,25 @@ public final class NeoForgeClientSetup {
             event.register(ModMenuTypes.COMPANION.get(), CompanionScreen::new);
             event.register(ModMenuTypes.BAY.get(), CompanionBayScreen::new);
         });
+        //? if >=1.20.5 {
         modEventBus.addListener((RegisterGuiLayersEvent event) -> event.registerAboveAll(
                 Identifier.fromNamespaceAndPath(NeroCompanionCommon.MOD_ID, "companion_hud"),
                 (g, delta) -> CompanionHud.render(g)));
+        //?} else {
+        /*modEventBus.addListener((net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent event) ->
+                event.registerAboveAll(Identifier.fromNamespaceAndPath(NeroCompanionCommon.MOD_ID, "companion_hud"),
+                        (gui, graphics, tick, width, height) -> CompanionHud.render(graphics)));
+        *///?}
         modEventBus.addListener((RegisterKeyMappingsEvent event) -> ClientKeys.all().forEach(event::register));
+        //? if >=1.20.5 {
         NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> CompanionClient.tick());
+        //?} else {
+        /*NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.TickEvent.ClientTickEvent event) -> {
+            if (event.phase == net.neoforged.neoforge.event.TickEvent.Phase.END) {
+                CompanionClient.tick();
+            }
+        });
+        *///?}
         modEventBus.addListener((net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent event) ->
                 za.co.neroland.nerocompanion.client.particle.CompanionParticles.registerAll((type, factory) ->
                         event.registerSpriteSet(type, factory::apply)));

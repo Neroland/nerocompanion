@@ -66,7 +66,11 @@ public final class ChatterService {
         ServerPlayer owner = companion.owner();
         double range = MAX_RANGE;
         if (owner != null) {
+            //? if >=1.20.2 {
             range = Math.min(range, Math.max(2, owner.clientInformation().viewDistance()) * 16.0D);
+            //?} else {
+            /*range = Math.min(range, Math.max(2, level.getServer().getPlayerList().getViewDistance()) * 16.0D);
+            *///?}
         }
         double rangeSq = range * range;
         boolean nameHidden = (companion.syncedFlags() & CompanionEntity.FLAG_NAME_HIDDEN) != 0;

@@ -26,8 +26,13 @@ public final class Wire {
     private Wire() {
     }
 
-    public static <T extends CustomPacketPayload> CustomPacketPayload.Type<T> type(String path) {
-        return new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(NeroCompanionCommon.MOD_ID, path));
+    public static <T extends CustomPacketPayload> CustomPacketPayload.Type<T> type(String path, Class<T> payloadClass) {
+        Identifier id = Identifier.fromNamespaceAndPath(NeroCompanionCommon.MOD_ID, path);
+        //? if >=1.20.5 {
+        return new CustomPacketPayload.Type<>(id);
+        //?} else {
+        /*return new CustomPacketPayload.Type<>(id, payloadClass);
+        *///?}
     }
 
     public static void mode(FriendlyByteBuf buf, CompanionMode mode) {

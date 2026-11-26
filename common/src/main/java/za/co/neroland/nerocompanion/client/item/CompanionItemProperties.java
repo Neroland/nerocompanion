@@ -30,8 +30,8 @@ public final class CompanionItemProperties {
 
     /** The type path a Capsule shows ({@code ""} when empty). */
     public static String capsuleType(ItemStack stack) {
-        CompanionRecord record = stack.get(ModDataComponents.COMPANION.get());
-        Identifier type = record != null ? record.type() : stack.get(ModDataComponents.BLUEPRINT.get());
+        CompanionRecord record = ModDataComponents.COMPANION.get(stack);
+        Identifier type = record != null ? record.type() : ModDataComponents.BLUEPRINT.get(stack);
         return type == null ? "" : type.getPath();
     }
 

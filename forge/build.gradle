@@ -4,17 +4,24 @@
 plugins {
     id 'net.minecraftforge.gradle'
     id 'net.minecraftforge.jarjar'
+    id 'net.minecraftforge.renamer' apply false
     id 'eclipse'
     id 'maven-publish'
 }
 
 // MC version comes from the Stonecutter node (e.g. :forge:26.1.2), not a global property.
 def mc = stonecutter.current.version
+def mc120 = mc == '1.20' || mc.startsWith('1.20.')
+def preComponents = stonecutter.eval(mc, '<1.20.5')
+if (preComponents) {
+    apply plugin: 'net.minecraftforge.renamer'
+}
 def forgeVersion = project.findProperty("forge_version_${mc}")
-def jeiVersion = project.findProperty("jei_version_${mc}")
+def jeiMc = mc == '1.20.5' ? '1.20.6' : mc
+def jeiVersion = project.findProperty("jei_version_${jeiMc}")
 def emiFile = project.findProperty("emi_file_neoforge_${mc}")
-def nerolandcoreVersion = project.findProperty('nerolandcore_version')
-def neroeconomyVersion = project.findProperty('neroeconomy_version')
+def nerolandcoreVersion = project.findProperty(mc120 ? 'nerolandcore_version_1.20' : 'nerolandcore_version')
+def neroeconomyVersion = project.findProperty(preComponents ? 'neroeconomy_version_pre_components' : mc120 ? 'neroeconomy_version_1.20' : 'neroeconomy_version')
 // Minecraft range: 1.21.x cells are bounded to their API line (gradle.properties); 26.x keep [mc,).
 def mcCeiling = project.findProperty("mc_ceiling_${mc}")
 def mcFloor = project.findProperty("mc_floor_${mc}") ?: mc
@@ -138,7 +145,8 @@ dependencies {
     // NeroColonies, NeroFactions, NeroLogistics, NeroSecurity, Nerospace — OPTIONAL façades (compat/<sibling>, decision 020). compileOnly and
     // non-transitive, so a sibling's POM never changes the Core on the compile classpath.
     ['nerocolonies', 'nerofactions', 'nerologistics', 'nerosecurity', 'nerospace'].each { sibling ->
-        compileOnly("za.co.neroland.${sibling}:${sibling}-forge-${mc}:${project.findProperty(sibling + '_version')}") {
+        def legacySiblingVersion = preComponents ? project.findProperty(sibling + '_version_pre_components') : null
+        compileOnly("za.co.neroland.${sibling}:${sibling}-forge-${mc}:${legacySiblingVersion ?: (mc120 ? project.findProperty(sibling + '_version_1.20') : null) ?: project.findProperty(sibling + '_version')}") {
             transitive = false
         }
     }
@@ -148,7 +156,7 @@ dependencies {
 
     // JEI common API only; Forge 26.x loader artifacts are not yet published on the pinned JEI lines.
     if (jeiVersion) {
-        compileOnly "mezz.jei:jei-${mc}-common-api:${jeiVersion}"
+        compileOnly "mezz.jei:jei-${jeiMc}-common-api:${jeiVersion}"
     }
 
     // EMI: compile-only, so any shared compat/emi plugin compiles in the Forge cells. The port publishes no
@@ -160,6 +168,18 @@ dependencies {
 }
 
 // Expand mods.toml from src/main/templates into generated resources.
+if (preComponents) {
+    renamer.mappings.from minecraft.dependency.toSrgFile
+    def bundled = tasks.named('jarJar', Jar) {
+        archiveClassifier = 'dev-all'
+    }
+    renamer.classes('renameReleaseJar', bundled) {
+        archiveClassifier = 'all'
+    }
+    tasks.named('assemble') { dependsOn 'renameReleaseJar' }
+}
+
+
 def generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
     def props = [
         mod_id                    : rootProject.mod_id,

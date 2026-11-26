@@ -13,6 +13,8 @@ plugins {
 
 // MC version comes from the Stonecutter node (e.g. :fabric:26.1.2), not a global property.
 def mc = stonecutter.current.version
+def mc120 = mc == '1.20' || mc.startsWith('1.20.')
+def preComponents = stonecutter.eval(mc, '<1.20.5')
 // Minecraft before 26.1 ships obfuscated, so those cells need mappings and a remapped jar.
 def obfuscated = mc.startsWith('1.')
 apply plugin: obfuscated ? 'net.fabricmc.fabric-loom-remap' : 'net.fabricmc.fabric-loom'
@@ -21,10 +23,11 @@ def mcCeiling = project.findProperty("mc_ceiling_${mc}")
 def mcFloor = project.findProperty("mc_floor_${mc}") ?: mc
 def minecraftRequirement = mcCeiling ? ">=${mcFloor} <${mcCeiling}" : ">=${mc}"
 def fabricApi = project.findProperty("fabric_api_version_${mc}")
-def jeiVersion = project.findProperty("jei_version_${mc}")
+def jeiMc = mc == '1.20.5' ? '1.20.6' : mc
+def jeiVersion = project.findProperty("jei_version_${jeiMc}")
 def emiFile = project.findProperty("emi_file_fabric_${mc}")
-def nerolandcoreVersion = project.findProperty('nerolandcore_version')
-def neroeconomyVersion = project.findProperty('neroeconomy_version')
+def nerolandcoreVersion = project.findProperty(mc120 ? 'nerolandcore_version_1.20' : 'nerolandcore_version')
+def neroeconomyVersion = project.findProperty(preComponents ? 'neroeconomy_version_pre_components' : mc120 ? 'neroeconomy_version_1.20' : 'neroeconomy_version')
 
 // This node's projectDir is <loader>/versions/<v>; the authoritative loader source +
 // resources live in the BRANCH root (fabric/). Resolve branch-root paths via the parent.
@@ -123,7 +126,8 @@ dependencies {
     // NeroColonies, NeroFactions, NeroLogistics, NeroSecurity, Nerospace — OPTIONAL façades (compat/<sibling>, decision 020). compileOnly
     // (remapped on 1.21.x) and non-transitive, so a sibling's POM never changes the Core on the compile classpath.
     ['nerocolonies', 'nerofactions', 'nerologistics', 'nerosecurity', 'nerospace'].each { sibling ->
-        "${obfuscated ? 'modCompileOnly' : 'compileOnly'}"("za.co.neroland.${sibling}:${sibling}-fabric-${mc}:${project.findProperty(sibling + '_version')}") {
+        def legacySiblingVersion = preComponents ? project.findProperty(sibling + '_version_pre_components') : null
+        "${obfuscated ? 'modCompileOnly' : 'compileOnly'}"("za.co.neroland.${sibling}:${sibling}-fabric-${mc}:${legacySiblingVersion ?: (mc120 ? project.findProperty(sibling + '_version_1.20') : null) ?: project.findProperty(sibling + '_version')}") {
             transitive = false
         }
     }
@@ -142,9 +146,9 @@ dependencies {
     // against the Fabric JEI mod at dev runtime. JEI is a soft dependency (compile-time API only; the mod
     // is runtime-only). Same per-MC version as NeoForge (jei_version_<mc>, BlameJared maven from the root).
     if (jeiVersion) {
-        compileOnly "mezz.jei:jei-${mc}-common-api:${jeiVersion}"
-        compileOnly "mezz.jei:jei-${mc}-fabric-api:${jeiVersion}"
-        runtimeOnly "mezz.jei:jei-${mc}-fabric:${jeiVersion}"
+        compileOnly "mezz.jei:jei-${jeiMc}-common-api:${jeiVersion}"
+        compileOnly "mezz.jei:jei-${jeiMc}-fabric-api:${jeiVersion}"
+        if (mc != '1.20.5') runtimeOnly "mezz.jei:jei-${jeiMc}-fabric:${jeiVersion}"
     }
 
     // EMI (optional recipe-viewer compat). EMI ships one jar per loader with its API inside, so compile
@@ -165,6 +169,7 @@ dependencies {
 // Run & Debug works — while values stay dynamic (sourced from gradle.properties).
 def generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
     def props = [
+        java_version: project.javaRelease,
         mod_id               : rootProject.mod_id,
         mod_version          : rootProject.mod_version,
         mod_name             : rootProject.mod_name,
