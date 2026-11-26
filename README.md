@@ -6,7 +6,7 @@
 attached to you. Player documentation lives in the [wiki](wiki/Home.md); this file describes what the source does.
 
 Fabric supports Minecraft 1.20 through 1.20.6. Forge supports 1.20 through 1.20.4 and 1.20.6. NeoForge supports 1.20.4 through 1.20.6, with the Forge jar for legacy NeoForge 1.20.1.
-Use the matching Neroland Core build. Minecraft 1.20.x builds require Core 1.23.0 or newer, and NeoForge 1.20.5 requires Core 1.24.0 or newer. Both require Core below 2.0.
+Use Neroland Core 1.24.0 or newer (below 2.0) for the same Minecraft version and loader.
 
 ## What the mod does
 
@@ -58,7 +58,7 @@ Data lives in `common/src/main/resources/data/nerocompanion/`: `companion_types/
 
 - **Minecraft:** 1.21.1, 1.21.4, 1.21.5, 1.21.8 (also 1.21.7), 1.21.10 (also 1.21.9), 1.21.11, 26.1.2, 26.2 and 26.3
 - **Loaders:** NeoForge, Forge and Fabric (27 builds). **Java:** 21 for 1.21.x, 25 for 26.x.
-- **Requires** Neroland Core 1.17.4 or later. Every other Neroland mod is optional.
+- **Requires** Neroland Core 1.24.0 or later. Every other Neroland mod is optional.
 - Mod id `nerocompanion`, package `za.co.neroland.nerocompanion`. Build one cell with
   `./gradlew :neoforge:26.3:build`; `tools/check_companion_assets.py` checks that every asset the code names exists.
 

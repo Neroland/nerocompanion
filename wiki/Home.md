@@ -1,7 +1,7 @@
 # NeroCompanion Wiki
 
 Fabric supports Minecraft 1.20 through 1.20.6. Forge supports 1.20 through 1.20.4 and 1.20.6. NeoForge supports 1.20.4 through 1.20.6, with the Forge jar for legacy NeoForge 1.20.1.
-Use the matching Neroland Core build. Minecraft 1.20.x builds require Core 1.23.0 or newer, and NeoForge 1.20.5 requires Core 1.24.0 or newer. Both require Core below 2.0.
+Use Neroland Core 1.24.0 or newer (below 2.0) for the same Minecraft version and loader.
 
 
 Personal drones, helper bots and a scrap pet for the Neroland sci-fi Minecraft mods. Built on **Neroland Core**.

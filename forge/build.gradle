@@ -11,7 +11,6 @@ plugins {
 
 // MC version comes from the Stonecutter node (e.g. :forge:26.1.2), not a global property.
 def mc = stonecutter.current.version
-def mc120 = mc == '1.20' || mc.startsWith('1.20.')
 def preComponents = stonecutter.eval(mc, '<1.20.5')
 if (preComponents) {
     apply plugin: 'net.minecraftforge.renamer'
@@ -20,8 +19,8 @@ def forgeVersion = project.findProperty("forge_version_${mc}")
 def jeiMc = mc == '1.20.5' ? '1.20.6' : mc
 def jeiVersion = project.findProperty("jei_version_${jeiMc}")
 def emiFile = project.findProperty("emi_file_neoforge_${mc}")
-def nerolandcoreVersion = project.findProperty(mc120 ? 'nerolandcore_version_1.20' : 'nerolandcore_version')
-def neroeconomyVersion = project.findProperty(preComponents ? 'neroeconomy_version_pre_components' : mc120 ? 'neroeconomy_version_1.20' : 'neroeconomy_version')
+def nerolandcoreVersion = rootProject.property('nerolandcore_version')
+def neroeconomyVersion = rootProject.property('neroeconomy_version')
 // Minecraft range: 1.21.x cells are bounded to their API line (gradle.properties); 26.x keep [mc,).
 def mcCeiling = project.findProperty("mc_ceiling_${mc}")
 def mcFloor = project.findProperty("mc_floor_${mc}") ?: mc
@@ -145,8 +144,7 @@ dependencies {
     // NeroColonies, NeroFactions, NeroLogistics, NeroSecurity, Nerospace — OPTIONAL façades (compat/<sibling>, decision 020). compileOnly and
     // non-transitive, so a sibling's POM never changes the Core on the compile classpath.
     ['nerocolonies', 'nerofactions', 'nerologistics', 'nerosecurity', 'nerospace'].each { sibling ->
-        def legacySiblingVersion = preComponents ? project.findProperty(sibling + '_version_pre_components') : null
-        compileOnly("za.co.neroland.${sibling}:${sibling}-forge-${mc}:${legacySiblingVersion ?: (mc120 ? project.findProperty(sibling + '_version_1.20') : null) ?: project.findProperty(sibling + '_version')}") {
+        compileOnly("za.co.neroland.${sibling}:${sibling}-forge-${mc}:${rootProject.property(sibling + '_version')}") {
             transitive = false
         }
     }
